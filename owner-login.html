@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acces proprietar | AFRODITI Studios Grigoriu</title>
+  <meta
+    name="description"
+    content="Pagina privata de login pentru administrarea disponibilitatii AFRODITI Studios Grigoriu Luxury Apartments."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="owner" class="owner-page">
+  <header class="owner-page-topbar">
+    <div class="container owner-page-topbar-inner">
+      <a class="brand owner-page-brand" href="index.html" aria-label="Inapoi la site-ul AFRODITI Studios Grigoriu">
+        <span class="brand-mark">
+          <img src="Images/Logo.webp" alt="AFRODITI Studios Grigoriu" width="320" height="320" loading="eager" decoding="async">
+        </span>
+        <span class="brand-copy">
+          <strong>AFRODITI Studios Grigoriu</strong>
+          <small>Owner access</small>
+        </span>
+      </a>
+
+      <a class="owner-page-backlink" href="index.html">Inapoi la website</a>
+    </div>
+  </header>
+
+  <main class="owner-page-main">
+    <section class="owner-page-section">
+      <div class="container owner-page-layout">
+        <div class="owner-page-intro">
+          <p class="eyebrow">Acces proprietar</p>
+          <h1>Login simplu si editare directa a calendarului.</h1>
+          <p>
+            Intri cu user si parola, apoi marchezi rapid zilele ca <strong>ocupate</strong> sau <strong>libere</strong>,
+            fara meniuri in plus si fara optiuni inutile.
+          </p>
+        </div>
+
+        <div class="owner-page-shell">
+          <div class="owner-modal-body" id="owner-access-area">
+            <div class="panel-surface owner-setup-card" id="owner-setup-card" hidden>
+              <div class="card-heading card-heading-tight">
+                <p class="eyebrow">Pornire panou</p>
+                <h3>Pagina privata are nevoie de backendul site-ului.</h3>
+                <p>Deschide varianta rulata prin <code>start-server.bat</code>, <code>vercel dev</code> sau versiunea deja publicata pe Vercel.</p>
+              </div>
+
+              <p class="mode-note">
+                Daca esti pe <code>127.0.0.1:5501</code> sau ai deschis fisierul direct, login-ul nu poate functiona aici.
+              </p>
+
+              <p class="owner-setup-hint">
+                Acces local: <code>http://127.0.0.1:8787/owner</code>
+              </p>
+            </div>
+
+            <form class="panel-surface owner-login-card stack-form" id="owner-login-form" hidden>
+              <div class="card-heading card-heading-tight">
+                <p class="eyebrow">Login proprietar</p>
+                <h3>Intri si editezi direct calendarul.</h3>
+                <p>User si parola deschid imediat editorul simplu pentru zilele din calendar.</p>
+              </div>
+
+              <div class="field-grid field-grid-2">
+                <label>
+                  <span>User</span>
+                  <input type="text" name="ownerUsername" autocomplete="username" required>
+                </label>
+
+                <label>
+                  <span>Parola</span>
+                  <input type="password" name="ownerPassword" autocomplete="current-password" required>
+                </label>
+              </div>
+
+              <button class="button button-block" type="submit">Intra in calendar</button>
+              <p class="owner-login-hint" id="owner-login-hint"></p>
+              <p class="form-status" id="owner-login-status" aria-live="polite"></p>
+            </form>
+
+            <div class="panel-surface owner-panel-card" id="owner-panel" hidden>
+              <div class="owner-panel-head">
+                <div>
+                  <p class="eyebrow">Editor calendar</p>
+                  <h3>Marchezi doar zilele ca ocupate sau libere.</h3>
+                </div>
+                <button class="button button-ghost-light button-small" type="button" id="owner-logout">
+                  Logout
+                </button>
+              </div>
+
+              <div class="owner-panel-top">
+                <label>
+                  <span>Cazare</span>
+                  <select id="owner-accommodation-select" data-owner-accommodation-select></select>
+                </label>
+
+                <div class="owner-mode-block">
+                  <span>Marcaj</span>
+                  <div class="owner-mode-switch">
+                    <button class="owner-mode-button is-active" type="button" data-owner-mode="occupied">
+                      Ocupat
+                    </button>
+                    <button class="owner-mode-button" type="button" data-owner-mode="free">
+                      Liber
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="owner-month-nav">
+                <button class="owner-month-button" type="button" id="owner-month-prev" aria-label="Luna anterioara">
+                  <span aria-hidden="true">&#8592;</span>
+                </button>
+
+                <div class="owner-month-copy">
+                  <strong id="owner-month-label">aprilie 2026</strong>
+                  <span>Apesi pe fiecare zi si o marchezi simplu: ocupata sau libera.</span>
+                </div>
+
+                <button class="owner-month-button" type="button" id="owner-month-next" aria-label="Luna urmatoare">
+                  <span aria-hidden="true">&#8594;</span>
+                </button>
+              </div>
+
+              <div class="calendar-legend owner-calendar-legend">
+                <span><i class="legend-dot legend-free"></i>Liber</span>
+                <span><i class="legend-dot legend-booked"></i>Ocupat</span>
+                <span><i class="legend-dot legend-today"></i>Azi</span>
+              </div>
+
+              <div class="calendar-grid owner-calendar-grid" data-owner-calendar></div>
+              <p class="mode-note">Daca apesi din nou pe aceeasi stare, ziua revine la setarea initiala.</p>
+              <p class="form-status" id="owner-status" aria-live="polite"></p>
+
+              <div class="owner-settings-block">
+                <div class="card-heading card-heading-tight">
+                  <p class="eyebrow">Credentiale owner</p>
+                  <h3>Schimbi userul si parola direct din panou.</h3>
+                  <p>Noile date raman salvate si dupa deploy pe Vercel, daca storage-ul este configurat.</p>
+                </div>
+
+                <form class="stack-form compact-form" id="owner-account-form">
+                  <div class="field-grid field-grid-2">
+                    <label>
+                      <span>Parola curenta</span>
+                      <input type="password" name="currentOwnerPassword" autocomplete="current-password" required>
+                    </label>
+
+                    <label>
+                      <span>User nou</span>
+                      <input type="text" name="nextOwnerUsername" autocomplete="username" required>
+                    </label>
+                  </div>
+
+                  <div class="field-grid field-grid-2">
+                    <label>
+                      <span>Parola noua</span>
+                      <input type="password" name="nextOwnerPassword" autocomplete="new-password" required>
+                    </label>
+
+                    <label>
+                      <span>Confirma parola noua</span>
+                      <input type="password" name="confirmOwnerPassword" autocomplete="new-password" required>
+                    </label>
+                  </div>
+
+                  <button class="button" type="submit">Salveaza noile date</button>
+                  <p class="form-status" id="owner-account-status" aria-live="polite"></p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

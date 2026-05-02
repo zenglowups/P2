@@ -1,0 +1,682 @@
+﻿<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AFRODITI Studios Grigoriu Luxury Apartments</title>
+  <meta
+    name="description"
+    content="Website de prezentare pentru AFRODITI Studios Grigoriu Luxury Apartments: galerie corecta, review-uri reale, calendar public clar si panou privat pentru disponibilitate."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header" id="page-top">
+    <div class="container header-inner">
+      <a class="brand" href="#page-top" aria-label="AFRODITI Studios Grigoriu Luxury Apartments">
+        <span class="brand-mark">
+          <img src="Images/Logo.webp" alt="AFRODITI Studios Grigoriu" width="320" height="320" loading="eager" decoding="async">
+        </span>
+        <span class="brand-copy">
+          <strong>AFRODITI Studios Grigoriu</strong>
+          <small>Luxury Apartments</small>
+        </span>
+      </a>
+
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        aria-label="Deschide meniul"
+      >
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="site-nav" id="site-nav">
+        <a href="#overview">Prezentare</a>
+        <a href="#gallery">Galerie</a>
+        <a href="#prices">Calendar</a>
+        <a href="#reviews">Review-uri</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="overview">
+      <div class="hero-backdrop" aria-hidden="true">
+        <div class="hero-glow hero-glow-left"></div>
+        <div class="hero-glow hero-glow-right"></div>
+      </div>
+
+      <div class="container hero-layout">
+        <div class="hero-copy">
+          <p class="eyebrow reveal">Paralia Katerinis, Grecia</p>
+          <h1 class="reveal">Control mai clar pentru rezervari, imagini corecte si o experienta mai relaxata pentru AFRODITI Studios.</h1>
+          <p class="hero-text reveal">
+            Am resetat directia site-ului pentru proprietatea corecta: galerie refacuta doar cu imaginile reale,
+            meniu inspirat din Booking, review-uri din materialele primite si un hub de disponibilitate care
+            te ajuta sa eviti suprapunerile intre cazari, cu calendar public pentru oaspeti si acces separat pentru proprietar.
+          </p>
+
+          <div class="hero-actions reveal">
+            <a class="button" href="#prices">Verifica disponibilitatea</a>
+            <a class="button button-ghost" href="#reviews">Vezi review-urile</a>
+          </div>
+
+          <div class="hero-metrics reveal">
+            <article>
+              <strong>9.9 / 10</strong>
+              <span>rating Booking extras din review-urile din folder</span>
+            </article>
+            <article>
+              <strong>Calendar public + panou privat</strong>
+              <span>oaspetii doar verifica, iar proprietarul poate marca zilele separat</span>
+            </article>
+            <article>
+              <strong>33 imagini reale</strong>
+              <span>fara amestec intre proprietati si fara galerie gresita</span>
+            </article>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal">
+          <figure class="hero-main-shot">
+            <img src="Images/718798500.jpg" alt="Terasa mare a proprietatii, cu vedere deschisa" loading="eager" decoding="async">
+          </figure>
+
+          <div class="hero-side-stack">
+            <figure>
+              <img src="Images/694257536.jpg" alt="Dormitor luminos cu pat dublu" loading="eager" decoding="async">
+            </figure>
+            <figure>
+              <img src="Images/694797681.jpg" alt="Balcon cu masa mica si doua scaune" loading="eager" decoding="async">
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="booking-tabs-bar">
+      <div class="container">
+        <nav class="booking-tabs" aria-label="Meniu inspirat din Booking">
+          <a href="#overview">Prezentare generala</a>
+          <a href="#prices">Preturi</a>
+          <a href="#facilities">Facilitati</a>
+          <a href="#important">Informatii importante</a>
+          <a href="#legal">Informatii importante si juridice</a>
+          <a href="#reviews">Evaluarile oaspetilor (19)</a>
+        </nav>
+      </div>
+    </section>
+
+    <section class="section availability-section" id="prices">
+      <div class="container section-heading reveal">
+        <p class="eyebrow">Preturi & disponibilitate</p>
+        <h2>Formularul si calendarul sunt sus in pagina, ca sa ajungi direct la ce conteaza.</h2>
+        <p>
+          Oaspetii vad imediat disponibilitatea si trimit cererea pe WhatsApp. Pentru tine si detinatorul afacerii exista
+          un acces discret cu user si parola, doar pentru a marca zilele ca libere sau ocupate.
+        </p>
+      </div>
+
+      <div class="container room-types-grid" data-room-types></div>
+
+      <div class="container availability-grid">
+        <div class="guest-card reveal">
+          <div class="card-heading card-heading-tight">
+            <p class="eyebrow">Cerere rapida</p>
+            <h3>Doar datele esentiale.</h3>
+            <p>Clientul completeaza rapid si trimite direct cererea pe WhatsApp.</p>
+          </div>
+
+          <form class="stack-form" id="booking-form">
+            <div class="field-grid field-grid-2">
+              <label>
+                <span>Nume</span>
+                <input type="text" name="guestName" placeholder="Ex: Andrei Popa" required>
+              </label>
+
+              <label>
+                <span>Telefon</span>
+                <input type="text" name="guestPhone" placeholder="Ex: 4074..." required>
+              </label>
+            </div>
+
+            <div class="field-grid field-grid-2">
+              <label>
+                <span>Cazare</span>
+                <select name="accommodationId" data-accommodation-select required></select>
+              </label>
+
+              <label>
+                <span>Oaspeti</span>
+                <input type="text" name="guestCount" placeholder="Ex: 2 adulti, 1 copil" required>
+              </label>
+            </div>
+
+            <div class="field-grid field-grid-2">
+              <label>
+                <span>Check-in</span>
+                <input type="date" name="checkIn" required>
+              </label>
+              <label>
+                <span>Check-out</span>
+                <input type="date" name="checkOut" required>
+              </label>
+            </div>
+
+            <p class="mode-note" id="booking-form-note">
+              Calendarul din dreapta este public pentru oaspeti, iar editorul de proprietar se deschide direct in aceeasi pagina.
+            </p>
+
+            <button class="button button-block" type="submit" id="booking-submit">Trimite pe WhatsApp</button>
+            <p class="form-status" id="booking-status" aria-live="polite"></p>
+          </form>
+        </div>
+
+        <div class="database-card availability-static-card reveal">
+          <div class="card-heading card-heading-tight">
+            <p class="eyebrow">Calendar public</p>
+            <h3>Disponibilitate clara pentru oaspeti, cu acces separat pentru proprietar.</h3>
+            <p>Vizitatorii pot doar consulta calendarul. Tu si detinatorul puteti intra separat pentru a marca zilele.</p>
+          </div>
+
+          <div class="source-lock-note panel-surface">
+            <strong>Setarile generale raman in cod</strong>
+            <span>Numarul de WhatsApp si intervalele de baza raman in <code>app.js</code>, iar zilele se pot marca simplu din panoul de proprietar de mai jos.</span>
+          </div>
+
+          <div class="owner-entry-card panel-surface">
+            <div>
+              <strong>Editezi calendarul tot aici</strong>
+              <span>Panoul proprietar se deschide in acelasi site, pe acelasi port, fara pagina separata.</span>
+            </div>
+            <button class="button button-ghost owner-entry-button" type="button" data-owner-access-toggle>
+              Acces proprietar
+            </button>
+          </div>
+
+          <div class="availability-month-nav" aria-label="Navigare luna calendar public">
+            <button class="availability-month-button" type="button" id="availability-month-prev" aria-label="Luna anterioara">
+              <span aria-hidden="true">&#8592;</span>
+            </button>
+
+            <div class="availability-month-copy">
+              <strong id="availability-month-label">aprilie 2026</strong>
+              <span>Schimbi luna si verifici rapid disponibilitatea pentru fiecare cazare.</span>
+            </div>
+
+            <button class="availability-month-button" type="button" id="availability-month-next" aria-label="Luna urmatoare">
+              <span aria-hidden="true">&#8594;</span>
+            </button>
+          </div>
+
+          <div class="calendar-legend calendar-legend-static">
+            <span><i class="legend-dot legend-free"></i>Liber</span>
+            <span><i class="legend-dot legend-booked"></i>Ocupat</span>
+            <span><i class="legend-dot legend-today"></i>Azi</span>
+          </div>
+
+          <div class="availability-overview" data-availability-overview></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section overview-section">
+      <div class="container overview-layout">
+        <div class="section-copy reveal">
+          <p class="eyebrow">Povestea proprietatii</p>
+          <h2>AFRODITI Studios Grigoriu Luxury Apartments inseamna camere noi, terase albe, tonuri calme si o locatie foarte aproape de plaja.</h2>
+          <p>
+            Din materialele primite reiese clar directia proprietatii: spatii proaspete, foarte curate,
+            camere cu lumina buna, terase si balcoane utile, accente moderne si o proximitate reala fata de plaja.
+            Asta e si directia noului site: mai clar, mai calm si mult mai usor de folosit pentru rezervari.
+          </p>
+          <p>
+            In loc de un simplu landing page, ai acum un nucleu de lucru care poate functiona ca prezentare,
+            galerie, calendar public de disponibilitate, panou privat pentru zilele ocupate si punct de plecare pentru cererile trimise pe WhatsApp.
+          </p>
+
+          <div class="overview-points">
+            <article>
+              <strong>Camere noi si curate</strong>
+              <span>accentul principal din reviews este curatenia si faptul ca totul arata foarte nou.</span>
+            </article>
+            <article>
+              <strong>Aproape de plaja</strong>
+              <span>mai multe review-uri mentioneaza distanta buna fata de plaja si zona linistita.</span>
+            </article>
+            <article>
+              <strong>Host foarte apreciat</strong>
+              <span>ospitalitatea si disponibilitatea gazdei apar constant in comentariile oaspetilor.</span>
+            </article>
+          </div>
+        </div>
+
+        <div class="overview-collage reveal">
+          <figure class="collage-card collage-card-large">
+            <img src="Images/699517290.jpg" alt="Studio cu pat dublu, canapea si chicineta" loading="lazy" decoding="async">
+          </figure>
+          <figure class="collage-card">
+            <img src="Images/696118666.jpg" alt="Balcon cu scaune albastre si vedere spre strada" loading="lazy" decoding="async">
+          </figure>
+          <figure class="collage-card">
+            <img src="Images/696794119.jpg" alt="Detaliu cu prosoape pe patul dublu" loading="lazy" decoding="async">
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery-section" id="gallery">
+      <div class="container section-heading reveal">
+        <p class="eyebrow">Galerie corecta</p>
+        <h2>Galeria este acum normala si usor de controlat: swipe pe telefon, navigare cu sageti pe desktop.</h2>
+        <p>
+          Am pastrat doar fotografiile reale ale proprietatii si le-am mutat intr-un carousel clar,
+          astfel incat review-urile sa ramana separate si galeria sa fie mult mai simplu de parcurs.
+        </p>
+      </div>
+
+        <div class="container gallery-carousel reveal">
+        <div class="gallery-carousel-head">
+          <div>
+            <strong>Toate fotografiile proprietatii</strong>
+            <span data-gallery-count>33 imagini reale in galerie</span>
+          </div>
+
+          <div class="gallery-arrows" aria-label="Navigare galerie">
+            <button class="gallery-arrow" type="button" id="gallery-prev" aria-label="Imagine anterioara">
+              <span aria-hidden="true">&#8592;</span>
+            </button>
+            <button class="gallery-arrow" type="button" id="gallery-next" aria-label="Imagine urmatoare">
+              <span aria-hidden="true">&#8594;</span>
+            </button>
+          </div>
+        </div>
+
+          <div class="gallery-viewport" id="gallery-viewport" role="region" aria-label="Galerie foto Afroditi Studios">
+            <div class="gallery-track" data-gallery-track></div>
+          </div>
+
+        <p class="gallery-helper">
+          Pe telefon faci scroll stanga-dreapta direct cu degetul. Pe desktop folosesti sagetile pentru a merge prin imagini.
+        </p>
+      </div>
+    </section>
+
+    <section class="video-band">
+      <video class="video-band-media" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+        <source src="Images/Video.mp4" type="video/mp4">
+      </video>
+      <div class="video-band-overlay"></div>
+      <div class="container video-band-content">
+        <p class="eyebrow">Atmosfera</p>
+        <h2>Un layer vizual in fundal, pastrat discret, ca sa nu incarce navigarea si booking flow-ul.</h2>
+      </div>
+    </section>
+
+    <section class="section facilities-section" id="facilities">
+      <div class="container section-heading reveal">
+        <p class="eyebrow">Facilitati</p>
+        <h2>Am trecut in site exact directiile vizuale si functionale din screenshot-ul de facilitati primit din Booking.</h2>
+        <p>
+          Sectiunea este construita pe punctele care apar clar in capturile tale: camere nefumatori,
+          balcon, terasa, vedere la mare, WiFi gratuit, aer conditionat, gratar si parcare gratuita.
+        </p>
+      </div>
+
+      <div class="container amenities-grid" data-amenities-grid></div>
+    </section>
+
+    <section class="section important-section" id="important">
+      <div class="container info-layout">
+        <div class="section-copy reveal">
+          <p class="eyebrow">Informatii importante</p>
+          <h2>Am structurat separat informatiile utile pentru oaspete, ca sa fie mai usor de gasit si de actualizat.</h2>
+          <p>
+            Din materialele Booking se vad clar cateva idei importante: aproape de plaja, locatie excelenta,
+            camere cu balcon si terasa, unitati cu baie privata si bucatarie utilata, plus acces bun spre punctele
+            locale de interes.
+          </p>
+        </div>
+
+        <div class="info-cards" data-important-cards></div>
+      </div>
+    </section>
+
+    <section class="section legal-section" id="legal">
+      <div class="container legal-layout">
+        <div class="section-copy reveal">
+          <p class="eyebrow">Informatii importante si juridice</p>
+          <h2>Partea juridica si operationala trebuie sa fie la fel de clara ca galeria.</h2>
+          <p>
+            Sectiunea aceasta leaga formularul de WhatsApp, calendarul public si comunicarea directa cu oaspetii,
+            astfel incat sa nu existe diferente intre ce este disponibil si ce se comunica public.
+          </p>
+        </div>
+
+        <div class="legal-list" data-legal-list></div>
+      </div>
+    </section>
+
+    <section class="section reviews-section" id="reviews">
+      <div class="container section-heading reveal">
+        <p class="eyebrow">Review-uri extrase</p>
+        <h2>Scorul de 9.9 ramane ancora principala, iar review-urile vizibile in capturile Booking sunt acum afisate complet, fara carusel 3D.</h2>
+        <p>
+          Am pastrat doar sumarul si review-urile extrase clar din screenshot-uri, ca zona de incredere sa fie mai curata,
+          mai usor de citit si mai apropiata de ce vezi in Booking.
+        </p>
+      </div>
+
+      <div class="container reviews-layout">
+        <div class="review-summary-card reveal">
+          <div class="review-summary-top">
+            <span class="rating-chip">9.9</span>
+            <div>
+              <strong>Exceptional</strong>
+              <span>19 evaluari Booking folosite ca baza pentru sectiunea de incredere</span>
+            </div>
+          </div>
+
+          <div class="score-bars" data-score-bars></div>
+        </div>
+
+        <div class="review-focus-card reveal">
+          <p class="eyebrow">Semnal clar din Booking</p>
+          <h3>Scorul general ramane sus, iar dedesubt ai doar review-urile extrase separat, intr-o forma clara si completa.</h3>
+          <p>
+            Ideile care se repeta cel mai des sunt aceleasi: curatenie impecabila, gazda primitoare, camere noi,
+            liniste si proximitate fata de plaja.
+          </p>
+
+          <div class="review-pillars">
+            <span>curatenie impecabila</span>
+            <span>gazda foarte bine vazuta</span>
+            <span>aproape de plaja</span>
+            <span>camere noi</span>
+            <span>atmosfera linistita</span>
+          </div>
+
+          <div class="review-proof-note">
+            <strong>19 evaluari Booking</strong>
+            <span>Mai jos apar toate review-urile lizibile extrase separat din screenshot-urile primite.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="container review-board reveal">
+        <div class="review-board-head">
+          <div>
+            <p class="eyebrow">Sectiune completa de review-uri</p>
+            <h3>Toate review-urile lizibile din screenshot-uri sunt grupate aici integral, intr-un format mai curat.</h3>
+          </div>
+
+          <div class="review-board-stats">
+            <strong>8 review-uri lizibile extrase</strong>
+            <span>toate cele care se vad clar in screenshot-urile Booking primite</span>
+          </div>
+        </div>
+
+        <div class="review-board-tags">
+          <span>Plaja</span>
+          <span>Curatenie</span>
+          <span>Baie</span>
+          <span>Liniste</span>
+          <span>Camere</span>
+        </div>
+
+        <div class="review-list" data-review-list></div>
+      </div>
+    </section>
+
+    <section class="section contact-section" id="contact">
+      <div class="container contact-layout">
+        <div class="section-copy reveal">
+          <p class="eyebrow">Social & contact</p>
+          <h2>Fara formular clasic, dar cu destinatii clare: WhatsApp, Instagram si TikTok.</h2>
+          <p>
+            Am lasat aici doar iesirile publice de care ai nevoie real: contact rapid si social media, fara alte link-uri care sa incarce inutil sectiunea.
+          </p>
+        </div>
+
+        <div class="social-grid reveal" id="social-grid">
+          <a
+            class="social-card social-card-tiktok"
+            href="https://www.tiktok.com/@cosmin.ovidiu.gri3"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span class="social-icon" aria-hidden="true">
+              <svg viewBox="0 0 64 64" role="img" focusable="false">
+                <rect x="6" y="6" width="52" height="52" rx="18" fill="currentColor"></rect>
+                <path d="M39.5 19.5c1.7 3.2 4.1 5.1 7.4 5.8v5.8a14 14 0 0 1-7.4-2.1v9.6c0 5.9-4.6 10.7-10.8 10.7-6 0-10.7-4.6-10.7-10.2 0-6.1 5-10.6 11.5-10.6.7 0 1.3.1 2 .2v6c-.5-.2-1.1-.3-1.8-.3-2.8 0-5 1.8-5 4.5 0 2.5 2 4.5 4.7 4.5 3 0 4.8-2.1 4.8-5.7V14.8h5.3z" fill="#fff7ef"></path>
+              </svg>
+            </span>
+            <div>
+              <strong>TikTok</strong>
+              <span>@cosmin.ovidiu.gri3</span>
+            </div>
+          </a>
+
+          <a
+            class="social-card social-card-instagram"
+            href="https://www.instagram.com/cosminovidiugrigoriu/?hl=en"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span class="social-icon" aria-hidden="true">
+              <svg viewBox="0 0 64 64" role="img" focusable="false">
+                <defs>
+                  <linearGradient id="instagramGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#feda75"></stop>
+                    <stop offset="35%" stop-color="#fa7e1e"></stop>
+                    <stop offset="68%" stop-color="#d62976"></stop>
+                    <stop offset="100%" stop-color="#4f5bd5"></stop>
+                  </linearGradient>
+                </defs>
+                <rect x="6" y="6" width="52" height="52" rx="18" fill="url(#instagramGradient)"></rect>
+                <rect x="20" y="20" width="24" height="24" rx="8" fill="none" stroke="#fff7ef" stroke-width="4"></rect>
+                <circle cx="32" cy="32" r="6" fill="none" stroke="#fff7ef" stroke-width="4"></circle>
+                <circle cx="41.5" cy="22.5" r="2.5" fill="#fff7ef"></circle>
+              </svg>
+            </span>
+            <div>
+              <strong>Instagram</strong>
+              <span>@cosminovidiugrigoriu</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>AFRODITI Studios Grigoriu Luxury Apartments</strong>
+        <span>Galerie corecta, review-uri reale, cereri pe WhatsApp fara suprapuneri si panou privat pentru calendar.</span>
+      </div>
+      <div class="footer-actions">
+        <a href="#page-top">Inapoi sus</a>
+        <button class="owner-footer-trigger" type="button" data-owner-access-toggle aria-label="Acces proprietar" title="Acces proprietar">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="7" cy="7" r="2.1" fill="currentColor"></circle>
+            <circle cx="17" cy="7" r="2.1" fill="currentColor"></circle>
+            <circle cx="7" cy="17" r="2.1" fill="currentColor"></circle>
+            <circle cx="17" cy="17" r="2.1" fill="currentColor"></circle>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <div class="owner-modal" id="owner-modal" hidden>
+    <div class="owner-modal-backdrop" data-owner-close></div>
+
+    <div class="owner-modal-shell" role="dialog" aria-modal="true" aria-labelledby="owner-modal-title">
+      <button class="owner-modal-close" type="button" id="owner-modal-close" aria-label="Inchide fereastra">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <div class="owner-modal-head">
+        <p class="eyebrow">Acces proprietar</p>
+        <h2 id="owner-modal-title">Login simplu si acces direct la editorul de calendar.</h2>
+        <p>Dupa autentificare se deschide imediat zona in care marchezi zilele ca <strong>ocupate</strong> sau <strong>libere</strong>.</p>
+      </div>
+
+      <div class="owner-modal-body" id="owner-access-area">
+        <div class="panel-surface owner-setup-card" id="owner-setup-card" hidden>
+          <div class="card-heading card-heading-tight">
+            <p class="eyebrow">Pornire panou</p>
+            <h3>Panoul privat are nevoie de backendul site-ului.</h3>
+            <p>Deschide varianta rulata prin <code>start-server.bat</code>, <code>vercel dev</code> sau versiunea deja publicata pe Vercel.</p>
+          </div>
+
+          <p class="mode-note">
+            Daca esti pe <code>127.0.0.1:5501</code> sau ai deschis <code>index.html</code> separat, login-ul nu poate functiona aici.
+          </p>
+
+          <p class="owner-setup-hint">
+            Acces local: <code>http://127.0.0.1:8787/owner</code>
+          </p>
+        </div>
+
+        <form class="panel-surface owner-login-card stack-form" id="owner-login-form" hidden>
+          <div class="card-heading card-heading-tight">
+            <p class="eyebrow">Login proprietar</p>
+            <h3>Intri si editezi direct calendarul.</h3>
+            <p>User si parola deschid imediat editorul simplu pentru zilele din calendar.</p>
+          </div>
+
+          <div class="field-grid field-grid-2">
+            <label>
+              <span>User</span>
+              <input type="text" name="ownerUsername" autocomplete="username" required>
+            </label>
+
+            <label>
+              <span>Parola</span>
+              <input type="password" name="ownerPassword" autocomplete="current-password" required>
+            </label>
+          </div>
+
+          <button class="button button-block" type="submit">Intra in calendar</button>
+          <p class="owner-login-hint" id="owner-login-hint"></p>
+          <p class="form-status" id="owner-login-status" aria-live="polite"></p>
+        </form>
+
+        <div class="panel-surface owner-panel-card" id="owner-panel" hidden>
+          <div class="owner-panel-head">
+            <div>
+              <p class="eyebrow">Editor calendar</p>
+              <h3>Marchezi doar zilele ca ocupate sau libere.</h3>
+            </div>
+            <button class="button button-ghost-light button-small" type="button" id="owner-logout">
+              Logout
+            </button>
+          </div>
+
+          <div class="owner-panel-top">
+            <label>
+              <span>Cazare</span>
+              <select id="owner-accommodation-select" data-owner-accommodation-select></select>
+            </label>
+
+            <div class="owner-mode-block">
+              <span>Marcaj</span>
+              <div class="owner-mode-switch">
+                <button class="owner-mode-button is-active" type="button" data-owner-mode="occupied">
+                  Ocupat
+                </button>
+                <button class="owner-mode-button" type="button" data-owner-mode="free">
+                  Liber
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="owner-month-nav">
+            <button class="owner-month-button" type="button" id="owner-month-prev" aria-label="Luna anterioara">
+              <span aria-hidden="true">&#8592;</span>
+            </button>
+
+            <div class="owner-month-copy">
+              <strong id="owner-month-label">aprilie 2026</strong>
+              <span>Apesi pe fiecare zi si o marchezi simplu: ocupata sau libera.</span>
+            </div>
+
+            <button class="owner-month-button" type="button" id="owner-month-next" aria-label="Luna urmatoare">
+              <span aria-hidden="true">&#8594;</span>
+            </button>
+          </div>
+
+          <div class="calendar-legend owner-calendar-legend">
+            <span><i class="legend-dot legend-free"></i>Liber</span>
+            <span><i class="legend-dot legend-booked"></i>Ocupat</span>
+            <span><i class="legend-dot legend-today"></i>Azi</span>
+          </div>
+
+          <div class="calendar-grid owner-calendar-grid" data-owner-calendar></div>
+          <p class="mode-note">Daca apesi din nou pe aceeasi stare, ziua revine la setarea initiala.</p>
+          <p class="form-status" id="owner-status" aria-live="polite"></p>
+
+          <div class="owner-settings-block">
+            <div class="card-heading card-heading-tight">
+              <p class="eyebrow">Credentiale owner</p>
+              <h3>Schimbi userul si parola direct din panou.</h3>
+              <p>Noile date raman salvate si dupa deploy pe Vercel, daca storage-ul este configurat.</p>
+            </div>
+
+            <form class="stack-form compact-form" id="owner-account-form">
+              <div class="field-grid field-grid-2">
+                <label>
+                  <span>Parola curenta</span>
+                  <input type="password" name="currentOwnerPassword" autocomplete="current-password" required>
+                </label>
+
+                <label>
+                  <span>User nou</span>
+                  <input type="text" name="nextOwnerUsername" autocomplete="username" required>
+                </label>
+              </div>
+
+              <div class="field-grid field-grid-2">
+                <label>
+                  <span>Parola noua</span>
+                  <input type="password" name="nextOwnerPassword" autocomplete="new-password" required>
+                </label>
+
+                <label>
+                  <span>Confirma parola noua</span>
+                  <input type="password" name="confirmOwnerPassword" autocomplete="new-password" required>
+                </label>
+              </div>
+
+              <button class="button" type="submit">Salveaza noile date</button>
+              <p class="form-status" id="owner-account-status" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
+
+
+
+

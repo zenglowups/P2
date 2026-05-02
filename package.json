@@ -1,0 +1,16 @@
+{
+  "name": "afroditi-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Presentation website with owner login and calendar management for AFRODITI Studios Grigoriu Luxury Apartments.",
+  "scripts": {
+    "start": "node server.js",
+    "dev:vercel": "npx vercel dev"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.3.3"
+  }
+}
