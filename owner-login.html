@@ -144,6 +144,24 @@
 
               <div class="owner-settings-block">
                 <div class="card-heading card-heading-tight">
+                  <p class="eyebrow">Contact public</p>
+                  <h3>Setezi numarul WhatsApp pentru formular.</h3>
+                  <p>Acesta este numarul public folosit cand un oaspete trimite cererea de cazare.</p>
+                </div>
+
+                <form class="stack-form compact-form" id="owner-contact-form">
+                  <label>
+                    <span>Numar WhatsApp</span>
+                    <input type="text" name="ownerWhatsappNumber" inputmode="tel" placeholder="Ex: 40741234567">
+                  </label>
+
+                  <button class="button" type="submit">Salveaza numarul</button>
+                  <p class="form-status" id="owner-contact-status" aria-live="polite"></p>
+                </form>
+              </div>
+
+              <div class="owner-settings-block">
+                <div class="card-heading card-heading-tight">
                   <p class="eyebrow">Credentiale owner</p>
                   <h3>Schimbi userul si parola direct din panou.</h3>
                   <p>Noile date raman salvate si dupa deploy pe Vercel, daca storage-ul este configurat.</p>

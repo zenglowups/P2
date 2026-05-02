@@ -1,0 +1,14 @@
+.env
+.env.local
+.env.*.local
+node_modules/
+data/owner-state.json
+chrome-profile*/
+edge-profile*/
+server-test-stdout.log
+server-test-stderr.log
+preview*.png
+preview*.jpg
+preview*.html
+*.tmp
+*.dmp

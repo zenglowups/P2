@@ -1,6 +1,6 @@
 const PROPERTY_NAME = "AFRODITI Studios Grigoriu Luxury Apartments";
 const PROPERTY_LOCATION = "Paralia Katerinis, Grecia";
-const DEFAULT_OWNER_USERNAME = "afroditi";
+const OWNER_USERNAME_PLACEHOLDER = "User proprietar";
 const LOCAL_OWNER_SERVER_URL = "http://127.0.0.1:8787/owner";
 const DESKTOP_SPIRAL = window.matchMedia("(min-width: 1081px)");
 const IS_OWNER_PAGE = document.body?.dataset.page === "owner";
@@ -86,64 +86,64 @@ const GALLERY_FILES = [
 
 const GALLERY_COPY = [
   {
-    title: "Exterior luminos",
-    note: "Fatada curata si intrare luminoasa, exact genul de prim cadru care inspira incredere.",
+    title: "Fatada primitoare",
+    note: "Intrare luminoasa si un prim cadru care spune imediat vacanta la mare.",
   },
   {
-    title: "Camera pregatita pentru sejur",
-    note: "Cadru aerisit, tonuri calme si senzatia de unitate noua, foarte bine intretinuta.",
+    title: "Camera pregatita pentru odihna",
+    note: "Pat confortabil, lumina buna si senzatia de spatiu foarte curat.",
   },
   {
     title: "Balcon pentru dimineti lente",
     note: "Zona buna pentru cafea, aer si ritmul acela relaxat de vacanta in Grecia.",
   },
   {
-    title: "Detalii curate",
-    note: "Textile, finisaje si lumina care sustin exact ce se repeta si in review-uri.",
+    title: "Texturi si lumina calda",
+    note: "Detaliile simple pastreaza atmosfera calma si ingrijita.",
   },
   {
     title: "Baie moderna",
-    note: "Un punct vizual important, mai ales pentru partea de curatenie si confort.",
+    note: "Finisaje curate si confortul pe care il cauti intr-un sejur de vara.",
   },
   {
-    title: "Terasa si spatiu exterior",
-    note: "Ajuta mult senzatia de vacanta lejera, fara aglomeratie si fara grabire.",
+    title: "Terasa pentru seri linistite",
+    note: "Un loc bun pentru aer, relaxare si serile lungi de vacanta.",
   },
   {
     title: "Studio complet",
-    note: "Pat, chicineta si zona functionala intr-o compozitie clara si usor de inteles.",
+    note: "Pat, chicineta si zone utile gandite pentru sejururi lejere.",
   },
   {
-    title: "Cadru real al proprietatii",
-    note: "Galeria ramane separata de review-uri, ca sa fie mai simplu de parcurs.",
+    title: "Atmosfera proprietatii",
+    note: "Totul ramane luminos, ordonat si usor de parcurs vizual.",
   },
 ];
 
 const AMENITIES = [
-  ["Apartamente", "Unitati noi, bine luminate, potrivite pentru sejururi relaxate aproape de plaja."],
-  ["Parcare gratuita", "Un plus important pentru oaspetii care vin cu masina."],
-  ["WiFi gratuit inclus", "Conectivitate buna pentru sejururi lejere sau lucru remote."],
-  ["Transfer de la si/sau la aeroport", "Optional, usor de mentionat si in comunicarea directa pe WhatsApp."],
-  ["Gratar", "Facilitate notata in materialele Booking si utila pentru pozitionarea relaxata."],
-  ["Camere pentru nefumatori", "Un standard cautat pentru familii, cupluri si oaspeti premium."],
-  ["Balcon", "Cadru important pentru cafeaua de dimineata si aerul de vacanta."],
-  ["Vedere la mare", "Foarte utila pentru copy-ul comercial si decizia de booking."],
-  ["Aer conditionat", "Esential pentru sezonul cald si asteptarile unei proprietati premium."],
-  ["Terasa", "Unul dintre punctele vizuale cele mai puternice din galeria reala."],
+  ["Apartamente", "Studios luminoase, bine organizate, potrivite pentru sejururi relaxate la mare."],
+  ["Parcare gratuita", "Confort in plus pentru sosiri cu masina si deplasari fara graba."],
+  ["WiFi gratuit inclus", "Util pentru conectivitate zilnica, planuri de plaja sau cateva ore de lucru."],
+  ["Transfer de la si/sau la aeroport", "Optiune practica pentru un drum mai usor pana la cazare."],
+  ["Gratar", "Un detaliu care completeaza atmosfera relaxata a proprietatii."],
+  ["Camere pentru nefumatori", "Un plus de confort pentru cupluri, familii si sejururi mai lungi."],
+  ["Balcon", "Spatiu bun pentru cafeaua de dimineata sau o pauza linistita seara."],
+  ["Vedere la mare", "Un detaliu care aduce si mai mult din senzatia de vacanta."],
+  ["Aer conditionat", "Confort important in zilele calde de vara."],
+  ["Terasa", "Una dintre cele mai placute zone pentru relaxare in aer liber."],
 ].map(([name, description]) => ({ name, description }));
 
 const IMPORTANT_INFO = [
-  ["Locatie foarte buna", "Capturile Booking indica proximitate buna fata de plaja Kolimvisis si pozitionare buna pentru cupluri."],
-  ["Unitati bine dotate", "Balcon, terasa, baie privata, chicineta si aer conditionat apar constant in materialele primite."],
-  ["Zona buna pentru explorare", "Muntele Olimp este mentionat la 27 km, Dion la 30 km, iar aeroportul la aproximativ 97 km."],
-  ["Sejururi linistite", "Directia generala a proprietatii este relaxata, curata si foarte potrivita pentru vacante fara graba."],
+  ["Foarte aproape de plaja", "Marea este la o plimbare scurta, fara sa pierzi atmosfera linistita a strazii."],
+  ["Unitati bine echipate", "Balconul, terasa, baia privata, chicineta si aerul conditionat sustin un sejur comod."],
+  ["Zona buna pentru explorare", "Proprietatea este un punct placut de plecare pentru plimbari, taverne si escapade prin imprejurimi."],
+  ["Potrivita pentru vacante fara graba", "Atmosfera generala este calma, curata si foarte usor de apreciat de la prima vedere."],
 ].map(([title, text]) => ({ title, text }));
 
 const LEGAL_INFO = [
-  ["Disponibilitatea se actualizeaza manual", "Poti porni de la intervalele din site.js, iar apoi ajusta rapid zilele direct din panoul proprietar."],
-  ["Calendar public pentru oaspeti", "Vizitatorii pot consulta disponibilitatea, iar panoul cu login ramane separat pentru proprietar."],
-  ["Booking si WhatsApp trebuie sa spuna acelasi lucru", "Calendarul public trebuie sa ramana sincronizat cu ce comunici public."],
-  ["Completare obligatorie inainte de publicare", "Adauga numarul real de WhatsApp direct in CONTACT_SETTINGS si pastreaza calendarul public sincronizat."],
+  ["Confirmarea perioadei", "Merita sa trimiti din start intervalul dorit, pentru a primi rapid o varianta potrivita."],
+  ["Ora de sosire", "O ora aproximativa de check-in ajuta gazda sa pregateasca studioul in cele mai bune conditii."],
+  ["Numarul de oaspeti", "Mentioneaza din timp cati adulti si copii calatoresc, pentru alegerea unitatii potrivite."],
+  ["Cereri speciale", "Daca ai nevoie de un detaliu suplimentar pentru sejur, este bine sa il mentionezi inainte de confirmare."],
 ].map(([title, text]) => ({ title, text }));
 
 const SCORE_BARS = [
@@ -288,6 +288,8 @@ const ownerLoginHint = $("#owner-login-hint");
 const ownerLoginStatus = $("#owner-login-status");
 const ownerPanel = $("#owner-panel");
 const ownerLogout = $("#owner-logout");
+const ownerContactForm = $("#owner-contact-form");
+const ownerContactStatus = $("#owner-contact-status");
 const ownerAccountForm = $("#owner-account-form");
 const ownerAccountStatus = $("#owner-account-status");
 const ownerAccommodationSelect = $("[data-owner-accommodation-select]");
@@ -394,7 +396,7 @@ function deriveHighlights(accommodation) {
   return [
     accommodation.capacity ? `capacitate: ${accommodation.capacity}` : "",
     accommodation.summary || "",
-    "calendar public clar pentru disponibilitate",
+    "aproape de plaja si potrivit pentru sejururi relaxate",
   ]
     .filter(Boolean)
     .slice(0, 3);
@@ -461,6 +463,10 @@ function createEmptyOverrideState(accommodations) {
   return Object.fromEntries(accommodations.map((item) => [item.id, { occupied: [], free: [] }]));
 }
 
+function cloneOwnerOverrides(raw) {
+  return normalizeOwnerOverrides(raw);
+}
+
 function normalizeOwnerOverrides(raw) {
   const base = createEmptyOverrideState(appState.accommodations);
   if (!raw || typeof raw !== "object") {
@@ -511,11 +517,14 @@ function createAppState() {
       isAvailable: CAN_USE_OWNER_API,
       isAuthenticated: false,
       panelOpen: IS_OWNER_PAGE || search.get("owner") === "1",
-      usernameHint: DEFAULT_OWNER_USERNAME,
+      usernameHint: "",
       activeAccommodationId: accommodations[0]?.id ?? "",
       activeMonth: /^\d{4}-\d{2}$/.test(configuredMonth) ? configuredMonth : toMonthValue(new Date()),
       activeMode: "occupied",
       overrides: createEmptyOverrideState(accommodations),
+      serverOverrides: createEmptyOverrideState(accommodations),
+      pendingOperations: [],
+      isSyncing: false,
     },
     availability: {
       activeMonth: /^\d{4}-\d{2}$/.test(configuredMonth) ? configuredMonth : toMonthValue(new Date()),
@@ -563,6 +572,47 @@ function getExplicitOwnerStatus(accommodationId, isoDate) {
   return null;
 }
 
+function applyOwnerOverrideChange(overrides, accommodationId, isoDate, mode) {
+  const bucket = normalizeOverrideBucket(overrides?.[accommodationId]);
+  const cleanMode = mode === "free" ? "free" : "occupied";
+  const currentList = cleanMode === "free" ? bucket.free : bucket.occupied;
+  const alreadyApplied = currentList.includes(isoDate);
+
+  bucket.occupied = bucket.occupied.filter((day) => day !== isoDate);
+  bucket.free = bucket.free.filter((day) => day !== isoDate);
+
+  if (!alreadyApplied) {
+    const targetList = cleanMode === "free" ? bucket.free : bucket.occupied;
+    targetList.push(isoDate);
+    targetList.sort();
+  }
+
+  overrides[accommodationId] = {
+    occupied: uniqueSortedDays(bucket.occupied),
+    free: uniqueSortedDays(bucket.free),
+  };
+}
+
+function syncOwnerOverridesFromServer(rawOverrides) {
+  appState.owner.serverOverrides = cloneOwnerOverrides(rawOverrides);
+  appState.owner.overrides = cloneOwnerOverrides(appState.owner.serverOverrides);
+
+  appState.owner.pendingOperations.forEach((operation) => {
+    applyOwnerOverrideChange(
+      appState.owner.overrides,
+      operation.accommodationId,
+      operation.date,
+      operation.mode,
+    );
+  });
+}
+
+function isOwnerDayPending(accommodationId, isoDate) {
+  return appState.owner.pendingOperations.some(
+    (operation) => operation.accommodationId === accommodationId && operation.date === isoDate,
+  );
+}
+
 function getDayStatus(accommodationId, isoDate, combinedSet = null) {
   const busySet = combinedSet ?? getCombinedBusySet(accommodationId);
   return {
@@ -591,6 +641,72 @@ function setStatus(target, message, type = "") {
   }
 }
 
+let ownerRefreshFrame = 0;
+
+function scheduleOwnerDataRefresh() {
+  if (ownerRefreshFrame) {
+    return;
+  }
+
+  ownerRefreshFrame = window.requestAnimationFrame(() => {
+    ownerRefreshFrame = 0;
+    renderRoomTypes();
+    renderAvailabilityOverview();
+    renderOwnerPanel();
+  });
+}
+
+async function flushOwnerPendingOperations() {
+  if (appState.owner.isSyncing || !appState.owner.pendingOperations.length) {
+    return;
+  }
+
+  appState.owner.isSyncing = true;
+  const operation = appState.owner.pendingOperations[0];
+
+  try {
+    const payload = await fetchJson("/api/calendar/toggle", {
+      method: "POST",
+      body: JSON.stringify({
+        accommodationId: operation.accommodationId,
+        date: operation.date,
+        mode: operation.mode,
+      }),
+    });
+
+    appState.owner.pendingOperations.shift();
+    syncOwnerOverridesFromServer(payload?.overrides);
+
+    if (appState.owner.pendingOperations.length) {
+      setStatus(
+        ownerStatus,
+        `Sincronizez inca ${appState.owner.pendingOperations.length} modificari din calendar...`,
+        "",
+      );
+    } else {
+      setStatus(
+        ownerStatus,
+        `${formatDate(operation.date)} este acum marcata ca ${operation.mode === "occupied" ? "ocupata" : "libera"}.`,
+        "success",
+      );
+    }
+  } catch (error) {
+    appState.owner.pendingOperations.shift();
+    syncOwnerOverridesFromServer(appState.owner.serverOverrides);
+    setStatus(
+      ownerStatus,
+      error.message || "Nu am putut salva modificarea. Am revenit la ultima varianta sincronizata.",
+      "error",
+    );
+  } finally {
+    appState.owner.isSyncing = false;
+    scheduleOwnerDataRefresh();
+    if (appState.owner.pendingOperations.length) {
+      void flushOwnerPendingOperations();
+    }
+  }
+}
+
 function getAccommodationStatus(accommodation, combinedSet = null) {
   const busySet = combinedSet ?? getCombinedBusySet(accommodation.id);
   const today = toInputDate(new Date());
@@ -599,7 +715,7 @@ function getAccommodationStatus(accommodation, combinedSet = null) {
     return {
       label: "Ocupat",
       className: "is-busy",
-      helper: "Ziua de azi este marcata ocupata in calendar.",
+      helper: "Perioada curenta este deja rezervata pentru aceasta unitate.",
     };
   }
 
@@ -619,12 +735,12 @@ function getAccommodationStatus(accommodation, combinedSet = null) {
     ? {
         label: "Disponibil",
         className: "is-free",
-        helper: `Urmatoarea zi blocata este pe ${formatDate(nextBusyDay)}.`,
+        helper: `Urmatoarea zi deja rezervata este ${formatDate(nextBusyDay)}.`,
       }
     : {
         label: "Disponibil",
         className: "is-free",
-        helper: "Nu exista zile marcate ocupate in urmatoarele luni.",
+        helper: "Momentan nu apar rezervari in lunile urmatoare.",
       };
 }
 
@@ -746,7 +862,7 @@ function renderReviewSpiral() {
           <div class="review-card-tags">
             ${item.tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}
           </div>
-          <p class="review-card-footnote">Extras separat din capturile Booking din folder.</p>
+          <p class="review-card-footnote">Impresie lasata de un oaspete dupa sejur.</p>
         </div>
       </article>
     `,
@@ -878,7 +994,7 @@ function renderRoomTypes() {
           <ul>
             <li>${escapeHtml(accommodation.capacity)}</li>
             ${accommodation.highlights.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
-            <li>${busyDays ? `${busyDays} zile ocupate in luna afisata` : "fara zile ocupate in luna afisata"}</li>
+            <li>${busyDays ? `${busyDays} zile deja rezervate in luna selectata` : "momentan fara zile rezervate in luna selectata"}</li>
           </ul>
           <p>${escapeHtml(status.helper)}</p>
         </article>
@@ -923,7 +1039,7 @@ function buildStaticCalendarCells(accommodationId, monthValue) {
       classes.push("is-today");
     }
 
-    const note = outside ? "" : isBooked ? "Ocupat" : "Liber";
+    const note = outside ? "" : isBooked ? "Rezervat" : "Disponibil";
     cells.push(`
       <div class="${classes.join(" ")}">
         <span class="calendar-day-number">${date.getDate()}</span>
@@ -957,8 +1073,10 @@ function renderAvailabilityOverview() {
             </div>
             <span class="room-type-status ${status.className}">${status.label}</span>
           </div>
-          <div class="calendar-grid availability-sheet-grid">${cells}</div>
-          <p class="availability-sheet-note">${busyDayCount} zile ocupate afisate in aceasta luna.</p>
+          <div class="calendar-scroll">
+            <div class="calendar-grid availability-sheet-grid">${cells}</div>
+          </div>
+          <p class="availability-sheet-note">${busyDayCount ? `${busyDayCount} zile rezervate in aceasta luna.` : "Momentan nu apar zile rezervate in aceasta luna."}</p>
         </article>
       `;
     })
@@ -991,6 +1109,7 @@ function buildOwnerCalendarCells(accommodationId, monthValue) {
     const isoDate = toInputDate(date);
     const outside = date.getMonth() !== monthIndex;
     const { isBooked, explicitStatus } = getDayStatus(accommodationId, isoDate, busySet);
+    const isPending = !outside && isOwnerDayPending(accommodationId, isoDate);
 
     const classes = ["calendar-day", "owner-calendar-day"];
     if (outside) {
@@ -1010,8 +1129,11 @@ function buildOwnerCalendarCells(accommodationId, monthValue) {
     if (isoDate === todayIso) {
       classes.push("is-today");
     }
+    if (isPending) {
+      classes.push("is-pending");
+    }
 
-    const note = outside ? "" : isBooked ? "Ocupat" : "Liber";
+    const note = outside ? "" : isPending ? "Se salveaza" : isBooked ? "Ocupat" : "Liber";
     cells.push(`
       <button
         class="${classes.join(" ")}"
@@ -1054,28 +1176,36 @@ function getOwnerAccountInput(fieldName) {
   return field instanceof HTMLInputElement ? field : null;
 }
 
+function getOwnerContactInput(fieldName) {
+  const field = ownerContactForm?.elements?.namedItem(fieldName);
+  return field instanceof HTMLInputElement ? field : null;
+}
+
 function syncOwnerLoginForm() {
   const usernameInput = getOwnerLoginInput("ownerUsername");
   if (usernameInput) {
-    usernameInput.placeholder = appState.owner.usernameHint || DEFAULT_OWNER_USERNAME;
-    if (!usernameInput.value.trim()) {
-      usernameInput.value = appState.owner.usernameHint || DEFAULT_OWNER_USERNAME;
-    }
+    usernameInput.placeholder = OWNER_USERNAME_PLACEHOLDER;
   }
 
   if (ownerLoginHint) {
-    ownerLoginHint.textContent = `User pregatit: ${appState.owner.usernameHint || DEFAULT_OWNER_USERNAME}`;
+    ownerLoginHint.textContent = "Datele de acces raman private si nu sunt afisate public.";
   }
 }
 
 function syncOwnerAccountForm() {
   const nextUsernameInput = getOwnerAccountInput("nextOwnerUsername");
   if (nextUsernameInput) {
-    nextUsernameInput.placeholder = appState.owner.usernameHint || DEFAULT_OWNER_USERNAME;
-    if (!nextUsernameInput.value.trim()) {
-      nextUsernameInput.value = appState.owner.usernameHint || DEFAULT_OWNER_USERNAME;
-    }
+    nextUsernameInput.placeholder = appState.owner.usernameHint || OWNER_USERNAME_PLACEHOLDER;
   }
+}
+
+function syncOwnerContactForm() {
+  const whatsappInput = getOwnerContactInput("ownerWhatsappNumber");
+  if (!whatsappInput) {
+    return;
+  }
+
+  whatsappInput.value = appState.settings.whatsappNumber || "";
 }
 
 function focusOwnerEntry() {
@@ -1126,6 +1256,7 @@ function renderOwnerAccess() {
   });
 
   syncOwnerLoginForm();
+  syncOwnerContactForm();
   syncOwnerAccountForm();
 
   if (IS_OWNER_PAGE) {
@@ -1182,8 +1313,8 @@ function syncBookingSetupState() {
   bookingSubmit.disabled = !hasWhatsAppNumber;
   bookingSubmit.setAttribute("aria-disabled", String(!hasWhatsAppNumber));
   bookingFormNote.textContent = hasWhatsAppNumber
-    ? "Calendarul din dreapta este public pentru oaspeti, iar editorul de proprietar se deschide direct in aceeasi pagina."
-    : "Pentru a activa cererile pe WhatsApp trebuie adaugat numarul real in CONTACT_SETTINGS din site.js.";
+    ? "Selectezi perioada dorita, iar calendarul te ajuta sa vezi dintr-o privire ce este disponibil."
+    : "Momentan formularul nu poate fi trimis, pentru ca numarul WhatsApp nu este setat.";
 }
 
 function composeWhatsAppMessage(payload, accommodation) {
@@ -1222,7 +1353,7 @@ function handleBookingSubmit(event) {
   const accommodation = getAccommodationById(accommodationId);
 
   if (!whatsappNumber) {
-    setStatus("booking-status", "Adauga numarul de WhatsApp in CONTACT_SETTINGS din site.js.", "error");
+    setStatus("booking-status", "Momentan contactul pe WhatsApp nu este disponibil.", "error");
     return;
   }
   if (!guestName || !guestPhone || !guestCount) {
@@ -1306,15 +1437,19 @@ async function hydrateOwnerState() {
     const payload = await fetchJson("/api/bootstrap");
     appState.owner.isAvailable = !!payload?.ownerEnabled;
     appState.owner.isAuthenticated = !!payload?.authenticated;
-    appState.owner.usernameHint = String(payload?.ownerUsername || DEFAULT_OWNER_USERNAME).trim() || DEFAULT_OWNER_USERNAME;
-    appState.owner.overrides = normalizeOwnerOverrides(payload?.overrides);
-    renderRoomTypes();
-    renderAvailabilityOverview();
-    renderOwnerPanel();
+    appState.owner.usernameHint = String(payload?.ownerUsername || "").trim();
+    appState.settings.whatsappNumber =
+      sanitizePhone(payload?.whatsappNumber) || sanitizePhone(CONTACT_SETTINGS.whatsappNumber);
+    appState.owner.pendingOperations = [];
+    appState.owner.isSyncing = false;
+    syncOwnerOverridesFromServer(payload?.overrides);
+    scheduleOwnerDataRefresh();
   } catch {
     appState.owner.isAvailable = false;
   }
 
+  syncBookingSetupState();
+  syncOwnerContactForm();
   renderOwnerAccess();
   focusOwnerEntry();
 }
@@ -1346,18 +1481,25 @@ async function handleOwnerLoginSubmit(event) {
     });
 
     appState.owner.isAuthenticated = true;
-    appState.owner.usernameHint = String(payload?.ownerUsername || username).trim() || DEFAULT_OWNER_USERNAME;
-    appState.owner.overrides = normalizeOwnerOverrides(payload?.overrides);
+    appState.owner.usernameHint = String(payload?.ownerUsername || username).trim();
+    appState.settings.whatsappNumber = sanitizePhone(payload?.whatsappNumber) || appState.settings.whatsappNumber;
+    appState.owner.pendingOperations = [];
+    appState.owner.isSyncing = false;
+    syncOwnerOverridesFromServer(payload?.overrides);
     ownerLoginForm.reset();
+    if (ownerContactForm) {
+      ownerContactForm.reset();
+    }
     if (ownerAccountForm) {
       ownerAccountForm.reset();
     }
+    syncBookingSetupState();
+    syncOwnerContactForm();
     setStatus(ownerLoginStatus, "Panoul proprietar este deschis.", "success");
     setStatus(ownerStatus, "", "");
+    setStatus(ownerContactStatus, "", "");
     setStatus(ownerAccountStatus, "", "");
-    renderRoomTypes();
-    renderAvailabilityOverview();
-    renderOwnerPanel();
+    scheduleOwnerDataRefresh();
     focusOwnerEntry();
   } catch (error) {
     setStatus(ownerLoginStatus, error.message || "Date de autentificare invalide.", "error");
@@ -1372,9 +1514,13 @@ async function handleOwnerLogout() {
   }
 
   appState.owner.isAuthenticated = false;
+  appState.owner.pendingOperations = [];
+  appState.owner.isSyncing = false;
+  appState.owner.overrides = cloneOwnerOverrides(appState.owner.serverOverrides);
   renderOwnerAccess();
   setStatus(ownerLoginStatus, "", "");
   setStatus(ownerStatus, "", "");
+  setStatus(ownerContactStatus, "", "");
   setStatus(ownerAccountStatus, "", "");
   focusOwnerEntry();
 }
@@ -1397,28 +1543,23 @@ async function handleOwnerCalendarClick(event) {
     return;
   }
 
-  try {
-    const payload = await fetchJson("/api/calendar/toggle", {
-      method: "POST",
-      body: JSON.stringify({
-        accommodationId: appState.owner.activeAccommodationId,
-        date: isoDate,
-        mode: appState.owner.activeMode,
-      }),
-    });
+  const operation = {
+    accommodationId: appState.owner.activeAccommodationId,
+    date: isoDate,
+    mode: appState.owner.activeMode,
+  };
 
-    appState.owner.overrides = normalizeOwnerOverrides(payload?.overrides);
-    renderRoomTypes();
-    renderAvailabilityOverview();
-    renderOwnerPanel();
-    setStatus(
-      ownerStatus,
-      `${formatDate(isoDate)} este acum marcata ca ${appState.owner.activeMode === "occupied" ? "ocupata" : "libera"}.`,
-      "success",
-    );
-  } catch (error) {
-    setStatus(ownerStatus, error.message || "Nu am putut salva modificarea.", "error");
-  }
+  applyOwnerOverrideChange(appState.owner.overrides, operation.accommodationId, operation.date, operation.mode);
+  appState.owner.pendingOperations.push(operation);
+  scheduleOwnerDataRefresh();
+  setStatus(
+    ownerStatus,
+    appState.owner.pendingOperations.length > 1
+      ? `Am marcat instant ziua. Sincronizez ${appState.owner.pendingOperations.length} modificari...`
+      : `${formatDate(isoDate)} se actualizeaza acum...`,
+    "",
+  );
+  void flushOwnerPendingOperations();
 }
 
 async function handleOwnerAccountSubmit(event) {
@@ -1453,15 +1594,50 @@ async function handleOwnerAccountSubmit(event) {
       }),
     });
 
-    appState.owner.usernameHint = String(payload?.ownerUsername || nextUsername).trim() || DEFAULT_OWNER_USERNAME;
+    appState.owner.usernameHint = String(payload?.ownerUsername || nextUsername).trim();
     appState.owner.isAuthenticated = true;
+    appState.settings.whatsappNumber = sanitizePhone(payload?.whatsappNumber) || appState.settings.whatsappNumber;
     ownerAccountForm.reset();
+    syncBookingSetupState();
+    syncOwnerContactForm();
     syncOwnerAccountForm();
     syncOwnerLoginForm();
     setStatus(ownerAccountStatus, "Noile date de login au fost salvate.", "success");
     setStatus(ownerLoginStatus, "Credentialele active au fost actualizate.", "success");
   } catch (error) {
     setStatus(ownerAccountStatus, error.message || "Nu am putut actualiza datele de login.", "error");
+  }
+}
+
+async function handleOwnerContactSubmit(event) {
+  event.preventDefault();
+  if (!ownerContactForm || !appState.owner.isAuthenticated) {
+    return;
+  }
+
+  const data = new FormData(ownerContactForm);
+  const whatsappNumber = String(data.get("ownerWhatsappNumber") ?? "").trim();
+
+  try {
+    const payload = await fetchJson("/api/contact-update", {
+      method: "POST",
+      body: JSON.stringify({
+        whatsappNumber,
+      }),
+    });
+
+    appState.settings.whatsappNumber = sanitizePhone(payload?.whatsappNumber);
+    syncBookingSetupState();
+    syncOwnerContactForm();
+    setStatus(
+      ownerContactStatus,
+      appState.settings.whatsappNumber
+        ? "Numarul WhatsApp public a fost salvat."
+        : "Numarul WhatsApp a fost golit, iar formularul public a fost dezactivat.",
+      "success",
+    );
+  } catch (error) {
+    setStatus(ownerContactStatus, error.message || "Nu am putut salva numarul WhatsApp.", "error");
   }
 }
 
@@ -1481,6 +1657,12 @@ function updateScrolledHeader() {
 }
 
 function initRevealObserver() {
+  revealItems.forEach((item) => {
+    if (item.getBoundingClientRect().top <= window.innerHeight * 0.92) {
+      item.classList.add("is-visible");
+    }
+  });
+
   if (!("IntersectionObserver" in window)) {
     revealItems.forEach((item) => item.classList.add("is-visible"));
     return;
@@ -1676,6 +1858,10 @@ function initEvents() {
 
 if (ownerLogout) {
   ownerLogout.addEventListener("click", handleOwnerLogout);
+}
+
+if (ownerContactForm) {
+  ownerContactForm.addEventListener("submit", handleOwnerContactSubmit);
 }
 
 if (ownerAccountForm) {
