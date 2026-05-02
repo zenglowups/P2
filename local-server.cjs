@@ -23,6 +23,7 @@ const MIME_TYPES = {
 
 const BLOCKED_STATIC_DIRECTORIES = new Set(["api", "data", "lib", "node_modules"]);
 const BLOCKED_STATIC_FILES = new Set([
+  "local-server.cjs",
   "server.js",
   "package.json",
   "package-lock.json",

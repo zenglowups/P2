@@ -140,7 +140,7 @@ const IMPORTANT_INFO = [
 ].map(([title, text]) => ({ title, text }));
 
 const LEGAL_INFO = [
-  ["Disponibilitatea se actualizeaza manual", "Poti porni de la intervalele din app.js, iar apoi ajusta rapid zilele direct din panoul proprietar."],
+  ["Disponibilitatea se actualizeaza manual", "Poti porni de la intervalele din site.js, iar apoi ajusta rapid zilele direct din panoul proprietar."],
   ["Calendar public pentru oaspeti", "Vizitatorii pot consulta disponibilitatea, iar panoul cu login ramane separat pentru proprietar."],
   ["Booking si WhatsApp trebuie sa spuna acelasi lucru", "Calendarul public trebuie sa ramana sincronizat cu ce comunici public."],
   ["Completare obligatorie inainte de publicare", "Adauga numarul real de WhatsApp direct in CONTACT_SETTINGS si pastreaza calendarul public sincronizat."],
@@ -1183,7 +1183,7 @@ function syncBookingSetupState() {
   bookingSubmit.setAttribute("aria-disabled", String(!hasWhatsAppNumber));
   bookingFormNote.textContent = hasWhatsAppNumber
     ? "Calendarul din dreapta este public pentru oaspeti, iar editorul de proprietar se deschide direct in aceeasi pagina."
-    : "Pentru a activa cererile pe WhatsApp trebuie adaugat numarul real in CONTACT_SETTINGS din app.js.";
+    : "Pentru a activa cererile pe WhatsApp trebuie adaugat numarul real in CONTACT_SETTINGS din site.js.";
 }
 
 function composeWhatsAppMessage(payload, accommodation) {
@@ -1222,7 +1222,7 @@ function handleBookingSubmit(event) {
   const accommodation = getAccommodationById(accommodationId);
 
   if (!whatsappNumber) {
-    setStatus("booking-status", "Adauga numarul de WhatsApp in CONTACT_SETTINGS din app.js.", "error");
+    setStatus("booking-status", "Adauga numarul de WhatsApp in CONTACT_SETTINGS din site.js.", "error");
     return;
   }
   if (!guestName || !guestPhone || !guestCount) {
