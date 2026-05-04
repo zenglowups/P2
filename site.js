@@ -3,7 +3,11 @@ const PROPERTY_LOCATION = "Paralia Katerinis, Grecia";
 const OWNER_USERNAME_PLACEHOLDER = "User proprietar";
 const LOCAL_OWNER_SERVER_URL = "http://127.0.0.1:8787/owner";
 const DESKTOP_SPIRAL = window.matchMedia("(min-width: 1081px)");
+const COMPACT_AVAILABILITY = window.matchMedia("(max-width: 760px)");
 const IS_OWNER_PAGE = document.body?.dataset.page === "owner";
+const INTRO_SESSION_KEY = "afroditi-intro-seen";
+const VISITOR_PREFERENCES_STORAGE_KEY = "afroditi-visitor-preferences";
+const VISITOR_POLICY_VERSION = "2026-05-04-mandatory-analytics";
 
 document.documentElement.classList.add("js-ready");
 
@@ -115,7 +119,7 @@ const GALLERY_COPY = [
   },
   {
     title: "Atmosfera proprietatii",
-    note: "Totul ramane luminos, ordonat si usor de parcurs vizual.",
+    note: "Totul ramane luminos, ordonat si relaxat, de la intrare pana la terasa.",
   },
 ];
 
@@ -257,6 +261,8 @@ const CAN_USE_OWNER_API = HAS_HTTP_PROTOCOL;
 const header = $(".site-header");
 const navToggle = $(".nav-toggle");
 const body = document.body;
+const introOverlay = $("#site-intro");
+const backToTopLinks = $$("[data-back-to-top]");
 const revealItems = $$(".reveal");
 const spiralShell = $(".review-spiral-shell");
 const spiralStage = $("[data-review-spiral-stage]");
@@ -275,9 +281,21 @@ const bookingForm = $("#booking-form");
 const bookingFormNote = $("#booking-form-note");
 const bookingSubmit = $("#booking-submit");
 const availabilityOverview = $("[data-availability-overview]");
-const availabilityMonthLabel = $("#availability-month-label");
-const availabilityMonthPrev = $("#availability-month-prev");
-const availabilityMonthNext = $("#availability-month-next");
+const preferenceStatusLabel = $("[data-preference-status]");
+const openTermsButtons = $$("[data-open-terms]");
+const openPreferencesButtons = $$("[data-open-preferences]");
+const visitorPreferencesModal = $("#visitor-preferences-modal");
+const visitorPreferencesClose = $("#visitor-preferences-close");
+const visitorPreferencesKicker = $("#visitor-preferences-kicker");
+const visitorPreferencesTitle = $("#visitor-preferences-title");
+const visitorPreferencesText = $("#visitor-preferences-text");
+const visitorSavePreferences = $("#visitor-save-preferences");
+const visitorPreferencesStatus = $("#visitor-preferences-status");
+const visitorBackdrop = $("[data-visitor-backdrop]");
+const siteTermsModal = $("#site-terms-modal");
+const siteTermsClose = $("#site-terms-close");
+const termsBackdrop = $("[data-terms-backdrop]");
+const trackableLinks = $$("[data-analytics-event]");
 const ownerAccessToggles = $$("[data-owner-access-toggle]");
 const ownerModal = $("#owner-modal");
 const ownerAccessArea = $("#owner-access-area");
@@ -298,6 +316,10 @@ const ownerMonthPrev = $("#owner-month-prev");
 const ownerMonthNext = $("#owner-month-next");
 const ownerCalendar = $("[data-owner-calendar]");
 const ownerStatus = $("#owner-status");
+const ownerAnalyticsGrid = $("[data-owner-analytics-grid]");
+const ownerAnalyticsDays = $("[data-owner-analytics-days]");
+const ownerAnalyticsVisitors = $("[data-owner-analytics-visitors]");
+const ownerAnalyticsStatus = $("#owner-analytics-status");
 
 const galleryState = {
   index: 0,
@@ -321,6 +343,36 @@ function escapeHtml(value) {
 
 function sanitizePhone(value) {
   return String(value ?? "").replace(/\D+/g, "");
+}
+
+function readLocalVisitorPreferences() {
+  try {
+    const raw = window.localStorage.getItem(VISITOR_PREFERENCES_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeLocalVisitorPreferences(payload) {
+  try {
+    window.localStorage.setItem(
+      VISITOR_PREFERENCES_STORAGE_KEY,
+      JSON.stringify({
+        analyticsEnabled: !!payload?.analyticsEnabled,
+        preferencesSaved: !!payload?.preferencesSaved,
+        policyVersion: String(payload?.policyVersion || VISITOR_POLICY_VERSION).trim() || VISITOR_POLICY_VERSION,
+        savedAt: String(payload?.savedAt || "").trim(),
+        storageMode: String(payload?.storageMode || "").trim(),
+      }),
+    );
+  } catch {
+    // ignoram lipsa localStorage
+  }
+}
+
+function getCurrentPath() {
+  return window.location.pathname || "/";
 }
 
 function parseDate(dateString) {
@@ -348,11 +400,36 @@ function toMonthValue(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 }
 
+function getDefaultCalendarMonthValue(configuredMonth = CONTACT_SETTINGS.calendarMonth) {
+  const normalized = String(configuredMonth ?? "").trim();
+  return /^\d{4}-\d{2}$/.test(normalized) ? normalized : toMonthValue(new Date());
+}
+
+function buildAvailabilityMonthState(accommodations, initialMonth) {
+  return accommodations.reduce((state, accommodation) => {
+    state[accommodation.id] = initialMonth;
+    return state;
+  }, {});
+}
+
 function formatDate(dateString) {
   const date = parseDate(dateString);
   return date
     ? new Intl.DateTimeFormat("ro-RO", { day: "2-digit", month: "short", year: "numeric" }).format(date)
     : "-";
+}
+
+function formatDateTime(dateString) {
+  const date = new Date(dateString);
+  return Number.isNaN(date.getTime())
+    ? "-"
+    : new Intl.DateTimeFormat("ro-RO", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(date);
 }
 
 function formatMonthLabel(monthValue) {
@@ -504,6 +581,7 @@ function createAppState() {
     a.checkIn.localeCompare(b.checkIn),
   );
   const configuredMonth = String(CONTACT_SETTINGS.calendarMonth ?? "").trim();
+  const initialMonth = getDefaultCalendarMonthValue(configuredMonth);
   const search = new URLSearchParams(window.location.search);
 
   return {
@@ -519,15 +597,28 @@ function createAppState() {
       panelOpen: IS_OWNER_PAGE || search.get("owner") === "1",
       usernameHint: "",
       activeAccommodationId: accommodations[0]?.id ?? "",
-      activeMonth: /^\d{4}-\d{2}$/.test(configuredMonth) ? configuredMonth : toMonthValue(new Date()),
+      activeMonth: initialMonth,
       activeMode: "occupied",
       overrides: createEmptyOverrideState(accommodations),
       serverOverrides: createEmptyOverrideState(accommodations),
       pendingOperations: [],
       isSyncing: false,
+      analyticsSummary: null,
+      analyticsLoading: false,
     },
     availability: {
-      activeMonth: /^\d{4}-\d{2}$/.test(configuredMonth) ? configuredMonth : toMonthValue(new Date()),
+      monthByAccommodation: buildAvailabilityMonthState(accommodations, initialMonth),
+    },
+    visitor: {
+      analyticsEnabled: false,
+      preferencesSaved: false,
+      policyVersion: VISITOR_POLICY_VERSION,
+      storageMode: CAN_USE_OWNER_API ? "local-file" : "local-only",
+      shouldShowWelcome: false,
+      modalOpen: false,
+      modalLocked: false,
+      isNewVisitor: false,
+      lastSavedAt: "",
     },
   };
 }
@@ -641,6 +732,247 @@ function setStatus(target, message, type = "") {
   }
 }
 
+function applyVisitorPayload(payload = {}) {
+  appState.visitor.analyticsEnabled = !!payload.analyticsEnabled;
+  appState.visitor.preferencesSaved = !!payload.preferencesSaved;
+  appState.visitor.policyVersion = String(payload.policyVersion || VISITOR_POLICY_VERSION).trim() || VISITOR_POLICY_VERSION;
+  appState.visitor.lastSavedAt = String(payload.savedAt || "").trim();
+  appState.visitor.storageMode = String(payload.storageMode || appState.visitor.storageMode || "").trim() || "local-only";
+}
+
+function renderVisitorPreferenceStatus() {
+  if (!preferenceStatusLabel) {
+    return;
+  }
+
+  if (!appState.visitor.preferencesSaved) {
+    preferenceStatusLabel.textContent = "Informarea cookies si analytics nu este salvata inca pentru acest vizitator.";
+    return;
+  }
+
+  preferenceStatusLabel.textContent = "Informare salvata pentru acest vizitator. Analytics-ul intern al site-ului este activ.";
+}
+
+function syncVisitorPreferenceUi() {
+  if (visitorPreferencesClose) {
+    visitorPreferencesClose.hidden = appState.visitor.modalLocked;
+  }
+
+  if (!visitorPreferencesKicker || !visitorPreferencesTitle || !visitorPreferencesText) {
+    renderVisitorPreferenceStatus();
+    return;
+  }
+
+  if (appState.visitor.modalLocked) {
+    visitorPreferencesKicker.textContent = appState.visitor.isNewVisitor ? "Prima vizita" : "Informare cookies";
+    visitorPreferencesTitle.textContent = "Bine ai venit la AFRODITI Studios Grigoriu.";
+    visitorPreferencesText.textContent =
+      "La prima deschidere dintr-o conexiune noua afisam aceasta informare si activam analytics-ul intern obligatoriu al site-ului, salvat separat pentru fiecare vizitator identificat tehnic dupa IP.";
+  } else {
+    visitorPreferencesKicker.textContent = "Cookies si analytics";
+    visitorPreferencesTitle.textContent = "Informare despre cookies si analytics obligatoriu.";
+    visitorPreferencesText.textContent =
+      "Site-ul foloseste analytics intern obligatoriu pentru masurarea intrarilor, a interactiunilor importante si pentru administrarea disponibilitatii, iar informarea ramane salvata pentru vizitatorii care au mai accesat site-ul.";
+  }
+
+  if (visitorSavePreferences) {
+    visitorSavePreferences.textContent =
+      appState.visitor.modalLocked || !appState.visitor.preferencesSaved
+        ? "Am inteles"
+        : "Inchide informarea";
+  }
+
+  renderVisitorPreferenceStatus();
+}
+
+function setVisitorModalOpen(isOpen, { locked = false } = {}) {
+  if (!visitorPreferencesModal) {
+    return;
+  }
+
+  appState.visitor.modalOpen = !!isOpen;
+  appState.visitor.modalLocked = !!locked && !!isOpen;
+  visitorPreferencesModal.hidden = !isOpen;
+  visitorPreferencesModal.setAttribute("aria-hidden", String(!isOpen));
+  body.classList.toggle("visitor-modal-open", !!isOpen);
+  syncVisitorPreferenceUi();
+
+  if (isOpen) {
+    window.requestAnimationFrame(() => {
+      if (visitorSavePreferences) {
+        visitorSavePreferences.focus();
+        return;
+      }
+      if (visitorPreferencesClose && !visitorPreferencesClose.hidden) {
+        visitorPreferencesClose.focus();
+      }
+    });
+    return;
+  }
+
+  setStatus(visitorPreferencesStatus, "", "");
+}
+
+function openTermsModal() {
+  if (!siteTermsModal) {
+    return;
+  }
+  siteTermsModal.hidden = false;
+  siteTermsModal.setAttribute("aria-hidden", "false");
+  body.classList.add("visitor-modal-open");
+  void trackAnalyticsEvent("policy_open");
+}
+
+function closeTermsModal() {
+  if (!siteTermsModal) {
+    return;
+  }
+
+  siteTermsModal.hidden = true;
+  siteTermsModal.setAttribute("aria-hidden", "true");
+  body.classList.toggle("visitor-modal-open", appState.visitor.modalOpen);
+}
+
+function maybeOpenVisitorWelcome() {
+  if (IS_OWNER_PAGE || !appState.visitor.shouldShowWelcome || appState.visitor.modalOpen) {
+    return;
+  }
+
+  if (body.classList.contains("intro-active")) {
+    return;
+  }
+
+  setVisitorModalOpen(true, { locked: true });
+}
+
+async function persistVisitorPreferences({ source = "manual" }) {
+  const fallbackPayload = {
+    analyticsEnabled: true,
+    preferencesSaved: true,
+    policyVersion: appState.visitor.policyVersion || VISITOR_POLICY_VERSION,
+    savedAt: new Date().toISOString(),
+    storageMode: CAN_USE_OWNER_API ? appState.visitor.storageMode : "local-only",
+  };
+
+  try {
+    const payload = CAN_USE_OWNER_API && !IS_OWNER_PAGE
+      ? await fetchJson("/api/visitor/preferences", {
+          method: "POST",
+          body: JSON.stringify({
+            path: getCurrentPath(),
+            source,
+          }),
+        })
+      : { visitor: fallbackPayload };
+
+    applyVisitorPayload(payload?.visitor || fallbackPayload);
+    appState.visitor.shouldShowWelcome = false;
+    writeLocalVisitorPreferences({
+      ...fallbackPayload,
+      ...(payload?.visitor || {}),
+    });
+    syncVisitorPreferenceUi();
+    setStatus(visitorPreferencesStatus, "Informarea a fost salvata pentru acest vizitator.", "success");
+    window.setTimeout(() => {
+      setVisitorModalOpen(false);
+    }, 240);
+  } catch {
+    applyVisitorPayload(fallbackPayload);
+    appState.visitor.shouldShowWelcome = false;
+    writeLocalVisitorPreferences(fallbackPayload);
+    syncVisitorPreferenceUi();
+    setStatus(
+      visitorPreferencesStatus,
+      "Informarea a fost salvata local pentru acest browser.",
+      "success",
+    );
+    window.setTimeout(() => {
+      setVisitorModalOpen(false);
+    }, 240);
+  }
+}
+
+async function hydrateVisitorState() {
+  if (IS_OWNER_PAGE) {
+    return;
+  }
+
+  const localPreferences = readLocalVisitorPreferences();
+  const localPreferencesSaved =
+    !!localPreferences?.preferencesSaved &&
+    String(localPreferences?.policyVersion || "").trim() === VISITOR_POLICY_VERSION;
+  const localPayload = {
+    analyticsEnabled: localPreferencesSaved ? true : !!localPreferences?.analyticsEnabled,
+    preferencesSaved: localPreferencesSaved,
+    policyVersion: String(localPreferences?.policyVersion || VISITOR_POLICY_VERSION).trim() || VISITOR_POLICY_VERSION,
+    savedAt: String(localPreferences?.savedAt || "").trim(),
+    storageMode: String(localPreferences?.storageMode || "local-only").trim(),
+  };
+
+  appState.visitor.isNewVisitor = false;
+
+  if (!CAN_USE_OWNER_API) {
+    applyVisitorPayload(localPayload);
+    appState.visitor.isNewVisitor = !appState.visitor.preferencesSaved;
+    appState.visitor.shouldShowWelcome = !appState.visitor.preferencesSaved;
+    syncVisitorPreferenceUi();
+    maybeOpenVisitorWelcome();
+    return;
+  }
+
+  try {
+    const payload = await fetchJson(`/api/visitor/bootstrap?path=${encodeURIComponent(getCurrentPath())}`);
+    appState.visitor.shouldShowWelcome = !!payload?.shouldShowWelcome;
+    appState.visitor.isNewVisitor = !!payload?.isNewVisitor;
+    applyVisitorPayload(payload?.visitor || localPayload);
+    writeLocalVisitorPreferences(payload?.visitor || localPayload);
+  } catch {
+    applyVisitorPayload(localPayload);
+    appState.visitor.isNewVisitor = !appState.visitor.preferencesSaved;
+    appState.visitor.shouldShowWelcome = !appState.visitor.preferencesSaved;
+  }
+
+  syncVisitorPreferenceUi();
+  maybeOpenVisitorWelcome();
+}
+
+async function trackAnalyticsEvent(eventType) {
+  if (IS_OWNER_PAGE || !appState.visitor.analyticsEnabled || !CAN_USE_OWNER_API) {
+    return;
+  }
+
+  try {
+    if (typeof navigator.sendBeacon === "function") {
+      const sent = navigator.sendBeacon(
+        "/api/analytics/event",
+        new Blob(
+          [
+            JSON.stringify({
+              eventType,
+              path: getCurrentPath(),
+            }),
+          ],
+          { type: "application/json" },
+        ),
+      );
+
+      if (sent) {
+        return;
+      }
+    }
+
+    await fetchJson("/api/analytics/event", {
+      method: "POST",
+      body: JSON.stringify({
+        eventType,
+        path: getCurrentPath(),
+      }),
+    });
+  } catch {
+    // analytics optional: nu blocam experienta publicului
+  }
+}
+
 let ownerRefreshFrame = 0;
 
 function scheduleOwnerDataRefresh() {
@@ -744,14 +1076,27 @@ function getAccommodationStatus(accommodation, combinedSet = null) {
       };
 }
 
-function getCalendarMonthValue() {
-  const active = String(appState.availability?.activeMonth ?? "").trim();
+function getAvailabilityMonthValue(accommodationId) {
+  const active = String(appState.availability?.monthByAccommodation?.[accommodationId] ?? "").trim();
   if (/^\d{4}-\d{2}$/.test(active)) {
     return active;
   }
 
-  const configured = String(appState.settings.calendarMonth ?? "").trim();
-  return /^\d{4}-\d{2}$/.test(configured) ? configured : toMonthValue(new Date());
+  return getDefaultCalendarMonthValue(appState.settings.calendarMonth);
+}
+
+function setAvailabilityMonthValue(accommodationId, monthValue) {
+  if (!accommodationId) {
+    return;
+  }
+
+  if (!appState.availability.monthByAccommodation) {
+    appState.availability.monthByAccommodation = {};
+  }
+
+  appState.availability.monthByAccommodation[accommodationId] = /^\d{4}-\d{2}$/.test(String(monthValue).trim())
+    ? String(monthValue).trim()
+    : getDefaultCalendarMonthValue(appState.settings.calendarMonth);
 }
 
 function getBusyDayCountForMonth(combinedSet, monthValue) {
@@ -763,6 +1108,22 @@ function getBusyDayCountForMonth(combinedSet, monthValue) {
     }
   });
   return count;
+}
+
+function getBusyDaysForMonth(combinedSet, monthValue) {
+  const prefix = `${monthValue}-`;
+  return Array.from(combinedSet)
+    .filter((day) => day.startsWith(prefix))
+    .sort()
+    .map((day) => String(Number(day.slice(-2))));
+}
+
+function getDaysInMonth(monthValue) {
+  const [year, month] = String(monthValue).split("-").map(Number);
+  if (!year || !month) {
+    return 30;
+  }
+  return new Date(year, month, 0).getDate();
 }
 
 function amenityIcon(name) {
@@ -974,10 +1335,10 @@ function renderRoomTypes() {
     return;
   }
 
-  const monthValue = getCalendarMonthValue();
-
   roomTypesGrid.innerHTML = appState.accommodations
     .map((accommodation) => {
+      const monthValue = getAvailabilityMonthValue(accommodation.id);
+      const monthLabel = formatMonthLabel(monthValue);
       const combinedSet = getCombinedBusySet(accommodation.id);
       const status = getAccommodationStatus(accommodation, combinedSet);
       const busyDays = getBusyDayCountForMonth(combinedSet, monthValue);
@@ -985,8 +1346,9 @@ function renderRoomTypes() {
       return `
         <article class="room-type-card">
           <div class="room-type-top">
-            <div>
+            <div class="room-type-copy">
               <strong>${escapeHtml(accommodation.name)}</strong>
+              <span class="room-type-month">${escapeHtml(monthLabel)}</span>
             </div>
             <span class="room-type-status ${status.className}">${status.label}</span>
           </div>
@@ -994,7 +1356,7 @@ function renderRoomTypes() {
           <ul>
             <li>${escapeHtml(accommodation.capacity)}</li>
             ${accommodation.highlights.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
-            <li>${busyDays ? `${busyDays} zile deja rezervate in luna selectata` : "momentan fara zile rezervate in luna selectata"}</li>
+            <li>${busyDays ? `${busyDays} zile ocupate in ${monthLabel}` : `nicio zi ocupata in ${monthLabel}`}</li>
           </ul>
           <p>${escapeHtml(status.helper)}</p>
         </article>
@@ -1056,38 +1418,109 @@ function renderAvailabilityOverview() {
     return;
   }
 
-  const monthValue = getCalendarMonthValue();
-  const monthLabel = formatMonthLabel(monthValue);
+  const compactAvailability = COMPACT_AVAILABILITY.matches;
 
   availabilityOverview.innerHTML = appState.accommodations
     .map((accommodation) => {
-      const status = getAccommodationStatus(accommodation);
+      const monthValue = getAvailabilityMonthValue(accommodation.id);
+      const monthLabel = formatMonthLabel(monthValue);
+      const daysInMonth = getDaysInMonth(monthValue);
+      const combinedSet = getCombinedBusySet(accommodation.id);
+      const status = getAccommodationStatus(accommodation, combinedSet);
       const { cells, busyDayCount } = buildStaticCalendarCells(accommodation.id, monthValue);
+      const busyDays = getBusyDaysForMonth(combinedSet, monthValue);
+      const availableDays = Math.max(0, daysInMonth - busyDayCount);
+      const busySummaryLabel = busyDayCount
+        ? `${busyDayCount} zile ocupate`
+        : compactAvailability
+          ? "Fara zile ocupate"
+          : "Nicio zi ocupata in aceasta luna";
+      const availableSummaryLabel = availableDays
+        ? compactAvailability
+          ? `${availableDays} zile libere`
+          : `${availableDays} zile libere in aceasta luna`
+        : compactAvailability
+          ? "Luna ocupata complet"
+          : "Luna este complet ocupata";
+      const busyDaysTitle = compactAvailability ? "Zile ocupate" : `Zile ocupate in ${monthLabel}`;
+      const calendarSummaryTitle = compactAvailability ? "Deschide calendarul complet" : "Calendarul complet al lunii";
+      const calendarSummaryText = compactAvailability
+        ? "Vezi toate zilele pentru aceasta unitate."
+        : "Zilele ocupate raman marcate direct pe intreaga luna.";
+      const monthHelper = compactAvailability
+        ? "Schimba luna doar pentru acest studio."
+        : "Verifica luna dorita pentru aceasta unitate, fara sa schimbi restul calendarelor.";
 
       return `
         <article class="availability-sheet panel-surface">
           <div class="availability-sheet-head">
             <div>
               <strong>${escapeHtml(accommodation.name)}</strong>
-              <span>${escapeHtml(monthLabel)}</span>
+              <span>Potrivit pentru ${escapeHtml(accommodation.capacity)}</span>
             </div>
             <span class="room-type-status ${status.className}">${status.label}</span>
           </div>
-          <div class="calendar-scroll">
-            <div class="calendar-grid availability-sheet-grid">${cells}</div>
+          <div class="availability-month-nav is-inline" aria-label="${escapeHtml(`Navigare luna pentru ${accommodation.name}`)}">
+            <button
+              class="availability-month-button"
+              type="button"
+              data-availability-month-step="-1"
+              data-accommodation-id="${escapeHtml(accommodation.id)}"
+              aria-label="${escapeHtml(`Luna anterioara pentru ${accommodation.name}`)}"
+            >
+              <span aria-hidden="true">&#8592;</span>
+            </button>
+
+            <div class="availability-month-copy">
+              <strong>${escapeHtml(monthLabel)}</strong>
+              <span>${escapeHtml(monthHelper)}</span>
+            </div>
+
+            <button
+              class="availability-month-button"
+              type="button"
+              data-availability-month-step="1"
+              data-accommodation-id="${escapeHtml(accommodation.id)}"
+              aria-label="${escapeHtml(`Luna urmatoare pentru ${accommodation.name}`)}"
+            >
+              <span aria-hidden="true">&#8594;</span>
+            </button>
           </div>
-          <p class="availability-sheet-note">${busyDayCount ? `${busyDayCount} zile rezervate in aceasta luna.` : "Momentan nu apar zile rezervate in aceasta luna."}</p>
+          <div class="availability-summary">
+            <span class="availability-summary-chip ${busyDayCount ? "is-busy" : "is-free"}">
+              ${busySummaryLabel}
+            </span>
+            <span class="availability-summary-chip">
+              ${availableSummaryLabel}
+            </span>
+          </div>
+          <div class="availability-day-block">
+            <strong class="availability-day-label">${escapeHtml(busyDaysTitle)}</strong>
+            <div class="availability-day-list" aria-label="${escapeHtml(`Zile ocupate in ${monthLabel}`)}">
+              ${
+                busyDays.length
+                  ? busyDays.map((day) => `<span class="availability-day-pill is-booked">${day}</span>`).join("")
+                  : '<span class="availability-day-pill is-free">Nicio zi ocupata in aceasta luna</span>'
+              }
+            </div>
+          </div>
+          <p class="availability-mobile-note">Pe telefon, schimba luna din sagetile de mai sus pentru acest studio, apoi deschide calendarul complet daca vrei toate zilele.</p>
+          <details class="availability-calendar-details"${compactAvailability ? "" : " open"}>
+            <summary class="availability-calendar-summary">
+              <span class="availability-calendar-copy">
+                <strong>${calendarSummaryTitle}</strong>
+                <small>${calendarSummaryText}</small>
+              </span>
+            </summary>
+            <div class="calendar-scroll">
+              <div class="calendar-grid availability-sheet-grid">${cells}</div>
+            </div>
+          </details>
+          <p class="availability-sheet-note">${busyDayCount ? `${busyDayCount} zile apar ocupate in ${monthLabel}.` : `In ${monthLabel} nu apar zile ocupate.`}</p>
         </article>
       `;
     })
     .join("");
-}
-
-function renderAvailabilityMonthNav() {
-  if (!availabilityMonthLabel) {
-    return;
-  }
-  availabilityMonthLabel.textContent = formatMonthLabel(getCalendarMonthValue());
 }
 
 function buildOwnerCalendarCells(accommodationId, monthValue) {
@@ -1302,6 +1735,122 @@ function renderOwnerPanel() {
   });
 
   ownerCalendar.innerHTML = buildOwnerCalendarCells(appState.owner.activeAccommodationId, appState.owner.activeMonth);
+  renderOwnerAnalytics();
+}
+
+function handleAvailabilityMonthChange(event) {
+  const button = event.target instanceof Element
+    ? event.target.closest("[data-availability-month-step]")
+    : null;
+  if (!(button instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  const accommodationId = String(button.dataset.accommodationId ?? "").trim();
+  const direction = Number(button.dataset.availabilityMonthStep ?? 0);
+
+  if (!accommodationId || !Number.isFinite(direction) || direction === 0) {
+    return;
+  }
+
+  const nextMonth = addMonthsToMonthValue(getAvailabilityMonthValue(accommodationId), direction);
+  setAvailabilityMonthValue(accommodationId, nextMonth);
+  renderRoomTypes();
+  renderAvailabilityOverview();
+}
+
+function renderOwnerAnalytics() {
+  if (!ownerAnalyticsGrid || !ownerAnalyticsDays || !ownerAnalyticsVisitors) {
+    return;
+  }
+
+  const summary = appState.owner.analyticsSummary;
+  if (!summary) {
+    ownerAnalyticsGrid.innerHTML = "";
+    ownerAnalyticsDays.innerHTML = '<p class="owner-analytics-empty">Statistica site-ului apare aici dupa autentificare.</p>';
+    ownerAnalyticsVisitors.innerHTML = "";
+    return;
+  }
+
+  const totals = summary.totals || {};
+  ownerAnalyticsGrid.innerHTML = [
+    ["Vizitatori unici", totals.uniqueVisitors || 0],
+    ["Intrari totale", totals.totalEntries || 0],
+    ["Intrari cu analytics", totals.analyticsEntries || 0],
+    ["Cereri WhatsApp", totals.whatsappRequests || 0],
+    ["Clickuri social", totals.socialClicks || 0],
+    ["Informari confirmate", totals.preferenceSaves || 0],
+  ]
+    .map(
+      ([label, value]) => `
+        <article class="owner-analytics-stat">
+          <strong>${escapeHtml(label)}</strong>
+          <b>${escapeHtml(String(value))}</b>
+          <span>Actualizat din datele agregate ale site-ului.</span>
+        </article>
+      `,
+    )
+    .join("");
+
+  ownerAnalyticsDays.innerHTML = Array.isArray(summary.recentDays) && summary.recentDays.length
+    ? summary.recentDays
+        .slice(-6)
+        .reverse()
+        .map(
+          (day) => `
+            <article class="owner-analytics-day">
+              <strong>${escapeHtml(formatDate(day.date))}</strong>
+              <span>${escapeHtml(String(day.entries || 0))} intrari, ${escapeHtml(String(day.newVisitors || 0))} vizitatori noi</span>
+              <span>${escapeHtml(String(day.whatsappRequests || 0))} cereri WhatsApp, ${escapeHtml(String(day.socialClicks || 0))} clickuri social</span>
+            </article>
+          `,
+        )
+        .join("")
+    : '<p class="owner-analytics-empty">Nu exista inca zile inregistrate in sumarul analytics.</p>';
+
+  ownerAnalyticsVisitors.innerHTML = Array.isArray(summary.recentVisitors) && summary.recentVisitors.length
+    ? summary.recentVisitors
+        .map(
+          (visitor) => `
+            <article class="owner-analytics-visitor">
+              <strong>Vizitator ${escapeHtml(String(visitor.id || "").toUpperCase())}</strong>
+              <span>Ultima activitate: ${escapeHtml(formatDateTime(visitor.lastSeenAt))}</span>
+              <span>${escapeHtml(String(visitor.visitCount || 0))} intrari, analytics intern activ</span>
+            </article>
+          `,
+        )
+        .join("")
+    : '<p class="owner-analytics-empty">Lista ultimelor vizite va aparea aici dupa primele intrari.</p>';
+}
+
+async function hydrateOwnerAnalytics() {
+  if (!CAN_USE_OWNER_API || !appState.owner.isAuthenticated) {
+    appState.owner.analyticsSummary = null;
+    renderOwnerAnalytics();
+    return;
+  }
+
+  appState.owner.analyticsLoading = true;
+  setStatus(ownerAnalyticsStatus, "Incarc analytics-ul site-ului...", "");
+
+  try {
+    const payload = await fetchJson("/api/analytics/summary");
+    appState.owner.analyticsSummary = payload;
+    renderOwnerAnalytics();
+    setStatus(
+      ownerAnalyticsStatus,
+      payload?.storageMode === "memory"
+        ? "Analytics activ, cu stocare temporara in memorie."
+        : "Analytics actualizat.",
+      "success",
+    );
+  } catch (error) {
+    appState.owner.analyticsSummary = null;
+    renderOwnerAnalytics();
+    setStatus(ownerAnalyticsStatus, error.message || "Nu am putut incarca analytics-ul site-ului.", "error");
+  } finally {
+    appState.owner.analyticsLoading = false;
+  }
 }
 
 function syncBookingSetupState() {
@@ -1313,7 +1862,7 @@ function syncBookingSetupState() {
   bookingSubmit.disabled = !hasWhatsAppNumber;
   bookingSubmit.setAttribute("aria-disabled", String(!hasWhatsAppNumber));
   bookingFormNote.textContent = hasWhatsAppNumber
-    ? "Selectezi perioada dorita, iar calendarul te ajuta sa vezi dintr-o privire ce este disponibil."
+    ? "Trimite perioada dorita, unitatea preferata si numarul de oaspeti pentru confirmare."
     : "Momentan formularul nu poate fi trimis, pentru ca numarul WhatsApp nu este setat.";
 }
 
@@ -1331,7 +1880,7 @@ function composeWhatsAppMessage(payload, accommodation) {
     `Durata: ${formatNights(getNights(payload.checkIn, payload.checkOut))}`,
     `Locatie: ${PROPERTY_LOCATION}`,
     "",
-    "Calendarul afisat pe site a fost verificat inainte de trimitere.",
+    "Perioada dorita se verifica inainte de confirmare.",
   ];
   return lines.join("\n");
 }
@@ -1383,6 +1932,7 @@ function handleBookingSubmit(event) {
     window.location.href = url;
   }
 
+  void trackAnalyticsEvent("whatsapp_request");
   setStatus("booking-status", "Am deschis WhatsApp cu cererea completata.", "success");
 }
 
@@ -1451,7 +2001,12 @@ async function hydrateOwnerState() {
   syncBookingSetupState();
   syncOwnerContactForm();
   renderOwnerAccess();
+  renderOwnerAnalytics();
   focusOwnerEntry();
+
+  if (appState.owner.isAuthenticated) {
+    void hydrateOwnerAnalytics();
+  }
 }
 
 async function handleOwnerLoginSubmit(event) {
@@ -1500,6 +2055,7 @@ async function handleOwnerLoginSubmit(event) {
     setStatus(ownerContactStatus, "", "");
     setStatus(ownerAccountStatus, "", "");
     scheduleOwnerDataRefresh();
+    void hydrateOwnerAnalytics();
     focusOwnerEntry();
   } catch (error) {
     setStatus(ownerLoginStatus, error.message || "Date de autentificare invalide.", "error");
@@ -1522,6 +2078,9 @@ async function handleOwnerLogout() {
   setStatus(ownerStatus, "", "");
   setStatus(ownerContactStatus, "", "");
   setStatus(ownerAccountStatus, "", "");
+  appState.owner.analyticsSummary = null;
+  renderOwnerAnalytics();
+  setStatus(ownerAnalyticsStatus, "", "");
   focusOwnerEntry();
 }
 
@@ -1654,6 +2213,107 @@ function updateScrolledHeader() {
   if (header) {
     header.classList.toggle("is-scrolled", window.scrollY > 20);
   }
+}
+
+function markIntroSeen() {
+  try {
+    window.sessionStorage.setItem(INTRO_SESSION_KEY, "1");
+  } catch {
+    // ignoram lipsa sessionStorage
+  }
+}
+
+function hasSeenIntro() {
+  try {
+    return window.sessionStorage.getItem(INTRO_SESSION_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function hideIntroImmediately() {
+  if (!introOverlay) {
+    return;
+  }
+
+  introOverlay.hidden = true;
+  introOverlay.classList.remove("is-leaving");
+  body.classList.remove("intro-active");
+  maybeOpenVisitorWelcome();
+}
+
+function finishIntro() {
+  if (!introOverlay || introOverlay.classList.contains("is-leaving")) {
+    return;
+  }
+
+  introOverlay.classList.add("is-leaving");
+  body.classList.remove("intro-active");
+  markIntroSeen();
+
+  window.setTimeout(() => {
+    introOverlay.hidden = true;
+    maybeOpenVisitorWelcome();
+  }, 760);
+}
+
+function initIntro() {
+  if (!introOverlay) {
+    return;
+  }
+
+  const skipIntro = new URLSearchParams(window.location.search).get("skipIntro") === "1";
+  if (skipIntro) {
+    hideIntroImmediately();
+    return;
+  }
+
+  if (hasSeenIntro()) {
+    hideIntroImmediately();
+    return;
+  }
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const minimumDelay = prefersReducedMotion ? 180 : COMPACT_AVAILABILITY.matches ? 820 : 1280;
+  const maximumDelay = prefersReducedMotion ? 480 : COMPACT_AVAILABILITY.matches ? 1500 : 2100;
+  const getTimestamp = () =>
+    window.performance && typeof window.performance.now === "function"
+      ? window.performance.now()
+      : Date.now();
+
+  body.classList.add("intro-active");
+
+  const startedAt = getTimestamp();
+  let minimumScheduled = false;
+
+  const scheduleFinishAfterMinimum = () => {
+    if (minimumScheduled) {
+      return;
+    }
+    minimumScheduled = true;
+
+    const elapsed = getTimestamp() - startedAt;
+    const remainingDelay = Math.max(0, minimumDelay - elapsed);
+    window.setTimeout(finishIntro, remainingDelay);
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", scheduleFinishAfterMinimum, { once: true });
+  } else {
+    scheduleFinishAfterMinimum();
+  }
+
+  window.setTimeout(finishIntro, maximumDelay);
+  window.addEventListener("pageshow", scheduleFinishAfterMinimum, { once: true });
+}
+
+function handleBackToTop(event) {
+  event.preventDefault();
+  closeMenu();
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
 }
 
 function initRevealObserver() {
@@ -1833,10 +2493,63 @@ function initEvents() {
   }
 
   $$(".site-nav a").forEach((link) => link.addEventListener("click", closeMenu));
+  backToTopLinks.forEach((link) => link.addEventListener("click", handleBackToTop));
 
   if (bookingForm) {
     bookingForm.addEventListener("submit", handleBookingSubmit);
   }
+
+  openTermsButtons.forEach((button) => {
+    button.addEventListener("click", openTermsModal);
+  });
+
+  openPreferencesButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      setVisitorModalOpen(true, { locked: false });
+    });
+  });
+
+  if (visitorPreferencesClose) {
+    visitorPreferencesClose.addEventListener("click", () => {
+      if (!appState.visitor.modalLocked) {
+        setVisitorModalOpen(false);
+      }
+    });
+  }
+
+  if (visitorBackdrop) {
+    visitorBackdrop.addEventListener("click", () => {
+      if (!appState.visitor.modalLocked) {
+        setVisitorModalOpen(false);
+      }
+    });
+  }
+
+  if (siteTermsClose) {
+    siteTermsClose.addEventListener("click", closeTermsModal);
+  }
+
+  if (termsBackdrop) {
+    termsBackdrop.addEventListener("click", closeTermsModal);
+  }
+
+  if (visitorSavePreferences) {
+    visitorSavePreferences.addEventListener("click", () => {
+      if (!appState.visitor.modalLocked && appState.visitor.preferencesSaved) {
+        setVisitorModalOpen(false);
+        return;
+      }
+      void persistVisitorPreferences({
+        source: appState.visitor.modalLocked ? "welcome" : "manual",
+      });
+    });
+  }
+
+  trackableLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      void trackAnalyticsEvent(link.dataset.analyticsEvent);
+    });
+  });
 
   ownerAccessToggles.forEach((toggle) => {
     toggle.addEventListener("click", () => {
@@ -1897,22 +2610,8 @@ if (ownerAccommodationSelect) {
     });
   }
 
-  if (availabilityMonthPrev) {
-    availabilityMonthPrev.addEventListener("click", () => {
-      appState.availability.activeMonth = addMonthsToMonthValue(getCalendarMonthValue(), -1);
-      renderAvailabilityMonthNav();
-      renderRoomTypes();
-      renderAvailabilityOverview();
-    });
-  }
-
-  if (availabilityMonthNext) {
-    availabilityMonthNext.addEventListener("click", () => {
-      appState.availability.activeMonth = addMonthsToMonthValue(getCalendarMonthValue(), 1);
-      renderAvailabilityMonthNav();
-      renderRoomTypes();
-      renderAvailabilityOverview();
-    });
+  if (availabilityOverview) {
+    availabilityOverview.addEventListener("click", handleAvailabilityMonthChange);
   }
 
   if (ownerCalendar) {
@@ -1944,7 +2643,20 @@ if (ownerAccommodationSelect) {
     syncScene();
     window.requestAnimationFrame(() => scrollGalleryTo(galleryState.index, "auto"));
   });
+  if (typeof COMPACT_AVAILABILITY.addEventListener === "function") {
+    COMPACT_AVAILABILITY.addEventListener("change", renderAvailabilityOverview);
+  } else if (typeof COMPACT_AVAILABILITY.addListener === "function") {
+    COMPACT_AVAILABILITY.addListener(renderAvailabilityOverview);
+  }
   window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !siteTermsModal?.hidden) {
+      closeTermsModal();
+      return;
+    }
+    if (event.key === "Escape" && appState.visitor.modalOpen && !appState.visitor.modalLocked) {
+      setVisitorModalOpen(false);
+      return;
+    }
     if (event.key === "Escape" && appState.owner.panelOpen) {
       closeOwnerModal();
     }
@@ -1952,6 +2664,7 @@ if (ownerAccommodationSelect) {
 }
 
 async function init() {
+  initIntro();
   renderGalleryCarousel();
   renderAmenities();
   renderInfoCards();
@@ -1959,7 +2672,6 @@ async function init() {
   renderAccommodationSelects();
   syncBookingSetupState();
   renderRoomTypes();
-  renderAvailabilityMonthNav();
   renderAvailabilityOverview();
   renderOwnerAccess();
   initRevealObserver();
@@ -1967,7 +2679,7 @@ async function init() {
   initEvents();
   updateScrolledHeader();
   updateSpiralScene();
-  await hydrateOwnerState();
+  await Promise.all([hydrateVisitorState(), hydrateOwnerState()]);
 }
 
 init();

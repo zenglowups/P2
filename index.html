@@ -17,9 +17,27 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="site-header" id="page-top">
+  <div class="page-top-anchor" id="page-top" aria-hidden="true"></div>
+
+  <div class="site-intro" id="site-intro" aria-hidden="true">
+    <div class="site-intro-shell">
+      <div class="site-intro-mark">
+        <img src="Images/Logo.webp" alt="" width="320" height="320" decoding="async">
+      </div>
+      <div class="site-intro-copy">
+        <p class="site-intro-kicker">Paralia Katerinis, Grecia</p>
+        <strong>AFRODITI Studios Grigoriu</strong>
+        <span>Camere luminoase, aproape de plaja, pentru sejururi calme la mare.</span>
+      </div>
+      <div class="site-intro-progress" aria-hidden="true">
+        <span></span>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="#page-top" aria-label="AFRODITI Studios Grigoriu Luxury Apartments">
+      <a class="brand" href="#page-top" data-back-to-top aria-label="AFRODITI Studios Grigoriu Luxury Apartments">
         <span class="brand-mark">
           <img src="Images/Logo.webp" alt="AFRODITI Studios Grigoriu" width="320" height="320" loading="eager" decoding="async">
         </span>
@@ -115,6 +133,7 @@
           <a href="#facilities">Facilitati</a>
           <a href="#important">Informatii utile</a>
           <a href="#legal">Bine de stiut</a>
+          <a href="#policy">Termeni, cookies si analytics</a>
           <a href="#reviews">Recenzii oaspeti</a>
         </nav>
       </div>
@@ -123,10 +142,10 @@
     <section class="section availability-section" id="prices">
       <div class="container section-heading reveal">
         <p class="eyebrow">Disponibilitate</p>
-        <h2>Verifica rapid perioada potrivita si trimite cererea in cateva secunde.</h2>
+        <h2>Alege luna, verifica zilele libere si trimite perioada dorita.</h2>
         <p>
-          Alege unitatea preferata, vezi imediat zilele rezervate si trimite cererea direct pentru perioada dorita.
-          Totul ramane clar, simplu si usor de parcurs atunci cand compari cele doua tipuri de cazare.
+          Compara usor Studio Double si Studio Deluxe, verifica perioadele ocupate
+          si alege varianta potrivita pentru sejurul dorit.
         </p>
       </div>
 
@@ -137,7 +156,7 @@
           <div class="card-heading card-heading-tight">
             <p class="eyebrow">Cerere de cazare</p>
             <h3>Spune-ne perioada si numarul de oaspeti.</h3>
-            <p>Mesajul ajunge rapid pentru confirmare, iar raspunsul poate veni direct pe WhatsApp.</p>
+            <p>Cererea ajunge direct pentru confirmarea perioadei si a unitatii alese.</p>
           </div>
 
           <form class="stack-form" id="booking-form">
@@ -177,7 +196,7 @@
             </div>
 
             <p class="mode-note" id="booking-form-note">
-              Selectezi perioada dorita, iar calendarul te ajuta sa vezi dintr-o privire ce este disponibil.
+              Alege perioada dorita si unitatea preferata, apoi trimite cererea pentru confirmare.
             </p>
 
             <button class="button button-block" type="submit" id="booking-submit">Trimite pe WhatsApp</button>
@@ -188,8 +207,8 @@
         <div class="database-card availability-static-card reveal">
           <div class="card-heading card-heading-tight">
             <p class="eyebrow">Calendar</p>
-            <h3>Vezi dintr-o privire ce este disponibil in fiecare unitate.</h3>
-            <p>Schimbi luna, compari studiourile si alegi mai usor perioada care ti se potriveste.</p>
+            <h3>Perioadele ocupate sunt marcate clar pentru fiecare unitate.</h3>
+            <p>Verifica luna dorita si compara rapid disponibilitatea dintre Studio Double si Studio Deluxe.</p>
           </div>
 
           <div class="source-lock-note panel-surface">
@@ -197,20 +216,9 @@
             <span>Studio Double este ideal pentru cupluri, iar Studio Deluxe ofera mai mult spatiu pentru sejururi mai lungi sau familii mici.</span>
           </div>
 
-          <div class="availability-month-nav" aria-label="Navigare luna calendar public">
-            <button class="availability-month-button" type="button" id="availability-month-prev" aria-label="Luna anterioara">
-              <span aria-hidden="true">&#8592;</span>
-            </button>
-
-            <div class="availability-month-copy">
-              <strong id="availability-month-label">aprilie 2026</strong>
-              <span>Schimbi luna si vezi imediat cum arata disponibilitatea pentru fiecare studio.</span>
-            </div>
-
-            <button class="availability-month-button" type="button" id="availability-month-next" aria-label="Luna urmatoare">
-              <span aria-hidden="true">&#8594;</span>
-            </button>
-          </div>
+          <p class="availability-inline-hint">
+            Fiecare studio are propriile sageti de luna, ca sa poti verifica rapid perioada dorita pentru exact acea unitate.
+          </p>
 
           <div class="calendar-legend calendar-legend-static">
             <span><i class="legend-dot legend-free"></i>Disponibil</span>
@@ -296,16 +304,16 @@
 
           <div class="gallery-viewport" id="gallery-viewport" role="region" aria-label="Galerie foto Afroditi Studios">
             <div class="gallery-track" data-gallery-track></div>
-          </div>
+        </div>
 
         <p class="gallery-helper">
-          Pe telefon glisezi printre imagini, iar pe desktop poti folosi sagetile laterale.
+          Fotografii reale din camere, bai, balcon si atmosfera proprietatii.
         </p>
       </div>
     </section>
 
     <section class="video-band">
-      <video class="video-band-media" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+      <video class="video-band-media" autoplay muted loop playsinline preload="none" aria-hidden="true">
         <source src="Images/Video.mp4" type="video/mp4">
       </video>
       <div class="video-band-overlay"></div>
@@ -355,6 +363,50 @@
         </div>
 
         <div class="legal-list" data-legal-list></div>
+      </div>
+    </section>
+
+    <section class="section policy-section" id="policy">
+      <div class="container section-heading reveal">
+        <p class="eyebrow">Termeni, cookies si analytics</p>
+        <h2>Conditii clare pentru cereri, confidentialitate si informarea salvata pe site.</h2>
+        <p>
+          Site-ul prezinta proprietatea, perioadele ocupate si modalitatile de contact.
+          Tot aici poti vedea pe scurt cum sunt tratate informarea cookies si analytics-ul intern folosit pentru masurarea intrarilor.
+        </p>
+      </div>
+
+      <div class="container policy-grid reveal">
+        <article class="policy-card panel-surface">
+          <p class="eyebrow">Conditii de folosire</p>
+          <h3>Disponibilitatea afisata este orientativa pana la confirmarea finala.</h3>
+          <p>
+            Cererile de cazare trimise prin formular sau mesaj direct sunt verificate inainte de confirmare,
+            iar rezervarea devine certa doar dupa raspunsul proprietatii.
+          </p>
+          <button class="button button-ghost-light" type="button" data-open-terms>Vezi termenii completi</button>
+        </article>
+
+        <article class="policy-card panel-surface">
+          <p class="eyebrow">Confidentialitate</p>
+          <h3>Datele de contact sunt folosite doar pentru raspunsul la cererea trimisa.</h3>
+          <p>
+            Informatiile introduse pentru o cerere de cazare sunt folosite pentru a raspunde,
+            confirma perioada dorita si continua discutia legata de sejur.
+          </p>
+          <button class="button button-ghost-light" type="button" data-open-terms>Citeste politica completa</button>
+        </article>
+
+        <article class="policy-card panel-surface">
+          <p class="eyebrow">Cookies si analytics</p>
+          <h3>Analytics-ul intern al site-ului este activ pentru fiecare vizitator nou.</h3>
+          <p>
+            Site-ul salveaza informarea si identificatorul tehnic al vizitatorului pentru fiecare IP cunoscut,
+            astfel incat mesajul de bun venit sa nu reapara inutil la urmatoarele accesari.
+          </p>
+          <p class="policy-status" data-preference-status>Informarea cookies si analytics nu este salvata inca.</p>
+          <button class="button" type="button" data-open-preferences>Vezi informarea</button>
+        </article>
       </div>
     </section>
 
@@ -408,12 +460,12 @@
         <div class="review-board-head">
           <div>
             <p class="eyebrow">Recenzii selectate</p>
-            <h3>Impresii din sejururi recente, prezentate clar si usor de parcurs.</h3>
+            <h3>Impresii din sejururi recente care surprind cel mai bine atmosfera proprietatii.</h3>
           </div>
 
           <div class="review-board-stats">
             <strong>8 recenzii prezentate</strong>
-            <span>toate descriu curatenia, linistea si apropierea de plaja</span>
+            <span>curatenia, linistea si apropierea de plaja apar cel mai des</span>
           </div>
         </div>
 
@@ -433,10 +485,10 @@
       <div class="container contact-layout">
         <div class="section-copy reveal">
           <p class="eyebrow">Contact</p>
-          <h2>Pentru disponibilitate, detalii sau o oferta rapida, scrie direct.</h2>
+          <h2>Pentru disponibilitate, detalii sau confirmarea perioadei, scrie direct.</h2>
           <p>
             Daca ai intrebari despre perioada, tipul camerei sau numarul de oaspeti,
-            mesajele directe sunt cea mai rapida cale pentru confirmare.
+            mesajele directe ajuta la confirmarea rapida a sejurului.
           </p>
         </div>
 
@@ -446,6 +498,7 @@
             href="https://www.tiktok.com/@cosmin.ovidiu.gri3"
             target="_blank"
             rel="noreferrer"
+            data-analytics-event="social_click"
           >
             <span class="social-icon" aria-hidden="true">
               <svg viewBox="0 0 64 64" role="img" focusable="false">
@@ -464,6 +517,7 @@
             href="https://www.instagram.com/cosminovidiugrigoriu/?hl=en"
             target="_blank"
             rel="noreferrer"
+            data-analytics-event="social_click"
           >
             <span class="social-icon" aria-hidden="true">
               <svg viewBox="0 0 64 64" role="img" focusable="false">
@@ -498,10 +552,139 @@
         <span>Studios moderne aproape de plaja, cu atmosfera linistita, terase luminoase si recenzii excelente.</span>
       </div>
       <div class="footer-actions">
-        <a href="#page-top">Inapoi sus</a>
+        <button class="footer-action-button" type="button" data-open-terms>Termeni</button>
+        <button class="footer-action-button" type="button" data-open-preferences>Cookies si analytics</button>
+        <a class="footer-back-top" href="#page-top" data-back-to-top>
+          <span aria-hidden="true">&#8593;</span>
+          <span>Inapoi sus</span>
+        </a>
       </div>
     </div>
   </footer>
+
+  <div class="visitor-modal" id="visitor-preferences-modal" hidden aria-hidden="true">
+    <div class="visitor-modal-backdrop" data-visitor-backdrop></div>
+    <div class="visitor-modal-shell">
+      <button class="visitor-modal-close" type="button" id="visitor-preferences-close" aria-label="Inchide informarea cookies">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <div class="visitor-modal-head">
+        <p class="eyebrow" id="visitor-preferences-kicker">Informare cookies</p>
+        <h3 id="visitor-preferences-title">Bine ai venit la AFRODITI Studios Grigoriu.</h3>
+        <p id="visitor-preferences-text">
+          La prima deschidere dintr-o conexiune noua afisam aceasta informare si activam analytics-ul intern obligatoriu al site-ului.
+        </p>
+      </div>
+
+      <div class="visitor-modal-body">
+        <div class="consent-option-grid">
+          <article class="consent-option is-required">
+            <strong>Analytics intern obligatoriu</strong>
+            <span>Masurarea intrarilor, a interactiunilor importante si a cererilor de contact este activa pentru functionarea si administrarea site-ului.</span>
+          </article>
+
+          <article class="consent-option">
+            <div>
+              <strong>Memorare pentru vizitatorii cunoscuti</strong>
+              <span>Informarea ramane salvata pentru fiecare vizitator identificat tehnic dupa IP, astfel incat mesajul de deschidere sa nu reapara inutil la urmatoarele accesari.</span>
+            </div>
+          </article>
+        </div>
+
+        <p class="visitor-consent-note">
+          Continuarea confirma citirea termenilor, a politicii de confidentialitate si a informarii privind analytics-ul intern obligatoriu.
+        </p>
+
+        <div class="visitor-modal-links">
+          <button class="text-link-button" type="button" data-open-terms>Citeste termenii si informarea completa</button>
+        </div>
+
+        <div class="visitor-modal-actions">
+          <button class="button" type="button" id="visitor-save-preferences">Am inteles</button>
+        </div>
+
+        <p class="form-status" id="visitor-preferences-status" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="visitor-modal" id="site-terms-modal" hidden aria-hidden="true">
+    <div class="visitor-modal-backdrop" data-terms-backdrop></div>
+    <div class="visitor-modal-shell visitor-modal-shell-wide">
+      <button class="visitor-modal-close" type="button" id="site-terms-close" aria-label="Inchide termenii">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <div class="visitor-modal-head">
+        <p class="eyebrow">Termeni si politica</p>
+        <h3>Termeni de utilizare, cereri de cazare si confidentialitate.</h3>
+        <p>
+          Informatiile de mai jos explica modul in care este folosit site-ul, cum sunt tratate cererile de cazare
+          si cum este salvata informarea despre cookies si analytics.
+        </p>
+      </div>
+
+      <div class="policy-richtext">
+        <article>
+          <strong>1. Rolul site-ului</strong>
+          <p>
+            Site-ul AFRODITI Studios Grigoriu prezinta proprietatea, facilitatile, fotografiile, calendarul orientativ
+            si modalitatile de contact disponibile pentru cereri de cazare.
+          </p>
+        </article>
+
+        <article>
+          <strong>2. Disponibilitate si rezervari</strong>
+          <p>
+            Calendarul public arata perioadele ocupate cunoscute la momentul afisarii, insa o perioada devine rezervare
+            confirmata doar dupa raspunsul explicit al proprietatii. Trimiterea unei cereri nu garanteaza automat disponibilitatea finala.
+          </p>
+        </article>
+
+        <article>
+          <strong>3. Cereri trimise prin formular sau mesaj</strong>
+          <p>
+            Datele completate pentru o cerere, precum numele, telefonul, perioada si numarul de oaspeti,
+            sunt folosite exclusiv pentru a raspunde solicitarii si pentru a continua discutia legata de sejur.
+          </p>
+        </article>
+
+        <article>
+          <strong>4. Continut si informatii</strong>
+          <p>
+            Fotografiile, descrierile si informatiile publicate urmaresc sa reflecte cat mai fidel proprietatea,
+            insa anumite detalii operationale pot fi actualizate in timp fara notificare separata.
+          </p>
+        </article>
+
+        <article>
+          <strong>5. Confidentialitate</strong>
+          <p>
+            Site-ul nu publica datele personale ale vizitatorilor. Datele transmise voluntar prin formularul de contact
+            sunt folosite strict pentru comunicarea privind cazarea si nu sunt afisate public.
+          </p>
+        </article>
+
+        <article>
+          <strong>6. Cookies si analytics obligatoriu</strong>
+          <p>
+            Pentru a retine mesajul de bun venit si a evita reaparisia lui pentru aceeasi conexiune, site-ul salveaza
+            o informare asociata tehnic vizitatorului identificat dupa IP. Analytics-ul intern al site-ului este obligatoriu
+            pentru masurarea intrarilor, a interactiunilor importante si a solicitarilor initiate din site, fara afisarea publica a adreselor IP.
+          </p>
+        </article>
+
+        <article>
+          <strong>7. Acceptarea conditiilor</strong>
+          <p>
+            Continuarea navigarii dupa confirmarea acestei informari arata ca ai citit aceste informatii si ca intelegi
+            rolul orientativ al calendarului public, al continutului din site si al analytics-ului intern folosit pentru administrarea website-ului.
+          </p>
+        </article>
+      </div>
+    </div>
+  </div>
 
   <script src="site.js"></script>
 </body>

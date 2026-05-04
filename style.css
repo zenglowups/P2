@@ -42,6 +42,10 @@ body {
   overflow-x: hidden;
 }
 
+body.intro-active {
+  overflow: hidden;
+}
+
 body.menu-open {
   overflow: hidden;
 }
@@ -71,6 +75,14 @@ button {
 .container {
   width: var(--container);
   margin: 0 auto;
+}
+
+.page-top-anchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
 }
 
 .section {
@@ -148,6 +160,132 @@ p {
   background: rgba(250, 245, 236, 0.88);
   backdrop-filter: blur(18px);
   box-shadow: 0 14px 32px rgba(12, 31, 39, 0.08);
+}
+
+.site-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 180;
+  display: grid;
+  place-items: center;
+  padding: 26px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(241, 211, 160, 0.24), transparent 22%),
+    radial-gradient(circle at 82% 24%, rgba(87, 173, 194, 0.22), transparent 28%),
+    linear-gradient(135deg, rgba(10, 36, 49, 0.98), rgba(17, 53, 68, 0.98));
+  animation: introOverlayExit 0.72s ease 2.2s forwards;
+  transition: opacity 720ms ease, visibility 720ms ease;
+}
+
+body.intro-active .site-intro {
+  animation: none;
+}
+
+.site-intro.is-leaving {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.site-intro-shell {
+  width: min(560px, 100%);
+  display: grid;
+  justify-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.site-intro-mark {
+  width: clamp(86px, 12vw, 118px);
+  height: clamp(86px, 12vw, 118px);
+  padding: 10px;
+  border-radius: 50%;
+  background: rgba(255, 253, 249, 0.94);
+  box-shadow:
+    0 20px 48px rgba(4, 13, 18, 0.2),
+    0 0 0 10px rgba(255, 253, 249, 0.08);
+  animation: introFloat 2.6s ease-in-out infinite;
+}
+
+.site-intro-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.site-intro-copy {
+  display: grid;
+  gap: 10px;
+  max-width: 34rem;
+  color: rgba(255, 253, 249, 0.94);
+}
+
+.site-intro-kicker {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(241, 224, 191, 0.82);
+}
+
+.site-intro-copy strong {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(2.6rem, 7vw, 4.6rem);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+
+.site-intro-copy span {
+  color: rgba(255, 253, 249, 0.78);
+  line-height: 1.7;
+}
+
+.site-intro-progress {
+  width: min(240px, 62vw);
+  height: 4px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 253, 249, 0.12);
+}
+
+.site-intro-progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, rgba(241, 211, 160, 0.94), rgba(112, 198, 218, 0.94));
+  animation: introProgress 1.55s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+@keyframes introFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes introProgress {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes introOverlayExit {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
 }
 
 .header-inner {
@@ -787,6 +925,26 @@ p {
   gap: 14px;
 }
 
+.room-type-copy {
+  display: grid;
+  gap: 8px;
+}
+
+.room-type-month {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(23, 53, 68, 0.06);
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .room-type-status {
   display: inline-flex;
   align-items: center;
@@ -969,6 +1127,63 @@ p {
 
 .owner-setup-hint code {
   font-size: 0.82rem;
+}
+
+.owner-analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.owner-analytics-stat,
+.owner-analytics-day,
+.owner-analytics-visitor {
+  display: grid;
+  gap: 6px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(23, 53, 68, 0.08);
+  background: rgba(255, 253, 249, 0.82);
+}
+
+.owner-analytics-stat strong,
+.owner-analytics-day strong,
+.owner-analytics-visitor strong {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.owner-analytics-stat span,
+.owner-analytics-day span,
+.owner-analytics-visitor span {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.owner-analytics-stat b {
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--sea-deep);
+}
+
+.owner-analytics-days,
+.owner-analytics-visitors {
+  display: grid;
+  gap: 12px;
+}
+
+.owner-analytics-days {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.owner-analytics-visitors {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.owner-analytics-empty {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
 }
 
 .owner-modal[hidden] {
@@ -1347,6 +1562,15 @@ textarea {
   background: rgba(255, 253, 249, 0.72);
 }
 
+.availability-inline-hint {
+  margin: 18px 0 0;
+  padding: 16px 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(23, 53, 68, 0.08);
+  background: rgba(255, 253, 249, 0.82);
+  color: var(--ink-soft);
+}
+
 .source-lock-note code {
   padding: 2px 8px;
   border-radius: 999px;
@@ -1377,6 +1601,145 @@ textarea {
   overflow: visible;
 }
 
+.availability-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.availability-summary-chip,
+.availability-day-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.availability-summary-chip {
+  border: 1px solid rgba(23, 53, 68, 0.08);
+  background: rgba(255, 253, 249, 0.88);
+  color: var(--ink);
+}
+
+.availability-summary-chip.is-busy {
+  background: rgba(199, 90, 90, 0.08);
+  color: #a34343;
+  border-color: rgba(199, 90, 90, 0.18);
+}
+
+.availability-summary-chip.is-free {
+  background: rgba(43, 148, 102, 0.08);
+  color: #1f7b55;
+  border-color: rgba(43, 148, 102, 0.18);
+}
+
+.availability-day-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.availability-day-block {
+  display: grid;
+  gap: 12px;
+}
+
+.availability-day-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.availability-day-pill {
+  background: rgba(23, 53, 68, 0.06);
+  color: var(--ink);
+}
+
+.availability-day-pill.is-booked {
+  background: rgba(199, 90, 90, 0.12);
+  color: #a34343;
+}
+
+.availability-day-pill.is-free {
+  background: rgba(43, 148, 102, 0.1);
+  color: #1f7b55;
+}
+
+.availability-mobile-note {
+  display: none;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.availability-calendar-details {
+  display: grid;
+  gap: 14px;
+}
+
+.availability-calendar-summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(23, 53, 68, 0.08);
+  background: rgba(255, 253, 249, 0.88);
+  box-shadow: 0 14px 28px rgba(12, 31, 39, 0.04);
+  cursor: pointer;
+}
+
+.availability-calendar-summary::-webkit-details-marker {
+  display: none;
+}
+
+.availability-calendar-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.availability-calendar-copy strong {
+  font-size: 0.96rem;
+  font-weight: 800;
+}
+
+.availability-calendar-copy small {
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.availability-calendar-summary::after {
+  content: "⌄";
+  flex-shrink: 0;
+  font-size: 1.16rem;
+  color: var(--ink-soft);
+  transition: transform 180ms ease;
+}
+
+.availability-calendar-details[open] .availability-calendar-summary::after {
+  transform: rotate(180deg);
+}
+
+.availability-calendar-details[open] .availability-calendar-summary {
+  border-color: rgba(23, 53, 68, 0.12);
+}
+
+.availability-calendar-summary:hover,
+.availability-calendar-summary:focus-visible {
+  border-color: rgba(23, 53, 68, 0.16);
+  box-shadow: 0 18px 32px rgba(12, 31, 39, 0.08);
+}
+
 .availability-month-nav {
   display: flex;
   align-items: center;
@@ -1387,6 +1750,11 @@ textarea {
   border: 1px solid rgba(23, 53, 68, 0.08);
   background: rgba(255, 253, 249, 0.86);
   box-shadow: 0 16px 30px rgba(12, 31, 39, 0.05);
+}
+
+.availability-month-nav.is-inline {
+  padding: 18px 20px;
+  border-radius: 26px;
 }
 
 .availability-month-copy {
@@ -1418,6 +1786,11 @@ textarea {
   place-items: center;
   flex-shrink: 0;
   transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.availability-month-button span {
+  font-size: 1.18rem;
+  line-height: 1;
 }
 
 .availability-month-button:hover,
@@ -2451,6 +2824,245 @@ textarea {
   color: #12171b;
 }
 
+.policy-section {
+  background:
+    linear-gradient(180deg, rgba(252, 247, 240, 0.9), rgba(245, 239, 230, 0.82)),
+    radial-gradient(circle at 85% 10%, rgba(123, 201, 216, 0.12), transparent 28%);
+}
+
+.policy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.policy-card {
+  display: grid;
+  gap: 16px;
+}
+
+.policy-card h3 {
+  max-width: 16ch;
+}
+
+.policy-status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(23, 53, 68, 0.06);
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.visitor-modal[hidden] {
+  display: none !important;
+}
+
+.visitor-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 190;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.visitor-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 21, 29, 0.68);
+  backdrop-filter: blur(10px);
+}
+
+.visitor-modal-shell {
+  position: relative;
+  z-index: 1;
+  width: min(720px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  padding: 34px;
+  border-radius: 34px;
+  border: 1px solid rgba(23, 53, 68, 0.1);
+  background:
+    linear-gradient(180deg, rgba(255, 253, 249, 0.98), rgba(246, 239, 229, 0.96)),
+    radial-gradient(circle at 88% 12%, rgba(123, 201, 216, 0.14), transparent 30%);
+  box-shadow: 0 34px 80px rgba(12, 31, 39, 0.24);
+}
+
+.visitor-modal-shell-wide {
+  width: min(920px, calc(100vw - 32px));
+}
+
+.visitor-modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(23, 53, 68, 0.1);
+  background: rgba(255, 253, 249, 0.94);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.visitor-modal-head,
+.visitor-modal-body {
+  display: grid;
+  gap: 16px;
+}
+
+.visitor-modal-head {
+  max-width: 60ch;
+  margin-bottom: 18px;
+}
+
+.consent-option-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.consent-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px;
+  border-radius: 22px;
+  border: 1px solid rgba(23, 53, 68, 0.08);
+  background: rgba(255, 253, 249, 0.84);
+}
+
+.consent-option strong {
+  display: block;
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.consent-option span {
+  color: var(--ink-soft);
+}
+
+.consent-option.is-required {
+  align-items: flex-start;
+  border-color: rgba(47, 139, 163, 0.16);
+  background: rgba(47, 139, 163, 0.08);
+}
+
+.consent-option-toggle {
+  cursor: pointer;
+}
+
+.consent-switch {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.consent-switch input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.consent-switch-slider {
+  position: relative;
+  width: 64px;
+  height: 36px;
+  border-radius: 999px;
+  background: rgba(23, 53, 68, 0.12);
+  transition: background-color 180ms ease;
+}
+
+.consent-switch-slider::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 10px 20px rgba(12, 31, 39, 0.12);
+  transition: transform 180ms ease;
+}
+
+.consent-switch input:checked + .consent-switch-slider {
+  background: rgba(47, 139, 163, 0.48);
+}
+
+.consent-switch input:checked + .consent-switch-slider::before {
+  transform: translateX(28px);
+}
+
+.visitor-consent-note {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.visitor-modal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.text-link-button,
+.footer-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--sea-deep);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.text-link-button {
+  font-size: 0.92rem;
+}
+
+.visitor-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.policy-richtext {
+  display: grid;
+  gap: 18px;
+}
+
+.policy-richtext article {
+  display: grid;
+  gap: 8px;
+  padding: 18px 20px;
+  border-radius: 22px;
+  border: 1px solid rgba(23, 53, 68, 0.08);
+  background: rgba(255, 253, 249, 0.78);
+}
+
+.policy-richtext strong {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+body.visitor-modal-open {
+  overflow: hidden;
+}
+
 .site-footer {
   padding: 26px 0 36px;
   background: #efe7da;
@@ -2476,6 +3088,34 @@ textarea {
 
 .footer-inner a {
   font-weight: 700;
+}
+
+.footer-action-button {
+  min-height: 42px;
+}
+
+.footer-back-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(23, 53, 68, 0.12);
+  background: rgba(255, 253, 249, 0.88);
+  box-shadow: 0 12px 28px rgba(12, 31, 39, 0.06);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.footer-back-top span:first-child {
+  font-size: 1rem;
+}
+
+.footer-back-top:hover,
+.footer-back-top:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 32px rgba(12, 31, 39, 0.1);
+  border-color: rgba(23, 53, 68, 0.18);
 }
 
 .owner-footer-trigger {
@@ -2603,6 +3243,7 @@ textarea {
   .overview-layout,
   .info-layout,
   .legal-layout,
+  .policy-grid,
   .contact-layout,
   .reviews-layout,
   .spiral-sticky {
@@ -2645,6 +3286,12 @@ textarea {
     grid-template-columns: 1fr;
   }
 
+  .owner-analytics-grid,
+  .owner-analytics-days,
+  .owner-analytics-visitors {
+    grid-template-columns: 1fr;
+  }
+
   .card-heading-tight h3 {
     max-width: none;
   }
@@ -2678,6 +3325,28 @@ textarea {
 
   .site-header {
     padding: 12px 0;
+  }
+
+  body.intro-active {
+    touch-action: none;
+    overscroll-behavior: none;
+  }
+
+  .site-intro {
+    padding: 18px;
+  }
+
+  .site-intro-shell {
+    gap: 16px;
+  }
+
+  .site-intro-copy strong {
+    font-size: clamp(2.2rem, 12vw, 3.2rem);
+  }
+
+  .site-intro-copy span {
+    font-size: 0.94rem;
+    line-height: 1.6;
   }
 
   .brand {
@@ -2735,6 +3404,18 @@ textarea {
     border-radius: 26px;
   }
 
+  .visitor-modal {
+    padding: 14px;
+  }
+
+  .visitor-modal-shell,
+  .visitor-modal-shell-wide {
+    width: min(100vw - 20px, 920px);
+    max-height: calc(100vh - 20px);
+    padding: 24px;
+    border-radius: 26px;
+  }
+
   .site-header.menu-open .site-nav {
     opacity: 1;
     pointer-events: auto;
@@ -2742,7 +3423,7 @@ textarea {
   }
 
   .hero {
-    padding: 118px 0 72px;
+    padding: 104px 0 66px;
     min-height: auto;
   }
 
@@ -2750,11 +3431,29 @@ textarea {
     min-height: auto;
   }
 
+  .hero-copy {
+    gap: 16px;
+  }
+
+  .hero-text {
+    font-size: 0.98rem;
+  }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions .button {
+    width: 100%;
+  }
+
   .hero-metrics,
   .field-grid-2,
   .field-grid-3,
   .info-cards,
   .legal-list,
+  .policy-grid,
   .testimonials-grid,
   .gallery-wall {
     grid-template-columns: 1fr;
@@ -2765,25 +3464,26 @@ textarea {
   }
 
   .hero-main-shot {
-    min-height: 360px;
+    min-height: 320px;
   }
 
   .hero-side-stack figure {
-    min-height: 220px;
+    min-height: 190px;
   }
 
   .booking-tabs-bar {
-    top: 74px;
+    top: 68px;
+    padding: 10px 0;
   }
 
   .booking-tabs {
-    gap: 10px;
-    padding: 0 2px 4px;
+    gap: 8px;
+    padding: 0 2px 2px;
     scroll-snap-type: x proximity;
   }
 
   .booking-tabs a {
-    padding: 12px 16px;
+    padding: 11px 15px;
     font-size: 0.82rem;
     scroll-snap-align: start;
   }
@@ -2798,6 +3498,7 @@ textarea {
   .amenity-card,
   .info-card,
   .legal-card,
+  .policy-card,
   .testimonial-card,
   .social-card,
   .room-type-card,
@@ -2805,12 +3506,35 @@ textarea {
     padding: 22px;
   }
 
+  .room-type-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .room-type-month {
+    min-height: 30px;
+    font-size: 0.72rem;
+    letter-spacing: 0.09em;
+  }
+
   .guest-card {
     max-width: none;
   }
 
+  .availability-grid {
+    gap: 20px;
+  }
+
   .availability-static-card {
-    padding: 24px;
+    order: -1;
+  }
+
+  .guest-card {
+    order: 2;
+  }
+
+  .availability-static-card {
+    padding: 22px;
     border-radius: 28px;
   }
 
@@ -2847,23 +3571,78 @@ textarea {
     border-radius: 30px;
   }
 
+  .consent-option {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .consent-option-toggle {
+    gap: 14px;
+  }
+
+  .consent-switch {
+    align-self: flex-end;
+  }
+
+  .visitor-modal-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .visitor-modal-actions .button {
+    width: 100%;
+  }
+
+  .availability-inline-hint {
+    margin-top: 16px;
+    padding: 14px 16px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+
+  .availability-month-nav {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) 52px;
+    gap: 10px;
+    padding: 18px 16px;
+  }
+
+  .availability-month-nav.is-inline {
+    align-items: center;
+  }
+
   .availability-month-button {
-    width: 56px;
-    height: 56px;
+    width: 52px;
+    height: 52px;
+    border-radius: 18px;
   }
 
   .availability-month-copy {
-    text-align: left;
+    text-align: center;
   }
 
   .availability-sheet {
-    padding: 24px;
+    padding: 22px;
     border-radius: 26px;
+  }
+
+  .availability-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .availability-summary-chip {
+    justify-content: center;
+    min-height: 52px;
+    padding: 10px 12px;
+    text-align: center;
+    line-height: 1.35;
   }
 
   .availability-sheet-grid .calendar-weekday,
   .availability-sheet-grid .calendar-day {
-    min-height: 98px;
+    min-height: 84px;
+    border-radius: 18px;
   }
 
   .calendar-scroll {
@@ -2874,19 +3653,46 @@ textarea {
   }
 
   .calendar-scroll .calendar-grid {
-    min-width: 640px;
+    min-width: 500px;
+    gap: 6px;
   }
 
   .availability-sheet-grid .calendar-day:not(.is-booked) .calendar-day-note {
     display: none;
   }
 
+  .availability-sheet-grid .calendar-weekday {
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+  }
+
+  .availability-sheet-grid .calendar-day {
+    padding: 10px 8px 8px;
+    gap: 6px;
+  }
+
+  .availability-sheet-grid .calendar-day-note {
+    min-height: 22px;
+    padding: 0 8px;
+    font-size: 0.68rem;
+  }
+
   .availability-sheet-grid .calendar-day-number {
-    font-size: 1.14rem;
+    font-size: 1.02rem;
   }
 
   .availability-month-copy strong {
     font-size: 1.08rem;
+  }
+
+  .availability-month-nav.is-inline .availability-month-copy {
+    text-align: left;
+    gap: 4px;
+  }
+
+  .availability-month-nav.is-inline .availability-month-copy span {
+    font-size: 0.8rem;
+    line-height: 1.45;
   }
 
   .availability-month-copy span,
@@ -2894,9 +3700,67 @@ textarea {
     font-size: 0.9rem;
   }
 
+  .availability-mobile-note {
+    display: block;
+  }
+
+  .availability-day-block {
+    gap: 10px;
+  }
+
+  .availability-day-label {
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+  }
+
+  .availability-calendar-summary {
+    padding: 14px 16px;
+    border-radius: 18px;
+  }
+
+  .availability-calendar-copy strong {
+    font-size: 0.9rem;
+  }
+
+  .availability-calendar-copy small {
+    font-size: 0.8rem;
+  }
+
+  .availability-day-list {
+    gap: 8px;
+  }
+
+  .calendar-legend {
+    gap: 10px;
+  }
+
+  .calendar-legend span {
+    min-height: 34px;
+    padding: 0 12px;
+    font-size: 0.78rem;
+  }
+
+  .availability-summary-chip,
+  .availability-day-pill {
+    min-height: 36px;
+    padding: 0 12px;
+    font-size: 0.8rem;
+  }
+
   .footer-actions {
     width: 100%;
     justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .footer-action-button,
+  .footer-back-top {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .owner-analytics-stat b {
+    font-size: 1.4rem;
   }
 
   .gallery-carousel {
@@ -2950,6 +3814,20 @@ textarea {
   .brand-copy strong {
     font-size: 0.72rem;
     letter-spacing: 0.03em;
+  }
+}
+
+@media (max-width: 420px) {
+  .availability-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .policy-status {
+    width: 100%;
+  }
+
+  .calendar-scroll .calendar-grid {
+    min-width: 472px;
   }
 }
 

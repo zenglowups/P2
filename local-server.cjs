@@ -8,6 +8,7 @@ const ROOT_DIR = __dirname;
 const HOST = process.env.HOST || "0.0.0.0";
 const PORT = Number(process.env.PORT || 8787);
 const ownerBackendPromise = import(pathToFileURL(path.join(ROOT_DIR, "lib", "owner-backend.mjs")).href);
+const siteBackendPromise = import(pathToFileURL(path.join(ROOT_DIR, "lib", "site-backend.mjs")).href);
 
 const MIME_TYPES = {
   ".css": "text/css; charset=utf-8",
@@ -161,6 +162,7 @@ async function serveStatic(request, response) {
 async function handleApi(request, response) {
   const url = new URL(request.url || "/", `http://${request.headers.host || `${HOST}:${PORT}`}`);
   const ownerBackend = await ownerBackendPromise;
+  const siteBackend = await siteBackendPromise;
 
   if (request.method === "GET" && url.pathname === "/api/health") {
     sendJson(response, 200, { ok: true });
@@ -169,6 +171,61 @@ async function handleApi(request, response) {
 
   if (request.method === "GET" && url.pathname === "/api/bootstrap") {
     sendJson(response, 200, await ownerBackend.getBootstrapPayload(request.headers));
+    return;
+  }
+
+  if (request.method === "GET" && url.pathname === "/api/visitor/bootstrap") {
+    sendJson(
+      response,
+      200,
+      await siteBackend.getVisitorBootstrap({
+        headers: request.headers,
+        socketAddress: request.socket?.remoteAddress,
+        pathname: url.searchParams.get("path") || "/",
+      }),
+    );
+    return;
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/visitor/preferences") {
+    const payload = await readJsonBody(request);
+    sendJson(
+      response,
+      200,
+      await siteBackend.saveVisitorPreferences({
+        headers: request.headers,
+        socketAddress: request.socket?.remoteAddress,
+        pathname: payload?.path,
+        analyticsEnabled: !!payload?.analyticsEnabled,
+        source: payload?.source,
+      }),
+    );
+    return;
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/analytics/event") {
+    const payload = await readJsonBody(request);
+    sendJson(
+      response,
+      200,
+      await siteBackend.trackVisitorEvent({
+        headers: request.headers,
+        socketAddress: request.socket?.remoteAddress,
+        pathname: payload?.path,
+        eventType: payload?.eventType,
+      }),
+    );
+    return;
+  }
+
+  if (request.method === "GET" && url.pathname === "/api/analytics/summary") {
+    const bootstrap = await ownerBackend.getBootstrapPayload(request.headers);
+    if (!bootstrap?.authenticated) {
+      sendJson(response, 401, { message: "Trebuie sa fii autentificat pentru analytics." });
+      return;
+    }
+
+    sendJson(response, 200, await siteBackend.getAnalyticsSummary());
     return;
   }
 
