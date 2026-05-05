@@ -133,7 +133,6 @@
           <a href="#facilities">Facilitati</a>
           <a href="#important">Informatii utile</a>
           <a href="#legal">Bine de stiut</a>
-          <a href="#policy">Termeni, cookies si analytics</a>
           <a href="#reviews">Recenzii oaspeti</a>
         </nav>
       </div>
@@ -142,10 +141,10 @@
     <section class="section availability-section" id="prices">
       <div class="container section-heading reveal">
         <p class="eyebrow">Disponibilitate</p>
-        <h2>Alege luna, verifica zilele libere si trimite perioada dorita.</h2>
+        <h2>Alege luna si vezi rapid ce zile mai sunt libere.</h2>
         <p>
-          Compara usor Studio Double si Studio Deluxe, verifica perioadele ocupate
-          si alege varianta potrivita pentru sejurul dorit.
+          Compara usor Studio Double si Studio Deluxe, verifica lunile ramase disponibile
+          si alege perioada potrivita fara sa deschizi un calendar mare.
         </p>
       </div>
 
@@ -206,9 +205,9 @@
 
         <div class="database-card availability-static-card reveal">
           <div class="card-heading card-heading-tight">
-            <p class="eyebrow">Calendar</p>
-            <h3>Perioadele ocupate sunt marcate clar pentru fiecare unitate.</h3>
-            <p>Verifica luna dorita si compara rapid disponibilitatea dintre Studio Double si Studio Deluxe.</p>
+            <p class="eyebrow">Disponibilitate pe luni</p>
+            <h3>Vezi dintr-o privire cate zile raman libere pentru fiecare studio.</h3>
+            <p>Schimba luna pentru fiecare unitate, vezi intervalele libere si compara rapid disponibilitatea.</p>
           </div>
 
           <div class="source-lock-note panel-surface">
@@ -217,14 +216,8 @@
           </div>
 
           <p class="availability-inline-hint">
-            Fiecare studio are propriile sageti de luna, ca sa poti verifica rapid perioada dorita pentru exact acea unitate.
+            Poti merge doar din luna curenta inainte, iar fiecare studio isi pastreaza separat luna selectata.
           </p>
-
-          <div class="calendar-legend calendar-legend-static">
-            <span><i class="legend-dot legend-free"></i>Disponibil</span>
-            <span><i class="legend-dot legend-booked"></i>Rezervat</span>
-            <span><i class="legend-dot legend-today"></i>Astazi</span>
-          </div>
 
           <div class="availability-overview" data-availability-overview></div>
         </div>
@@ -302,12 +295,16 @@
           </div>
         </div>
 
-          <div class="gallery-viewport" id="gallery-viewport" role="region" aria-label="Galerie foto Afroditi Studios">
+          <div class="gallery-viewport" id="gallery-viewport" role="region" aria-label="Galerie foto Afroditi Studios" tabindex="0">
             <div class="gallery-track" data-gallery-track></div>
         </div>
 
+        <div class="gallery-progress" data-gallery-progress aria-hidden="true">
+          <span></span>
+        </div>
+
         <p class="gallery-helper">
-          Fotografii reale din camere, bai, balcon si atmosfera proprietatii.
+          Gliseaza sau foloseste sagetile pentru a trece rapid prin fotografii.
         </p>
       </div>
     </section>
@@ -363,50 +360,6 @@
         </div>
 
         <div class="legal-list" data-legal-list></div>
-      </div>
-    </section>
-
-    <section class="section policy-section" id="policy">
-      <div class="container section-heading reveal">
-        <p class="eyebrow">Termeni, cookies si analytics</p>
-        <h2>Conditii clare pentru cereri, confidentialitate si informarea salvata pe site.</h2>
-        <p>
-          Site-ul prezinta proprietatea, perioadele ocupate si modalitatile de contact.
-          Tot aici poti vedea pe scurt cum sunt tratate informarea cookies si analytics-ul intern folosit pentru masurarea intrarilor.
-        </p>
-      </div>
-
-      <div class="container policy-grid reveal">
-        <article class="policy-card panel-surface">
-          <p class="eyebrow">Conditii de folosire</p>
-          <h3>Disponibilitatea afisata este orientativa pana la confirmarea finala.</h3>
-          <p>
-            Cererile de cazare trimise prin formular sau mesaj direct sunt verificate inainte de confirmare,
-            iar rezervarea devine certa doar dupa raspunsul proprietatii.
-          </p>
-          <button class="button button-ghost-light" type="button" data-open-terms>Vezi termenii completi</button>
-        </article>
-
-        <article class="policy-card panel-surface">
-          <p class="eyebrow">Confidentialitate</p>
-          <h3>Datele de contact sunt folosite doar pentru raspunsul la cererea trimisa.</h3>
-          <p>
-            Informatiile introduse pentru o cerere de cazare sunt folosite pentru a raspunde,
-            confirma perioada dorita si continua discutia legata de sejur.
-          </p>
-          <button class="button button-ghost-light" type="button" data-open-terms>Citeste politica completa</button>
-        </article>
-
-        <article class="policy-card panel-surface">
-          <p class="eyebrow">Cookies si analytics</p>
-          <h3>Analytics-ul intern al site-ului este activ pentru fiecare vizitator nou.</h3>
-          <p>
-            Site-ul salveaza informarea si identificatorul tehnic al vizitatorului pentru fiecare IP cunoscut,
-            astfel incat mesajul de bun venit sa nu reapara inutil la urmatoarele accesari.
-          </p>
-          <p class="policy-status" data-preference-status>Informarea cookies si analytics nu este salvata inca.</p>
-          <button class="button" type="button" data-open-preferences>Vezi informarea</button>
-        </article>
       </div>
     </section>
 
@@ -485,65 +438,142 @@
       <div class="container contact-layout">
         <div class="section-copy reveal">
           <p class="eyebrow">Contact</p>
-          <h2>Pentru disponibilitate, detalii sau confirmarea perioadei, scrie direct.</h2>
+          <h2>Alege varianta de contact cea mai simpla pentru perioada dorita.</h2>
           <p>
-            Daca ai intrebari despre perioada, tipul camerei sau numarul de oaspeti,
-            mesajele directe ajuta la confirmarea rapida a sejurului.
+            Pentru intrebari rapide, WhatsApp-ul merge foarte bine. Daca vrei un raspuns direct
+            si clar pe loc, apelul telefonic ramane cea mai comoda varianta.
           </p>
         </div>
 
-        <div class="social-grid reveal" id="social-grid">
+        <div class="contact-stack reveal" id="social-grid">
+          <div class="contact-primary-grid">
+            <a
+              class="social-card contact-card contact-card-call"
+              href="tel:+40742721408"
+              data-analytics-event="social_click"
+            >
+              <span class="social-icon contact-icon" aria-hidden="true">
+                <img src="Images/phone-app-original.svg" alt="" loading="lazy" decoding="async">
+              </span>
+              <div>
+                <p class="contact-card-kicker">Apel direct</p>
+                <strong>0742 721 408</strong>
+                <span>Potrivit pentru verificarea rapida a disponibilitatii, a perioadei si a detaliilor importante.</span>
+              </div>
+            </a>
+
+            <a
+              class="social-card contact-card contact-card-whatsapp"
+              href="https://wa.me/40742721408"
+              target="_blank"
+              rel="noreferrer"
+              data-analytics-event="social_click"
+            >
+              <span class="social-icon contact-icon" aria-hidden="true">
+                <img src="Images/whatsapp-app-original.svg" alt="" loading="lazy" decoding="async">
+              </span>
+              <div>
+                <p class="contact-card-kicker">Mesaj rapid</p>
+                <strong>Scrie pe WhatsApp</strong>
+                <span>Trimite perioada dorita, numarul de oaspeti si intrebarile esentiale intr-un singur mesaj.</span>
+              </div>
+            </a>
+          </div>
+
           <a
-            class="social-card social-card-tiktok"
-            href="https://www.tiktok.com/@cosmin.ovidiu.gri3"
+            class="contact-map-card"
+            href="https://www.google.com/maps/place/Afroditi+Studios+Grigoriu+Luxury+Apartaments/@40.2710307,22.5965619,17z/data=!4m6!3m5!1s0x135801e3e6ffe4b9:0xdb0364059ecd73d2!8m2!3d40.2731743!4d22.5980588!16s%2Fg%2F11n3k88bdn?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D"
             target="_blank"
             rel="noreferrer"
             data-analytics-event="social_click"
           >
-            <span class="social-icon" aria-hidden="true">
-              <svg viewBox="0 0 64 64" role="img" focusable="false">
-                <rect x="6" y="6" width="52" height="52" rx="18" fill="currentColor"></rect>
-                <path d="M39.5 19.5c1.7 3.2 4.1 5.1 7.4 5.8v5.8a14 14 0 0 1-7.4-2.1v9.6c0 5.9-4.6 10.7-10.8 10.7-6 0-10.7-4.6-10.7-10.2 0-6.1 5-10.6 11.5-10.6.7 0 1.3.1 2 .2v6c-.5-.2-1.1-.3-1.8-.3-2.8 0-5 1.8-5 4.5 0 2.5 2 4.5 4.7 4.5 3 0 4.8-2.1 4.8-5.7V14.8h5.3z" fill="#fff7ef"></path>
-              </svg>
-            </span>
-            <div>
-              <strong>TikTok</strong>
-              <span>@cosmin.ovidiu.gri3</span>
+            <figure class="contact-map-media">
+              <img
+                src="Images/map-afroditi-studios-detailed.png"
+                alt="Harta detaliata cu pozitionarea Afroditi Studios Grigoriu Luxury Apartments in Paralia Katerinis, aproape de plaja"
+                loading="lazy"
+                decoding="async"
+              >
+              <figcaption class="contact-map-floating">
+                <span>Paralia Katerinis</span>
+                <strong>Afroditi Studios Grigoriu</strong>
+              </figcaption>
+            </figure>
+            <div class="contact-map-copy">
+              <div class="contact-map-copy-top">
+                <p class="contact-card-kicker">Harta si locatie</p>
+                <span class="contact-map-chip">Google Maps</span>
+              </div>
+              <strong>Locatia este aproape de plaja si usor de gasit odata ce deschizi ruta.</strong>
+              <span>Deschide harta pentru traseul exact, orientare rapida si punctele utile din jurul proprietatii.</span>
+              <span class="contact-map-link">Vezi ruta in Google Maps</span>
             </div>
           </a>
 
-          <a
-            class="social-card social-card-instagram"
-            href="https://www.instagram.com/cosminovidiugrigoriu/?hl=en"
-            target="_blank"
-            rel="noreferrer"
-            data-analytics-event="social_click"
-          >
-            <span class="social-icon" aria-hidden="true">
-              <svg viewBox="0 0 64 64" role="img" focusable="false">
-                <defs>
-                  <linearGradient id="instagramGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#feda75"></stop>
-                    <stop offset="35%" stop-color="#fa7e1e"></stop>
-                    <stop offset="68%" stop-color="#d62976"></stop>
-                    <stop offset="100%" stop-color="#4f5bd5"></stop>
-                  </linearGradient>
-                </defs>
-                <rect x="6" y="6" width="52" height="52" rx="18" fill="url(#instagramGradient)"></rect>
-                <rect x="20" y="20" width="24" height="24" rx="8" fill="none" stroke="#fff7ef" stroke-width="4"></rect>
-                <circle cx="32" cy="32" r="6" fill="none" stroke="#fff7ef" stroke-width="4"></circle>
-                <circle cx="41.5" cy="22.5" r="2.5" fill="#fff7ef"></circle>
-              </svg>
-            </span>
-            <div>
-              <strong>Instagram</strong>
-              <span>@cosminovidiugrigoriu</span>
+          <div class="contact-social-block">
+            <div class="contact-social-head">
+              <p class="contact-card-kicker">Social</p>
+              <span>Cadre reale si mici update-uri din atmosfera proprietatii.</span>
             </div>
-          </a>
+            <div class="contact-social-strip">
+            <a
+              class="contact-mini-card social-card-tiktok"
+              href="https://www.tiktok.com/@cosmin.ovidiu.gri3"
+              target="_blank"
+              rel="noreferrer"
+              data-analytics-event="social_click"
+            >
+              <span class="contact-mini-icon" aria-hidden="true">
+                <img src="Images/tiktok-logo-original.svg" alt="" loading="lazy" decoding="async">
+              </span>
+              <div>
+                <strong>TikTok</strong>
+                <span>@cosmin.ovidiu.gri3</span>
+              </div>
+            </a>
+
+            <a
+              class="contact-mini-card social-card-instagram"
+              href="https://www.instagram.com/cosminovidiugrigoriu/?hl=en"
+              target="_blank"
+              rel="noreferrer"
+              data-analytics-event="social_click"
+            >
+              <span class="contact-mini-icon" aria-hidden="true">
+                <img src="Images/instagram-logo-original.svg" alt="" loading="lazy" decoding="async">
+              </span>
+              <div>
+                <strong>Instagram</strong>
+                <span>@cosminovidiugrigoriu</span>
+              </div>
+            </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   </main>
+
+  <div class="mobile-quick-actions" data-mobile-quick-actions aria-label="Actiuni rapide de contact">
+    <a class="mobile-quick-action is-call" href="tel:+40742721408" data-analytics-event="social_click">
+      <span class="mobile-quick-action-badge" aria-hidden="true">
+        <img src="Images/phone-app-original.svg" alt="" loading="lazy" decoding="async">
+      </span>
+      <span>Suna acum</span>
+    </a>
+    <a
+      class="mobile-quick-action is-whatsapp"
+      href="https://wa.me/40742721408"
+      target="_blank"
+      rel="noreferrer"
+      data-analytics-event="social_click"
+    >
+      <span class="mobile-quick-action-badge" aria-hidden="true">
+        <img src="Images/whatsapp-app-original.svg" alt="" loading="lazy" decoding="async">
+      </span>
+      <span>WhatsApp</span>
+    </a>
+  </div>
 
   <footer class="site-footer">
     <div class="container footer-inner">

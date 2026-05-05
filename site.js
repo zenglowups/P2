@@ -12,7 +12,7 @@ const VISITOR_POLICY_VERSION = "2026-05-04-mandatory-analytics";
 document.documentElement.classList.add("js-ready");
 
 const CONTACT_SETTINGS = {
-  whatsappNumber: "",
+  whatsappNumber: "40742721408",
   calendarMonth: "",
 };
 
@@ -86,41 +86,6 @@ const GALLERY_FILES = [
   "846839553.jpg",
   "846843696.jpg",
   "847487317.jpg",
-];
-
-const GALLERY_COPY = [
-  {
-    title: "Fatada primitoare",
-    note: "Intrare luminoasa si un prim cadru care spune imediat vacanta la mare.",
-  },
-  {
-    title: "Camera pregatita pentru odihna",
-    note: "Pat confortabil, lumina buna si senzatia de spatiu foarte curat.",
-  },
-  {
-    title: "Balcon pentru dimineti lente",
-    note: "Zona buna pentru cafea, aer si ritmul acela relaxat de vacanta in Grecia.",
-  },
-  {
-    title: "Texturi si lumina calda",
-    note: "Detaliile simple pastreaza atmosfera calma si ingrijita.",
-  },
-  {
-    title: "Baie moderna",
-    note: "Finisaje curate si confortul pe care il cauti intr-un sejur de vara.",
-  },
-  {
-    title: "Terasa pentru seri linistite",
-    note: "Un loc bun pentru aer, relaxare si serile lungi de vacanta.",
-  },
-  {
-    title: "Studio complet",
-    note: "Pat, chicineta si zone utile gandite pentru sejururi lejere.",
-  },
-  {
-    title: "Atmosfera proprietatii",
-    note: "Totul ramane luminos, ordonat si relaxat, de la intrare pana la terasa.",
-  },
 ];
 
 const AMENITIES = [
@@ -269,8 +234,11 @@ const spiralStage = $("[data-review-spiral-stage]");
 const galleryViewport = $("#gallery-viewport");
 const galleryTrack = $("[data-gallery-track]");
 const galleryCount = $("[data-gallery-count]");
+const galleryProgress = $("[data-gallery-progress]");
 const galleryPrev = $("#gallery-prev");
 const galleryNext = $("#gallery-next");
+const siteFooter = $(".site-footer");
+const mobileQuickActions = $("[data-mobile-quick-actions]");
 const roomTypesGrid = $("[data-room-types]");
 const amenitiesGrid = $("[data-amenities-grid]");
 const importantCards = $("[data-important-cards]");
@@ -325,6 +293,9 @@ const galleryState = {
   index: 0,
   scrollTicking: false,
 };
+
+const PUBLIC_AVAILABILITY_MIN_VISIBLE_MONTHS = 8;
+const PUBLIC_AVAILABILITY_TAIL_MONTHS = 3;
 
 const appState = createAppState();
 
@@ -448,6 +419,53 @@ function addMonthsToMonthValue(monthValue, delta) {
     return toMonthValue(new Date());
   }
   return toMonthValue(new Date(year, month - 1 + delta, 1));
+}
+
+function getMonthIndex(monthValue) {
+  const [year, month] = String(monthValue).split("-").map(Number);
+  if (!year || !month) {
+    return null;
+  }
+  return year * 12 + (month - 1);
+}
+
+function compareMonthValues(leftMonthValue, rightMonthValue) {
+  const leftIndex = getMonthIndex(leftMonthValue);
+  const rightIndex = getMonthIndex(rightMonthValue);
+  if (leftIndex === null || rightIndex === null) {
+    return 0;
+  }
+  return leftIndex - rightIndex;
+}
+
+function getMonthDistance(startMonthValue, endMonthValue) {
+  return Math.max(0, compareMonthValues(endMonthValue, startMonthValue));
+}
+
+function formatMonthShortLabel(monthValue) {
+  const [year, month] = String(monthValue).split("-").map(Number);
+  if (!year || !month) {
+    return "";
+  }
+  return new Intl.DateTimeFormat("ro-RO", { month: "short", year: "numeric" }).format(
+    new Date(year, month - 1, 1),
+  );
+}
+
+function getPublicAvailabilityMinimumMonthValue() {
+  return toMonthValue(new Date());
+}
+
+function clampAvailabilityMonthValue(monthValue) {
+  const normalized = /^\d{4}-\d{2}$/.test(String(monthValue).trim())
+    ? String(monthValue).trim()
+    : getDefaultCalendarMonthValue();
+  const minimumMonthValue = getPublicAvailabilityMinimumMonthValue();
+  return compareMonthValues(normalized, minimumMonthValue) < 0 ? minimumMonthValue : normalized;
+}
+
+function getInitialAvailabilityMonthValue(configuredMonth = CONTACT_SETTINGS.calendarMonth) {
+  return clampAvailabilityMonthValue(getDefaultCalendarMonthValue(configuredMonth));
 }
 
 function getNights(checkIn, checkOut) {
@@ -581,7 +599,7 @@ function createAppState() {
     a.checkIn.localeCompare(b.checkIn),
   );
   const configuredMonth = String(CONTACT_SETTINGS.calendarMonth ?? "").trim();
-  const initialMonth = getDefaultCalendarMonthValue(configuredMonth);
+  const initialMonth = getInitialAvailabilityMonthValue(configuredMonth);
   const search = new URLSearchParams(window.location.search);
 
   return {
@@ -1079,10 +1097,10 @@ function getAccommodationStatus(accommodation, combinedSet = null) {
 function getAvailabilityMonthValue(accommodationId) {
   const active = String(appState.availability?.monthByAccommodation?.[accommodationId] ?? "").trim();
   if (/^\d{4}-\d{2}$/.test(active)) {
-    return active;
+    return clampAvailabilityMonthValue(active);
   }
 
-  return getDefaultCalendarMonthValue(appState.settings.calendarMonth);
+  return getInitialAvailabilityMonthValue(appState.settings.calendarMonth);
 }
 
 function setAvailabilityMonthValue(accommodationId, monthValue) {
@@ -1094,9 +1112,7 @@ function setAvailabilityMonthValue(accommodationId, monthValue) {
     appState.availability.monthByAccommodation = {};
   }
 
-  appState.availability.monthByAccommodation[accommodationId] = /^\d{4}-\d{2}$/.test(String(monthValue).trim())
-    ? String(monthValue).trim()
-    : getDefaultCalendarMonthValue(appState.settings.calendarMonth);
+  appState.availability.monthByAccommodation[accommodationId] = clampAvailabilityMonthValue(monthValue);
 }
 
 function getBusyDayCountForMonth(combinedSet, monthValue) {
@@ -1126,6 +1142,87 @@ function getDaysInMonth(monthValue) {
   return new Date(year, month, 0).getDate();
 }
 
+function formatDayRangeLabel(startDay, endDay) {
+  return startDay === endDay ? String(startDay) : `${startDay}-${endDay}`;
+}
+
+function getAvailabilityVisibleDayStart(monthValue) {
+  const today = new Date();
+  return monthValue === toMonthValue(today) ? today.getDate() : 1;
+}
+
+function getAvailabilityMonthMetrics(combinedSet, monthValue) {
+  const daysInMonth = getDaysInMonth(monthValue);
+  const visibleStartDay = getAvailabilityVisibleDayStart(monthValue);
+  const busyDays = [];
+  const freeRanges = [];
+  let rangeStart = null;
+
+  for (let day = visibleStartDay; day <= daysInMonth; day += 1) {
+    const isoDate = `${monthValue}-${String(day).padStart(2, "0")}`;
+    const isBusy = combinedSet.has(isoDate);
+
+    if (!isBusy && rangeStart === null) {
+      rangeStart = day;
+    }
+
+    if (isBusy) {
+      busyDays.push(String(day));
+    }
+
+    if ((isBusy || day === daysInMonth) && rangeStart !== null) {
+      const rangeEnd = isBusy ? day - 1 : day;
+      if (rangeEnd >= rangeStart) {
+        freeRanges.push(formatDayRangeLabel(rangeStart, rangeEnd));
+      }
+      rangeStart = null;
+    }
+  }
+
+  const visibleDayCount = Math.max(0, daysInMonth - visibleStartDay + 1);
+  const busyDayCount = busyDays.length;
+
+  return {
+    daysInMonth,
+    visibleDayCount,
+    visibleStartDay,
+    busyDayCount,
+    busyDays,
+    freeRanges,
+    availableDayCount: Math.max(0, visibleDayCount - busyDayCount),
+    startsFromToday: visibleStartDay > 1,
+  };
+}
+
+function buildAvailabilityMonthButtons(accommodationId, activeMonthValue, combinedSet) {
+  const minimumMonthValue = getPublicAvailabilityMinimumMonthValue();
+  const activeMonth = clampAvailabilityMonthValue(activeMonthValue);
+  const totalMonths = Math.max(
+    PUBLIC_AVAILABILITY_MIN_VISIBLE_MONTHS,
+    getMonthDistance(minimumMonthValue, activeMonth) + 1 + PUBLIC_AVAILABILITY_TAIL_MONTHS,
+  );
+
+  return Array.from({ length: totalMonths }, (_, offset) => {
+    const monthValue = addMonthsToMonthValue(minimumMonthValue, offset);
+    const metrics = getAvailabilityMonthMetrics(combinedSet, monthValue);
+    const isActive = monthValue === activeMonth;
+    const helperLabel = metrics.availableDayCount ? `${metrics.availableDayCount} libere` : "ocupata";
+
+    return `
+      <button
+        class="availability-month-pill${isActive ? " is-active" : ""}"
+        type="button"
+        data-availability-month-value="${escapeHtml(monthValue)}"
+        data-accommodation-id="${escapeHtml(accommodationId)}"
+        aria-pressed="${isActive ? "true" : "false"}"
+      >
+        <strong>${escapeHtml(formatMonthShortLabel(monthValue))}</strong>
+        <span>${escapeHtml(helperLabel)}</span>
+      </button>
+    `;
+  }).join("");
+}
+
 function amenityIcon(name) {
   const icons = {
     Apartamente: '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg>',
@@ -1143,18 +1240,17 @@ function amenityIcon(name) {
 }
 
 function buildGallerySlide(file, index) {
-  const copy = GALLERY_COPY[index % GALLERY_COPY.length];
   return `
     <article class="gallery-slide" data-gallery-slide data-gallery-index="${index}">
       <figure class="gallery-slide-frame">
         <div class="gallery-slide-media">
-          <img src="Images/${escapeHtml(file)}" alt="${escapeHtml(copy.title)}" loading="lazy" decoding="async">
+          <img
+            src="Images/${escapeHtml(file)}"
+            alt="${escapeHtml(`Fotografia ${index + 1} din galeria AFRODITI Studios Grigoriu`)}"
+            loading="lazy"
+            decoding="async"
+          >
         </div>
-        <figcaption class="gallery-slide-copy">
-          <span class="gallery-slide-kicker">Cadru ${index + 1}</span>
-          <strong>${escapeHtml(copy.title)}</strong>
-          <p>${escapeHtml(copy.note)}</p>
-        </figcaption>
       </figure>
     </article>
   `;
@@ -1365,91 +1461,38 @@ function renderRoomTypes() {
     .join("");
 }
 
-function buildStaticCalendarCells(accommodationId, monthValue) {
-  const [year, month] = monthValue.split("-").map(Number);
-  const monthIndex = month - 1;
-  const monthStart = new Date(year, monthIndex, 1);
-  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
-  const offset = (monthStart.getDay() + 6) % 7;
-  const totalCells = Math.ceil((offset + daysInMonth) / 7) * 7;
-  const todayIso = toInputDate(new Date());
-  const busySet = getCombinedBusySet(accommodationId);
-
-  let busyDayCount = 0;
-  const cells = ["Lu", "Ma", "Mi", "Jo", "Vi", "Sa", "Du"].map(
-    (day) => `<div class="calendar-weekday">${day}</div>`,
-  );
-
-  for (let index = 0; index < totalCells; index += 1) {
-    const date = new Date(year, monthIndex, 1 - offset + index);
-    const isoDate = toInputDate(date);
-    const outside = date.getMonth() !== monthIndex;
-    const isBooked = !outside && busySet.has(isoDate);
-
-    if (isBooked) {
-      busyDayCount += 1;
-    }
-
-    const classes = ["calendar-day"];
-    if (outside) {
-      classes.push("is-outside");
-    }
-    if (isBooked) {
-      classes.push("is-booked");
-    }
-    if (isoDate === todayIso) {
-      classes.push("is-today");
-    }
-
-    const note = outside ? "" : isBooked ? "Rezervat" : "Disponibil";
-    cells.push(`
-      <div class="${classes.join(" ")}">
-        <span class="calendar-day-number">${date.getDate()}</span>
-        ${note ? `<div class="calendar-day-note">${escapeHtml(note)}</div>` : ""}
-      </div>
-    `);
-  }
-
-  return { cells: cells.join(""), busyDayCount };
-}
-
 function renderAvailabilityOverview() {
   if (!availabilityOverview) {
     return;
   }
 
-  const compactAvailability = COMPACT_AVAILABILITY.matches;
-
   availabilityOverview.innerHTML = appState.accommodations
     .map((accommodation) => {
       const monthValue = getAvailabilityMonthValue(accommodation.id);
       const monthLabel = formatMonthLabel(monthValue);
-      const daysInMonth = getDaysInMonth(monthValue);
       const combinedSet = getCombinedBusySet(accommodation.id);
       const status = getAccommodationStatus(accommodation, combinedSet);
-      const { cells, busyDayCount } = buildStaticCalendarCells(accommodation.id, monthValue);
-      const busyDays = getBusyDaysForMonth(combinedSet, monthValue);
-      const availableDays = Math.max(0, daysInMonth - busyDayCount);
-      const busySummaryLabel = busyDayCount
-        ? `${busyDayCount} zile ocupate`
-        : compactAvailability
-          ? "Fara zile ocupate"
-          : "Nicio zi ocupata in aceasta luna";
-      const availableSummaryLabel = availableDays
-        ? compactAvailability
-          ? `${availableDays} zile libere`
-          : `${availableDays} zile libere in aceasta luna`
-        : compactAvailability
-          ? "Luna ocupata complet"
-          : "Luna este complet ocupata";
-      const busyDaysTitle = compactAvailability ? "Zile ocupate" : `Zile ocupate in ${monthLabel}`;
-      const calendarSummaryTitle = compactAvailability ? "Deschide calendarul complet" : "Calendarul complet al lunii";
-      const calendarSummaryText = compactAvailability
-        ? "Vezi toate zilele pentru aceasta unitate."
-        : "Zilele ocupate raman marcate direct pe intreaga luna.";
-      const monthHelper = compactAvailability
-        ? "Schimba luna doar pentru acest studio."
-        : "Verifica luna dorita pentru aceasta unitate, fara sa schimbi restul calendarelor.";
+      const metrics = getAvailabilityMonthMetrics(combinedSet, monthValue);
+      const minimumMonthValue = getPublicAvailabilityMinimumMonthValue();
+      const previousDisabled = compareMonthValues(monthValue, minimumMonthValue) <= 0;
+      const availableSummaryLabel = metrics.availableDayCount
+        ? `${metrics.availableDayCount} zile libere`
+        : "Nicio zi libera";
+      const busySummaryLabel = metrics.busyDayCount
+        ? `${metrics.busyDayCount} zile ocupate`
+        : "Fara zile ocupate";
+      const availabilityRatio = metrics.visibleDayCount
+        ? Math.round((metrics.availableDayCount / metrics.visibleDayCount) * 100)
+        : 0;
+      const monthHelper = metrics.startsFromToday
+        ? "Afisam doar zilele ramase incepand de astazi."
+        : "Selecteaza rapid alta luna, fara sa mergi inapoi de luna curenta.";
+      const freeRangesMarkup = metrics.freeRanges.length
+        ? metrics.freeRanges.map((range) => `<span class="availability-day-pill is-free">${range}</span>`).join("")
+        : '<span class="availability-day-pill is-booked">Nicio zi libera</span>';
+      const busyDaysMarkup = metrics.busyDays.length
+        ? metrics.busyDays.map((day) => `<span class="availability-day-pill is-booked">${day}</span>`).join("")
+        : '<span class="availability-day-pill is-free">Fara zile ocupate</span>';
 
       return `
         <article class="availability-sheet panel-surface">
@@ -1467,6 +1510,7 @@ function renderAvailabilityOverview() {
               data-availability-month-step="-1"
               data-accommodation-id="${escapeHtml(accommodation.id)}"
               aria-label="${escapeHtml(`Luna anterioara pentru ${accommodation.name}`)}"
+              ${previousDisabled ? "disabled" : ""}
             >
               <span aria-hidden="true">&#8592;</span>
             </button>
@@ -1486,41 +1530,51 @@ function renderAvailabilityOverview() {
               <span aria-hidden="true">&#8594;</span>
             </button>
           </div>
+          <div class="availability-month-strip" aria-label="${escapeHtml(`Luni disponibile pentru ${accommodation.name}`)}">
+            ${buildAvailabilityMonthButtons(accommodation.id, monthValue, combinedSet)}
+          </div>
           <div class="availability-summary">
-            <span class="availability-summary-chip ${busyDayCount ? "is-busy" : "is-free"}">
-              ${busySummaryLabel}
-            </span>
             <span class="availability-summary-chip">
               ${availableSummaryLabel}
             </span>
+            <span class="availability-summary-chip ${metrics.busyDayCount ? "is-busy" : "is-free"}">
+              ${busySummaryLabel}
+            </span>
           </div>
-          <div class="availability-day-block">
-            <strong class="availability-day-label">${escapeHtml(busyDaysTitle)}</strong>
-            <div class="availability-day-list" aria-label="${escapeHtml(`Zile ocupate in ${monthLabel}`)}">
-              ${
-                busyDays.length
-                  ? busyDays.map((day) => `<span class="availability-day-pill is-booked">${day}</span>`).join("")
-                  : '<span class="availability-day-pill is-free">Nicio zi ocupata in aceasta luna</span>'
-              }
+          <div class="availability-month-progress" aria-hidden="true">
+            <span style="width:${availabilityRatio}%"></span>
+          </div>
+          <div class="availability-range-grid">
+            <div class="availability-day-block">
+              <strong class="availability-day-label">Intervale libere</strong>
+              <div class="availability-day-list" aria-label="${escapeHtml(`Intervale libere in ${monthLabel}`)}">
+                ${freeRangesMarkup}
+              </div>
+            </div>
+            <div class="availability-day-block">
+              <strong class="availability-day-label">Zile ocupate</strong>
+              <div class="availability-day-list" aria-label="${escapeHtml(`Zile ocupate in ${monthLabel}`)}">
+                ${busyDaysMarkup}
+              </div>
             </div>
           </div>
-          <p class="availability-mobile-note">Pe telefon, schimba luna din sagetile de mai sus pentru acest studio, apoi deschide calendarul complet daca vrei toate zilele.</p>
-          <details class="availability-calendar-details"${compactAvailability ? "" : " open"}>
-            <summary class="availability-calendar-summary">
-              <span class="availability-calendar-copy">
-                <strong>${calendarSummaryTitle}</strong>
-                <small>${calendarSummaryText}</small>
-              </span>
-            </summary>
-            <div class="calendar-scroll">
-              <div class="calendar-grid availability-sheet-grid">${cells}</div>
-            </div>
-          </details>
-          <p class="availability-sheet-note">${busyDayCount ? `${busyDayCount} zile apar ocupate in ${monthLabel}.` : `In ${monthLabel} nu apar zile ocupate.`}</p>
+          <p class="availability-sheet-note">
+            ${metrics.startsFromToday
+              ? `Pentru ${monthLabel} sunt afisate doar zilele ramase de la ziua ${metrics.visibleStartDay}.`
+              : monthHelper}
+          </p>
         </article>
       `;
     })
     .join("");
+
+  window.requestAnimationFrame(() => {
+    availabilityOverview.querySelectorAll(".availability-month-pill.is-active").forEach((button) => {
+      if (button instanceof HTMLElement) {
+        button.scrollIntoView({ block: "nearest", inline: "center" });
+      }
+    });
+  });
 }
 
 function buildOwnerCalendarCells(accommodationId, monthValue) {
@@ -1739,15 +1793,30 @@ function renderOwnerPanel() {
 }
 
 function handleAvailabilityMonthChange(event) {
-  const button = event.target instanceof Element
-    ? event.target.closest("[data-availability-month-step]")
-    : null;
-  if (!(button instanceof HTMLButtonElement)) {
+  if (!(event.target instanceof Element)) {
     return;
   }
 
-  const accommodationId = String(button.dataset.accommodationId ?? "").trim();
-  const direction = Number(button.dataset.availabilityMonthStep ?? 0);
+  const selectButton = event.target.closest("[data-availability-month-value]");
+  if (selectButton instanceof HTMLButtonElement) {
+    const accommodationId = String(selectButton.dataset.accommodationId ?? "").trim();
+    const monthValue = String(selectButton.dataset.availabilityMonthValue ?? "").trim();
+    if (!accommodationId || !/^\d{4}-\d{2}$/.test(monthValue)) {
+      return;
+    }
+    setAvailabilityMonthValue(accommodationId, monthValue);
+    renderRoomTypes();
+    renderAvailabilityOverview();
+    return;
+  }
+
+  const stepButton = event.target.closest("[data-availability-month-step]");
+  if (!(stepButton instanceof HTMLButtonElement) || stepButton.disabled) {
+    return;
+  }
+
+  const accommodationId = String(stepButton.dataset.accommodationId ?? "").trim();
+  const direction = Number(stepButton.dataset.availabilityMonthStep ?? 0);
 
   if (!accommodationId || !Number.isFinite(direction) || direction === 0) {
     return;
@@ -2354,6 +2423,12 @@ function updateGalleryMeta() {
   if (galleryCount) {
     galleryCount.textContent = total ? `${galleryState.index + 1} / ${total} imagini reale` : "0 imagini";
   }
+  if (galleryProgress) {
+    const bar = galleryProgress.querySelector("span");
+    if (bar instanceof HTMLElement) {
+      bar.style.width = total ? `${((galleryState.index + 1) / total) * 100}%` : "0%";
+    }
+  }
   if (galleryPrev) {
     galleryPrev.disabled = galleryState.index <= 0;
   }
@@ -2475,12 +2550,40 @@ function initGalleryCarousel() {
     return;
   }
   galleryViewport.addEventListener("scroll", handleGalleryScroll, { passive: true });
+  galleryViewport.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      scrollGalleryTo(galleryState.index - 1);
+    }
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      scrollGalleryTo(galleryState.index + 1);
+    }
+  });
   if (galleryPrev) {
     galleryPrev.addEventListener("click", () => scrollGalleryTo(galleryState.index - 1));
   }
   if (galleryNext) {
     galleryNext.addEventListener("click", () => scrollGalleryTo(galleryState.index + 1));
   }
+}
+
+function initMobileQuickActions() {
+  if (!mobileQuickActions || !siteFooter || !("IntersectionObserver" in window)) {
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const isFooterVisible = entries.some((entry) => entry.isIntersecting);
+      mobileQuickActions.classList.toggle("is-hidden", isFooterVisible);
+    },
+    {
+      threshold: 0.08,
+    },
+  );
+
+  observer.observe(siteFooter);
 }
 
 function initEvents() {
@@ -2676,6 +2779,7 @@ async function init() {
   renderOwnerAccess();
   initRevealObserver();
   initGalleryCarousel();
+  initMobileQuickActions();
   initEvents();
   updateScrolledHeader();
   updateSpiralScene();

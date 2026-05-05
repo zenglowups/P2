@@ -1,0 +1,10 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="phoneAppGreen" x1="10" y1="8" x2="54" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#66F34F"/>
+      <stop offset="1" stop-color="#2EE314"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#phoneAppGreen)"/>
+  <path d="M20.2 15.8C21.8 15 23.7 15.4 24.9 16.8L29.2 22.1C30.2 23.4 30.3 25.1 29.4 26.5L27.6 29.1C30.7 34.2 33.6 37.1 38.7 40.2L41.3 38.4C42.7 37.5 44.4 37.6 45.7 38.6L51 42.9C52.4 44.1 52.8 46 52 47.6L50.7 50.1C49.8 51.9 47.8 52.9 45.8 52.6C39.2 51.6 31.8 46.6 26 40.8C20.2 35 15.2 27.6 14.2 21C13.9 19 14.9 17 16.7 16.1L20.2 15.8Z" fill="#F7F7F7"/>
+</svg>

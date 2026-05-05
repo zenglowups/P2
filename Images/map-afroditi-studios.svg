@@ -1,0 +1,97 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sea" x1="1248" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8FD3E2"/>
+      <stop offset="1" stop-color="#63ADC4"/>
+    </linearGradient>
+    <linearGradient id="sand" x1="1168" y1="0" x2="1248" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4E6BE"/>
+      <stop offset="1" stop-color="#EAD7A0"/>
+    </linearGradient>
+    <radialGradient id="pinGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(838 410) rotate(90) scale(168 196)">
+      <stop stop-color="#FFFFFF" stop-opacity="0.92"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="706" y="214" width="286" height="348" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="22"/>
+      <feGaussianBlur stdDeviation="26"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0705882 0 0 0 0 0.219608 0 0 0 0 0.278431 0 0 0 0.16 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_1" result="shape"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" rx="0" fill="#F6F0E4"/>
+  <path d="M0 0H1168V900H0V0Z" fill="#F4EEE1"/>
+  <path d="M1168 0H1248V900H1168V0Z" fill="url(#sand)"/>
+  <path d="M1248 0H1600V900H1248V0Z" fill="url(#sea)"/>
+
+  <g opacity="0.92">
+    <rect x="80" y="70" width="352" height="104" rx="32" fill="#ECE8E2"/>
+    <rect x="456" y="70" width="170" height="104" rx="32" fill="#ECE8E2"/>
+    <rect x="92" y="210" width="210" height="420" rx="44" fill="#D8F0D9"/>
+    <path d="M260 172H420L518 56H1150V210H260V172Z" fill="#F8F2E6"/>
+  </g>
+
+  <g stroke="#A6B5C4" stroke-width="24" stroke-linecap="round" opacity="0.95">
+    <path d="M0 122H762"/>
+    <path d="M0 266H508"/>
+    <path d="M442 0V900"/>
+    <path d="M574 324H1126"/>
+    <path d="M694 498H1290"/>
+    <path d="M534 648H1268"/>
+    <path d="M756 234V790"/>
+    <path d="M932 228V804"/>
+    <path d="M1094 152V812"/>
+    <path d="M250 506L446 596"/>
+    <path d="M338 730H784"/>
+  </g>
+
+  <g fill="#EFE6D3">
+    <rect x="96" y="88" width="86" height="62" rx="18"/>
+    <rect x="220" y="88" width="120" height="62" rx="18"/>
+    <rect x="478" y="88" width="102" height="62" rx="18"/>
+    <rect x="560" y="260" width="118" height="86" rx="18"/>
+    <rect x="736" y="248" width="102" height="74" rx="18"/>
+    <rect x="864" y="254" width="78" height="68" rx="18"/>
+    <rect x="1014" y="220" width="106" height="84" rx="18"/>
+    <rect x="1142" y="184" width="90" height="96" rx="18"/>
+    <rect x="120" y="336" width="92" height="122" rx="20"/>
+    <rect x="554" y="388" width="100" height="92" rx="18"/>
+    <rect x="824" y="378" width="92" height="126" rx="18"/>
+    <rect x="970" y="372" width="90" height="118" rx="18"/>
+    <rect x="1130" y="374" width="82" height="118" rx="18"/>
+    <rect x="1208" y="416" width="90" height="78" rx="18"/>
+    <rect x="120" y="490" width="80" height="110" rx="18"/>
+    <rect x="586" y="546" width="106" height="92" rx="18"/>
+    <rect x="758" y="544" width="92" height="116" rx="18"/>
+    <rect x="920" y="560" width="100" height="100" rx="18"/>
+    <rect x="1084" y="560" width="90" height="104" rx="18"/>
+    <rect x="1208" y="550" width="86" height="120" rx="18"/>
+    <rect x="370" y="740" width="94" height="84" rx="18"/>
+    <rect x="534" y="708" width="94" height="104" rx="18"/>
+    <rect x="674" y="704" width="92" height="112" rx="18"/>
+    <rect x="824" y="708" width="92" height="108" rx="18"/>
+  </g>
+
+  <path d="M1248 0H1600V900H1248V0Z" fill="url(#sea)" opacity="0.95"/>
+  <path d="M1172 0H1248V900H1172V0Z" fill="url(#sand)" opacity="0.95"/>
+
+  <circle cx="838" cy="410" r="156" fill="url(#pinGlow)"/>
+  <g filter="url(#shadow)">
+    <path d="M838 270C774.487 270 723 321.487 723 385C723 470 838 584 838 584C838 584 953 470 953 385C953 321.487 901.513 270 838 270Z" fill="#D85A67"/>
+    <circle cx="838" cy="385" r="42" fill="#FFF8F0"/>
+    <circle cx="838" cy="385" r="16" fill="#D85A67"/>
+  </g>
+
+  <g fill="#FFFFFF" opacity="0.86">
+    <rect x="980" y="112" width="212" height="60" rx="30"/>
+    <rect x="1008" y="128" width="86" height="12" rx="6" fill="#D9C7A8"/>
+    <rect x="1106" y="128" width="58" height="12" rx="6" fill="#8EC2CF"/>
+    <rect x="1284" y="734" width="194" height="60" rx="30"/>
+    <rect x="1310" y="750" width="66" height="12" rx="6" fill="#8EC2CF"/>
+    <rect x="1388" y="750" width="62" height="12" rx="6" fill="#D9C7A8"/>
+  </g>
+</svg>
