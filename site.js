@@ -21,6 +21,8 @@ const DEFAULT_ACCOMMODATIONS = [
     id: "studio-double",
     name: "Apartament studio cu 1 pat dublu",
     capacity: "2 adulti",
+    maxAdults: 2,
+    maxChildren: 0,
     summary: "Studio luminos cu pat dublu, baie privata, balcon si acces rapid spre plaja.",
     highlights: [
       "pat dublu si decor modern",
@@ -32,6 +34,8 @@ const DEFAULT_ACCOMMODATIONS = [
     id: "studio-deluxe",
     name: "Studio Deluxe",
     capacity: "2 adulti + 1 copil",
+    maxAdults: 2,
+    maxChildren: 1,
     summary: "Unitate spatioasa cu pat dublu, canapea, chicineta si atmosfera premium.",
     highlights: [
       "chicineta utilata",
@@ -100,20 +104,6 @@ const AMENITIES = [
   ["Aer conditionat", "Confort important in zilele calde de vara."],
   ["Terasa", "Una dintre cele mai placute zone pentru relaxare in aer liber."],
 ].map(([name, description]) => ({ name, description }));
-
-const IMPORTANT_INFO = [
-  ["Foarte aproape de plaja", "Marea este la o plimbare scurta, fara sa pierzi atmosfera linistita a strazii."],
-  ["Unitati bine echipate", "Balconul, terasa, baia privata, chicineta si aerul conditionat sustin un sejur comod."],
-  ["Zona buna pentru explorare", "Proprietatea este un punct placut de plecare pentru plimbari, taverne si escapade prin imprejurimi."],
-  ["Potrivita pentru vacante fara graba", "Atmosfera generala este calma, curata si foarte usor de apreciat de la prima vedere."],
-].map(([title, text]) => ({ title, text }));
-
-const LEGAL_INFO = [
-  ["Confirmarea perioadei", "Merita sa trimiti din start intervalul dorit, pentru a primi rapid o varianta potrivita."],
-  ["Ora de sosire", "O ora aproximativa de check-in ajuta gazda sa pregateasca studioul in cele mai bune conditii."],
-  ["Numarul de oaspeti", "Mentioneaza din timp cati adulti si copii calatoresc, pentru alegerea unitatii potrivite."],
-  ["Cereri speciale", "Daca ai nevoie de un detaliu suplimentar pentru sejur, este bine sa il mentionezi inainte de confirmare."],
-].map(([title, text]) => ({ title, text }));
 
 const SCORE_BARS = [
   ["Personal", 10],
@@ -228,6 +218,7 @@ const navToggle = $(".nav-toggle");
 const body = document.body;
 const introOverlay = $("#site-intro");
 const backToTopLinks = $$("[data-back-to-top]");
+const sectionAnchorLinks = $$('a[href^="#"]:not([data-back-to-top])');
 const revealItems = $$(".reveal");
 const spiralShell = $(".review-spiral-shell");
 const spiralStage = $("[data-review-spiral-stage]");
@@ -241,11 +232,20 @@ const siteFooter = $(".site-footer");
 const mobileQuickActions = $("[data-mobile-quick-actions]");
 const roomTypesGrid = $("[data-room-types]");
 const amenitiesGrid = $("[data-amenities-grid]");
-const importantCards = $("[data-important-cards]");
-const legalList = $("[data-legal-list]");
 const scoreBars = $("[data-score-bars]");
 const reviewList = $("[data-review-list]");
 const bookingForm = $("#booking-form");
+const bookingAccommodationSelect = bookingForm?.querySelector("[data-accommodation-select]") ?? null;
+const bookingGuestPicker = $("[data-guest-picker]");
+const bookingGuestTrigger = $("#booking-guests-trigger");
+const bookingGuestPanel = $("#booking-guests-panel");
+const bookingGuestSummary = $("#booking-guests-summary");
+const bookingGuestHint = $("#booking-guests-hint");
+const bookingAdultsValue = $("#booking-adults-value");
+const bookingChildrenValue = $("#booking-children-value");
+const bookingAdultCountField = $("#booking-adult-count");
+const bookingChildCountField = $("#booking-child-count");
+const bookingGuestCountField = $("#booking-guest-count");
 const bookingFormNote = $("#booking-form-note");
 const bookingSubmit = $("#booking-submit");
 const availabilityOverview = $("[data-availability-overview]");
@@ -344,6 +344,27 @@ function writeLocalVisitorPreferences(payload) {
 
 function getCurrentPath() {
   return window.location.pathname || "/";
+}
+
+function getCurrentUrlWithoutHash() {
+  return `${getCurrentPath()}${window.location.search || ""}`;
+}
+
+function getNavigationType() {
+  const performanceApi = window.performance;
+  const navigationEntries =
+    performanceApi && typeof performanceApi.getEntriesByType === "function"
+      ? performanceApi.getEntriesByType("navigation")
+      : [];
+  return navigationEntries && navigationEntries.length ? String(navigationEntries[0]?.type || "") : "";
+}
+
+function replaceUrlWithoutHash() {
+  try {
+    window.history.replaceState(window.history.state, document.title, getCurrentUrlWithoutHash());
+  } catch {
+    // ignoram browserele care nu permit replaceState pe fisiere locale
+  }
 }
 
 function parseDate(dateString) {
@@ -497,6 +518,17 @@ function deriveHighlights(accommodation) {
     .slice(0, 3);
 }
 
+function inferAccommodationGuestLimits(capacity) {
+  const capacityLabel = String(capacity ?? "").toLowerCase();
+  const adultsMatch = capacityLabel.match(/(\d+)\s*adulti?/);
+  const childrenMatch = capacityLabel.match(/(\d+)\s*cop/i);
+
+  return {
+    maxAdults: clamp(Number(adultsMatch?.[1] ?? 2), 1, 20),
+    maxChildren: clamp(Number(childrenMatch?.[1] ?? 0), 0, 20),
+  };
+}
+
 function normalizeAccommodation(raw, index = 0) {
   const name = String(raw?.name ?? "").trim();
   if (!name) {
@@ -505,14 +537,20 @@ function normalizeAccommodation(raw, index = 0) {
 
   const capacity = String(raw?.capacity ?? "").trim();
   const summary = String(raw?.summary ?? "").trim();
+  const inferredLimits = inferAccommodationGuestLimits(capacity);
   const highlights = Array.isArray(raw?.highlights)
     ? raw.highlights.map((item) => String(item).trim()).filter(Boolean)
     : [];
+  const parsedMaxAdults = Number.parseInt(raw?.maxAdults, 10);
+  const parsedMaxChildren = Number.parseInt(raw?.maxChildren, 10);
 
   return {
     id: String(raw?.id ?? `acc-${index + 1}`),
     name,
     capacity: capacity || "2 adulti",
+    maxAdults: Number.isFinite(parsedMaxAdults) && parsedMaxAdults > 0 ? parsedMaxAdults : inferredLimits.maxAdults,
+    maxChildren:
+      Number.isFinite(parsedMaxChildren) && parsedMaxChildren >= 0 ? parsedMaxChildren : inferredLimits.maxChildren,
     summary: summary || "Spatiu pregatit pentru sejururi relaxate aproape de plaja.",
     highlights: highlights.length ? highlights.slice(0, 4) : deriveHighlights({ capacity, summary }),
   };
@@ -601,6 +639,8 @@ function createAppState() {
   const configuredMonth = String(CONTACT_SETTINGS.calendarMonth ?? "").trim();
   const initialMonth = getInitialAvailabilityMonthValue(configuredMonth);
   const search = new URLSearchParams(window.location.search);
+  const initialAccommodation = accommodations[0] ?? null;
+  const initialGuestLimits = getAccommodationGuestLimits(initialAccommodation);
 
   return {
     settings: {
@@ -609,6 +649,11 @@ function createAppState() {
     },
     accommodations,
     reservations,
+    booking: {
+      adults: clamp(2, 1, initialGuestLimits.maxAdults),
+      children: 0,
+      guestPickerOpen: false,
+    },
     owner: {
       isAvailable: CAN_USE_OWNER_API,
       isAuthenticated: false,
@@ -643,6 +688,109 @@ function createAppState() {
 
 function getAccommodationById(id) {
   return appState.accommodations.find((item) => item.id === id) ?? null;
+}
+
+function getAccommodationGuestLimits(accommodation) {
+  return {
+    maxAdults: clamp(Number(accommodation?.maxAdults ?? 2), 1, 20),
+    maxChildren: clamp(Number(accommodation?.maxChildren ?? 0), 0, 20),
+  };
+}
+
+function getActiveBookingAccommodation() {
+  return getAccommodationById(bookingAccommodationSelect?.value) ?? appState.accommodations[0] ?? null;
+}
+
+function formatGuestPartyLabel(adults, children) {
+  const safeAdults = clamp(Number(adults ?? 1), 1, 20);
+  const safeChildren = clamp(Number(children ?? 0), 0, 20);
+  const parts = [`${safeAdults} ${safeAdults === 1 ? "adult" : "adulti"}`];
+
+  if (safeChildren > 0) {
+    parts.push(`${safeChildren} ${safeChildren === 1 ? "copil" : "copii"}`);
+  }
+
+  return parts.join(", ");
+}
+
+function clampBookingGuestSelection(adults, children, accommodation = getActiveBookingAccommodation()) {
+  const limits = getAccommodationGuestLimits(accommodation);
+
+  return {
+    adults: clamp(Number(adults ?? appState.booking?.adults ?? 1), 1, limits.maxAdults),
+    children: clamp(Number(children ?? appState.booking?.children ?? 0), 0, limits.maxChildren),
+  };
+}
+
+function setBookingGuestPickerOpen(isOpen) {
+  if (!bookingGuestTrigger || !bookingGuestPanel) {
+    return;
+  }
+
+  const shouldOpen = !!isOpen;
+  appState.booking.guestPickerOpen = shouldOpen;
+  bookingGuestTrigger.setAttribute("aria-expanded", String(shouldOpen));
+  bookingGuestPanel.hidden = !shouldOpen;
+  bookingGuestPicker?.classList.toggle("is-open", shouldOpen);
+}
+
+function syncBookingGuestPicker(nextSelection = null) {
+  const accommodation = getActiveBookingAccommodation();
+  const selection = nextSelection
+    ? clampBookingGuestSelection(nextSelection.adults, nextSelection.children, accommodation)
+    : clampBookingGuestSelection(appState.booking.adults, appState.booking.children, accommodation);
+  const limits = getAccommodationGuestLimits(accommodation);
+  const summary = formatGuestPartyLabel(selection.adults, selection.children);
+  const maxSummary = formatGuestPartyLabel(limits.maxAdults, limits.maxChildren);
+
+  appState.booking.adults = selection.adults;
+  appState.booking.children = selection.children;
+
+  if (bookingGuestSummary) {
+    bookingGuestSummary.textContent = summary;
+  }
+  if (bookingAdultsValue) {
+    bookingAdultsValue.textContent = String(selection.adults);
+  }
+  if (bookingChildrenValue) {
+    bookingChildrenValue.textContent = String(selection.children);
+  }
+  if (bookingAdultCountField) {
+    bookingAdultCountField.value = String(selection.adults);
+  }
+  if (bookingChildCountField) {
+    bookingChildCountField.value = String(selection.children);
+  }
+  if (bookingGuestCountField) {
+    bookingGuestCountField.value = summary;
+  }
+  if (bookingGuestHint) {
+    bookingGuestHint.textContent =
+      limits.maxChildren > 0
+        ? `Maxim ${maxSummary} pentru aceasta unitate.`
+        : `Maxim ${limits.maxAdults} ${limits.maxAdults === 1 ? "adult" : "adulti"} pentru aceasta unitate.`;
+  }
+
+  bookingGuestPanel
+    ?.querySelectorAll(".guest-picker-step")
+    .forEach((button) => {
+      const field = button.dataset.guestField;
+      const step = Number(button.dataset.guestStep);
+      let isDisabled = false;
+
+      if (field === "adults") {
+        isDisabled = step < 0 ? selection.adults <= 1 : selection.adults >= limits.maxAdults;
+      }
+      if (field === "children") {
+        isDisabled = step < 0 ? selection.children <= 0 : selection.children >= limits.maxChildren;
+      }
+
+      button.disabled = isDisabled;
+      button.setAttribute("aria-disabled", String(isDisabled));
+    });
+
+  setBookingGuestPickerOpen(appState.booking.guestPickerOpen);
+  return selection;
 }
 
 function getOwnerOverrideBucket(accommodationId) {
@@ -863,7 +1011,7 @@ function maybeOpenVisitorWelcome() {
   setVisitorModalOpen(true, { locked: true });
 }
 
-async function persistVisitorPreferences({ source = "manual" }) {
+async function persistVisitorPreferences({ source = "manual", silent = false, closeModal = true } = {}) {
   const fallbackPayload = {
     analyticsEnabled: true,
     preferencesSaved: true,
@@ -890,23 +1038,31 @@ async function persistVisitorPreferences({ source = "manual" }) {
       ...(payload?.visitor || {}),
     });
     syncVisitorPreferenceUi();
-    setStatus(visitorPreferencesStatus, "Informarea a fost salvata pentru acest vizitator.", "success");
-    window.setTimeout(() => {
-      setVisitorModalOpen(false);
-    }, 240);
+    if (!silent) {
+      setStatus(visitorPreferencesStatus, "Informarea a fost salvata pentru acest vizitator.", "success");
+    }
+    if (closeModal) {
+      window.setTimeout(() => {
+        setVisitorModalOpen(false);
+      }, 240);
+    }
   } catch {
     applyVisitorPayload(fallbackPayload);
     appState.visitor.shouldShowWelcome = false;
     writeLocalVisitorPreferences(fallbackPayload);
     syncVisitorPreferenceUi();
-    setStatus(
-      visitorPreferencesStatus,
-      "Informarea a fost salvata local pentru acest browser.",
-      "success",
-    );
-    window.setTimeout(() => {
-      setVisitorModalOpen(false);
-    }, 240);
+    if (!silent) {
+      setStatus(
+        visitorPreferencesStatus,
+        "Informarea a fost salvata local pentru acest browser.",
+        "success",
+      );
+    }
+    if (closeModal) {
+      window.setTimeout(() => {
+        setVisitorModalOpen(false);
+      }, 240);
+    }
   }
 }
 
@@ -1036,7 +1192,7 @@ async function flushOwnerPendingOperations() {
     } else {
       setStatus(
         ownerStatus,
-        `${formatDate(operation.date)} este acum marcata ca ${operation.mode === "occupied" ? "ocupata" : "libera"}.`,
+        `${formatDate(operation.date)} este acum marcata ca ${operation.mode === "occupied" ? "ocupata" : "libera"} si reflectata in site.`,
         "success",
       );
     }
@@ -1249,6 +1405,7 @@ function buildGallerySlide(file, index) {
             alt="${escapeHtml(`Fotografia ${index + 1} din galeria AFRODITI Studios Grigoriu`)}"
             loading="lazy"
             decoding="async"
+            draggable="false"
           >
         </div>
       </figure>
@@ -1345,30 +1502,6 @@ function renderAmenities() {
   ).join("");
 }
 
-function renderInfoCards() {
-  if (importantCards) {
-    importantCards.innerHTML = IMPORTANT_INFO.map(
-      (item) => `
-        <article class="info-card">
-          <strong>${escapeHtml(item.title)}</strong>
-          <p>${escapeHtml(item.text)}</p>
-        </article>
-      `,
-    ).join("");
-  }
-
-  if (legalList) {
-    legalList.innerHTML = LEGAL_INFO.map(
-      (item) => `
-        <article class="legal-card">
-          <strong>${escapeHtml(item.title)}</strong>
-          <p>${escapeHtml(item.text)}</p>
-        </article>
-      `,
-    ).join("");
-  }
-}
-
 function renderReviews() {
   if (scoreBars) {
     scoreBars.innerHTML = SCORE_BARS.map(
@@ -1392,22 +1525,19 @@ function renderReviews() {
 }
 
 function renderAccommodationSelects() {
-  if (!bookingForm) {
-    return;
-  }
-  const select = bookingForm.querySelector('[data-accommodation-select]');
-  if (!select) {
+  if (!bookingAccommodationSelect) {
     return;
   }
 
-  const previous = select.value;
-  select.innerHTML = appState.accommodations
+  const previous = bookingAccommodationSelect.value;
+  bookingAccommodationSelect.innerHTML = appState.accommodations
     .map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`)
     .join("");
 
-  select.value = appState.accommodations.some((item) => item.id === previous)
+  bookingAccommodationSelect.value = appState.accommodations.some((item) => item.id === previous)
     ? previous
     : appState.accommodations[0]?.id ?? "";
+  syncBookingGuestPicker();
 }
 
 function renderOwnerAccommodationSelect() {
@@ -1459,6 +1589,25 @@ function renderRoomTypes() {
       `;
     })
     .join("");
+}
+
+function scrollAvailabilityMonthStripToActive(button, behavior = "smooth") {
+  if (!(button instanceof HTMLElement)) {
+    return;
+  }
+
+  const strip = button.closest(".availability-month-strip");
+  if (!(strip instanceof HTMLElement)) {
+    return;
+  }
+
+  const targetLeft =
+    button.offsetLeft - strip.offsetLeft - Math.max(0, (strip.clientWidth - button.offsetWidth) / 2);
+
+  strip.scrollTo({
+    left: Math.max(0, targetLeft),
+    behavior,
+  });
 }
 
 function renderAvailabilityOverview() {
@@ -1570,9 +1719,7 @@ function renderAvailabilityOverview() {
 
   window.requestAnimationFrame(() => {
     availabilityOverview.querySelectorAll(".availability-month-pill.is-active").forEach((button) => {
-      if (button instanceof HTMLElement) {
-        button.scrollIntoView({ block: "nearest", inline: "center" });
-      }
+      scrollAvailabilityMonthStripToActive(button, "auto");
     });
   });
 }
@@ -1675,7 +1822,8 @@ function syncOwnerLoginForm() {
   }
 
   if (ownerLoginHint) {
-    ownerLoginHint.textContent = "Datele de acces raman private si nu sunt afisate public.";
+    ownerLoginHint.textContent =
+      "Datele de acces raman private, iar zilele salvate aici se reflecta in disponibilitatea publica a site-ului.";
   }
 }
 
@@ -1964,7 +2112,11 @@ function handleBookingSubmit(event) {
   const guestName = String(data.get("guestName") ?? "").trim();
   const guestPhone = String(data.get("guestPhone") ?? "").trim();
   const accommodationId = String(data.get("accommodationId") ?? "").trim();
-  const guestCount = String(data.get("guestCount") ?? "").trim();
+  const guestSelection = syncBookingGuestPicker({
+    adults: data.get("adultCount"),
+    children: data.get("childCount"),
+  });
+  const guestCount = formatGuestPartyLabel(guestSelection.adults, guestSelection.children);
   const checkIn = String(data.get("checkIn") ?? "").trim();
   const checkOut = String(data.get("checkOut") ?? "").trim();
   const whatsappNumber = sanitizePhone(appState.settings.whatsappNumber);
@@ -2001,6 +2153,7 @@ function handleBookingSubmit(event) {
     window.location.href = url;
   }
 
+  setBookingGuestPickerOpen(false);
   void trackAnalyticsEvent("whatsapp_request");
   setStatus("booking-status", "Am deschis WhatsApp cu cererea completata.", "success");
 }
@@ -2183,8 +2336,8 @@ async function handleOwnerCalendarClick(event) {
   setStatus(
     ownerStatus,
     appState.owner.pendingOperations.length > 1
-      ? `Am marcat instant ziua. Sincronizez ${appState.owner.pendingOperations.length} modificari...`
-      : `${formatDate(isoDate)} se actualizeaza acum...`,
+      ? `Am marcat instant ziua. Sincronizez ${appState.owner.pendingOperations.length} modificari si pentru site-ul public...`
+      : `${formatDate(isoDate)} se actualizeaza acum si in disponibilitatea publica...`,
     "",
   );
   void flushOwnerPendingOperations();
@@ -2276,6 +2429,33 @@ function closeMenu() {
   header.classList.remove("menu-open");
   body.classList.remove("menu-open");
   navToggle.setAttribute("aria-expanded", "false");
+}
+
+function resetScrollOnReload() {
+  const shouldForceTop = window.__AFRODITI_RELOAD_SCROLL_TOP__ === true || getNavigationType() === "reload";
+  if (!shouldForceTop) {
+    return;
+  }
+
+  if ("scrollRestoration" in window.history) {
+    window.history.scrollRestoration = "manual";
+  }
+
+  if (window.location.hash) {
+    replaceUrlWithoutHash();
+  }
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+  };
+
+  scrollToTop();
+  window.requestAnimationFrame(scrollToTop);
+  window.setTimeout(scrollToTop, 140);
 }
 
 function updateScrolledHeader() {
@@ -2383,6 +2563,48 @@ function handleBackToTop(event) {
     top: 0,
     behavior: "smooth",
   });
+}
+
+function isPlainLeftClick(event) {
+  return event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
+}
+
+function scrollToHashTarget(hash, behavior = "smooth") {
+  const targetId = String(hash ?? "").replace(/^#/, "").trim();
+  if (!targetId) {
+    return false;
+  }
+
+  const target = document.getElementById(targetId);
+  if (!(target instanceof HTMLElement)) {
+    return false;
+  }
+
+  target.scrollIntoView({
+    behavior,
+    block: "start",
+  });
+  return true;
+}
+
+function handleSectionAnchorClick(event) {
+  const link = event.currentTarget;
+  if (!(link instanceof HTMLAnchorElement) || !isPlainLeftClick(event)) {
+    return;
+  }
+
+  if (!link.hash || link.hash === "#page-top") {
+    return;
+  }
+
+  const didScroll = scrollToHashTarget(link.hash);
+  if (!didScroll) {
+    return;
+  }
+
+  event.preventDefault();
+  closeMenu();
+  replaceUrlWithoutHash();
 }
 
 function initRevealObserver() {
@@ -2549,6 +2771,9 @@ function initGalleryCarousel() {
   if (!galleryViewport) {
     return;
   }
+  galleryViewport.addEventListener("dragstart", (event) => {
+    event.preventDefault();
+  });
   galleryViewport.addEventListener("scroll", handleGalleryScroll, { passive: true });
   galleryViewport.addEventListener("keydown", (event) => {
     if (event.key === "ArrowLeft") {
@@ -2596,10 +2821,74 @@ function initEvents() {
   }
 
   $$(".site-nav a").forEach((link) => link.addEventListener("click", closeMenu));
+  sectionAnchorLinks.forEach((link) => link.addEventListener("click", handleSectionAnchorClick));
   backToTopLinks.forEach((link) => link.addEventListener("click", handleBackToTop));
 
   if (bookingForm) {
     bookingForm.addEventListener("submit", handleBookingSubmit);
+  }
+  if (bookingAccommodationSelect) {
+    bookingAccommodationSelect.addEventListener("change", () => {
+      syncBookingGuestPicker();
+      setStatus("booking-status", "", "");
+    });
+  }
+  if (bookingGuestTrigger) {
+    bookingGuestTrigger.addEventListener("click", () => {
+      setBookingGuestPickerOpen(!appState.booking.guestPickerOpen);
+    });
+    bookingGuestTrigger.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        setBookingGuestPickerOpen(true);
+        bookingGuestPanel?.querySelector(".guest-picker-step:not(:disabled)")?.focus();
+        return;
+      }
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        setBookingGuestPickerOpen(false);
+      }
+    });
+  }
+  if (bookingGuestPanel) {
+    bookingGuestPanel.addEventListener("click", (event) => {
+      if (!(event.target instanceof Element)) {
+        return;
+      }
+
+      const button = event.target.closest("[data-guest-field][data-guest-step]");
+      if (!(button instanceof HTMLButtonElement) || button.disabled) {
+        return;
+      }
+
+      const field = button.dataset.guestField;
+      const step = Number(button.dataset.guestStep);
+      const nextSelection = {
+        adults: appState.booking.adults,
+        children: appState.booking.children,
+      };
+
+      if (field === "adults") {
+        nextSelection.adults += step;
+      }
+      if (field === "children") {
+        nextSelection.children += step;
+      }
+
+      syncBookingGuestPicker(nextSelection);
+      setStatus("booking-status", "", "");
+    });
+  }
+  if (bookingGuestPicker) {
+    document.addEventListener("click", (event) => {
+      if (!appState.booking.guestPickerOpen) {
+        return;
+      }
+      if (event.target instanceof Node && bookingGuestPicker.contains(event.target)) {
+        return;
+      }
+      setBookingGuestPickerOpen(false);
+    });
   }
 
   openTermsButtons.forEach((button) => {
@@ -2752,6 +3041,11 @@ if (ownerAccommodationSelect) {
     COMPACT_AVAILABILITY.addListener(renderAvailabilityOverview);
   }
   window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && appState.booking.guestPickerOpen) {
+      setBookingGuestPickerOpen(false);
+      bookingGuestTrigger?.focus();
+      return;
+    }
     if (event.key === "Escape" && !siteTermsModal?.hidden) {
       closeTermsModal();
       return;
@@ -2767,10 +3061,10 @@ if (ownerAccommodationSelect) {
 }
 
 async function init() {
+  resetScrollOnReload();
   initIntro();
   renderGalleryCarousel();
   renderAmenities();
-  renderInfoCards();
   renderReviews();
   renderAccommodationSelects();
   syncBookingSetupState();
@@ -2784,6 +3078,7 @@ async function init() {
   updateScrolledHeader();
   updateSpiralScene();
   await Promise.all([hydrateVisitorState(), hydrateOwnerState()]);
+  resetScrollOnReload();
 }
 
 init();

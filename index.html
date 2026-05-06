@@ -8,6 +8,37 @@
     name="description"
     content="Studios moderne in Paralia Katerinis, aproape de plaja, cu camere luminoase, terase aerisite si recenzii excelente."
   >
+  <script>
+    (() => {
+      const performanceApi = window.performance;
+      const navigationEntries =
+        performanceApi && typeof performanceApi.getEntriesByType === "function"
+          ? performanceApi.getEntriesByType("navigation")
+          : [];
+      const navigationEntry = navigationEntries && navigationEntries.length ? navigationEntries[0] : null;
+      const isReload = navigationEntry && navigationEntry.type === "reload";
+
+      window.__AFRODITI_RELOAD_SCROLL_TOP__ = isReload;
+
+      if (!isReload) {
+        return;
+      }
+
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "manual";
+      }
+
+      if (window.location.hash) {
+        try {
+          window.history.replaceState(window.history.state, "", `${window.location.pathname}${window.location.search}`);
+        } catch {
+          // lasam URL-ul asa cum este daca browserul blocheaza History API pe file://
+        }
+      }
+
+      window.scrollTo(0, 0);
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -131,8 +162,6 @@
           <a href="#overview">Prezentare generala</a>
           <a href="#prices">Disponibilitate</a>
           <a href="#facilities">Facilitati</a>
-          <a href="#important">Informatii utile</a>
-          <a href="#legal">Bine de stiut</a>
           <a href="#reviews">Recenzii oaspeti</a>
         </nav>
       </div>
@@ -177,10 +206,53 @@
                 <select name="accommodationId" data-accommodation-select required></select>
               </label>
 
-              <label>
-                <span>Oaspeti</span>
-                <input type="text" name="guestCount" placeholder="Ex: 2 adulti, 1 copil" required>
-              </label>
+              <div class="field-group">
+                <span class="field-label">Oaspeti</span>
+                <div class="guest-picker" data-guest-picker>
+                  <button
+                    class="guest-picker-trigger"
+                    id="booking-guests-trigger"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="booking-guests-panel"
+                  >
+                    <span class="guest-picker-label">Selecteaza oaspetii</span>
+                    <strong class="guest-picker-summary" id="booking-guests-summary" aria-live="polite">2 adulti</strong>
+                    <span class="guest-picker-chevron" aria-hidden="true"></span>
+                  </button>
+
+                  <div class="guest-picker-panel" id="booking-guests-panel" hidden>
+                    <div class="guest-picker-row">
+                      <div class="guest-picker-copy">
+                        <strong>Adulti</strong>
+                        <span>Varsta 18+</span>
+                      </div>
+                      <div class="guest-picker-stepper" aria-label="Numar adulti">
+                        <button type="button" class="guest-picker-step" data-guest-field="adults" data-guest-step="-1" aria-label="Scade numarul de adulti">-</button>
+                        <span class="guest-picker-value" id="booking-adults-value">2</span>
+                        <button type="button" class="guest-picker-step" data-guest-field="adults" data-guest-step="1" aria-label="Creste numarul de adulti">+</button>
+                      </div>
+                    </div>
+
+                    <div class="guest-picker-row">
+                      <div class="guest-picker-copy">
+                        <strong>Copii</strong>
+                        <span>Sub 18 ani</span>
+                      </div>
+                      <div class="guest-picker-stepper" aria-label="Numar copii">
+                        <button type="button" class="guest-picker-step" data-guest-field="children" data-guest-step="-1" aria-label="Scade numarul de copii">-</button>
+                        <span class="guest-picker-value" id="booking-children-value">0</span>
+                        <button type="button" class="guest-picker-step" data-guest-field="children" data-guest-step="1" aria-label="Creste numarul de copii">+</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="guest-picker-hint" id="booking-guests-hint">Maxim 2 adulti pentru aceasta unitate.</p>
+                  <input type="hidden" name="adultCount" id="booking-adult-count" value="2">
+                  <input type="hidden" name="childCount" id="booking-child-count" value="0">
+                  <input type="hidden" name="guestCount" id="booking-guest-count" value="2 adulti">
+                </div>
+              </div>
             </div>
 
             <div class="field-grid field-grid-2">
@@ -333,36 +405,6 @@
       <div class="container amenities-grid" data-amenities-grid></div>
     </section>
 
-    <section class="section important-section" id="important">
-      <div class="container info-layout">
-        <div class="section-copy reveal">
-          <p class="eyebrow">Informatii utile</p>
-          <h2>Detalii clare pentru un sejur usor de planificat.</h2>
-          <p>
-            Pozitionarea buna fata de plaja, atmosfera linistita si unitatile bine dotate
-            fac din proprietate un punct de plecare foarte placut pentru zilele petrecute in Paralia Katerinis.
-          </p>
-        </div>
-
-        <div class="info-cards" data-important-cards></div>
-      </div>
-    </section>
-
-    <section class="section legal-section" id="legal">
-      <div class="container legal-layout">
-        <div class="section-copy reveal">
-          <p class="eyebrow">Bine de stiut</p>
-          <h2>Cateva detalii simple inainte de sosire.</h2>
-          <p>
-            Confirmarea perioadei, numarul de oaspeti si cateva preferinte comunicate din timp
-            ajuta gazda sa pregateasca sejurul exact asa cum trebuie.
-          </p>
-        </div>
-
-        <div class="legal-list" data-legal-list></div>
-      </div>
-    </section>
-
     <section class="section reviews-section" id="reviews">
       <div class="container section-heading reveal">
         <p class="eyebrow">Recenzii oaspeti</p>
@@ -443,6 +485,7 @@
             Pentru intrebari rapide, WhatsApp-ul merge foarte bine. Daca vrei un raspuns direct
             si clar pe loc, apelul telefonic ramane cea mai comoda varianta.
           </p>
+          <a class="button contact-direct-cta" href="#booking-form">Solicita cazare</a>
         </div>
 
         <div class="contact-stack reveal" id="social-grid">
