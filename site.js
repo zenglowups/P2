@@ -2629,7 +2629,9 @@ function initRevealObserver() {
         observer.unobserve(entry.target);
       });
     },
-    { threshold: 0.18, rootMargin: "0px 0px -8% 0px" },
+    // Large stacked blocks like the mobile review board can stay below a high
+    // intersection ratio for too long, so we reveal them as soon as they enter view.
+    { threshold: 0.01, rootMargin: "0px 0px -8% 0px" },
   );
 
   revealItems.forEach((item) => observer.observe(item));

@@ -4144,6 +4144,11 @@ body.visitor-modal-open {
     max-width: none;
   }
 
+  .js-ready .review-board.reveal {
+    opacity: 1;
+    transform: none;
+  }
+
   .review-board-head,
   .owner-panel-head,
   .owner-month-nav {
