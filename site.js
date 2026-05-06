@@ -8,6 +8,17 @@ const IS_OWNER_PAGE = document.body?.dataset.page === "owner";
 const INTRO_SESSION_KEY = "afroditi-intro-seen";
 const VISITOR_PREFERENCES_STORAGE_KEY = "afroditi-visitor-preferences";
 const VISITOR_POLICY_VERSION = "2026-05-04-mandatory-analytics";
+const SUPABASE_URL = "https://qnmezrzdkdhhrjsayngn.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFubWV6cnpka2RoaHJqc2F5bmduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMzQxNDYsImV4cCI6MjA5MzYxMDE0Nn0.0GMP74cjB8av3rIzMZmC2CWdwFpCT73oTo50ayMVXp0";
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY,
+  {
+    auth: {
+      persistSession: false,
+    },
+  }
+);
 
 document.documentElement.classList.add("js-ready");
 

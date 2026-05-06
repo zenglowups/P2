@@ -12,5 +12,8 @@
   },
   "dependencies": {
     "@vercel/blob": "^2.3.3"
+  },
+  "devDependencies": {
+    "supabase": "^2.98.2"
   }
 }
