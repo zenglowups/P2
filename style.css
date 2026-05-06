@@ -1599,6 +1599,69 @@ textarea {
   min-height: 120px;
 }
 
+.booking-accommodation-picker {
+  position: relative;
+  display: grid;
+  gap: 12px;
+}
+
+.booking-accommodation-native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  border: 0;
+  white-space: nowrap;
+}
+
+.booking-accommodation-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.booking-accommodation-option {
+  width: 100%;
+  display: grid;
+  gap: 6px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(23, 53, 68, 0.12);
+  background: rgba(255, 253, 249, 0.94);
+  color: var(--ink);
+  text-align: left;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.booking-accommodation-option strong {
+  font-size: 0.98rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.booking-accommodation-option span {
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+}
+
+.booking-accommodation-option:hover,
+.booking-accommodation-option:focus-visible {
+  border-color: rgba(47, 139, 163, 0.32);
+  box-shadow: 0 0 0 4px rgba(47, 139, 163, 0.12);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.booking-accommodation-option.is-active {
+  border-color: rgba(47, 139, 163, 0.4);
+  background: linear-gradient(160deg, rgba(240, 250, 252, 0.96), rgba(255, 253, 249, 0.94));
+  box-shadow: inset 0 0 0 1px rgba(47, 139, 163, 0.16), 0 12px 28px rgba(18, 56, 71, 0.08);
+}
+
 .guest-picker {
   position: relative;
   display: grid;
@@ -4336,6 +4399,7 @@ body.visitor-modal-open {
   }
 
   .hero-metrics,
+  .booking-accommodation-options,
   .field-grid-2,
   .field-grid-3,
   .info-cards,
@@ -4493,11 +4557,19 @@ body.visitor-modal-open {
     max-width: none;
   }
 
+  .guest-picker-trigger {
+    display: none;
+  }
+
   .guest-picker-panel {
     position: static;
     margin-top: 2px;
     padding: 16px;
     box-shadow: 0 16px 32px rgba(23, 53, 68, 0.1);
+  }
+
+  .guest-picker-panel[hidden] {
+    display: grid;
   }
 
   .guest-picker-row {

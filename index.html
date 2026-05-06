@@ -203,7 +203,10 @@
             <div class="field-grid field-grid-2">
               <label>
                 <span>Cazare</span>
-                <select name="accommodationId" data-accommodation-select required></select>
+                <div class="booking-accommodation-picker">
+                  <div class="booking-accommodation-options" data-accommodation-options aria-label="Alege cazarea"></div>
+                  <select class="booking-accommodation-native" name="accommodationId" data-accommodation-select required></select>
+                </div>
               </label>
 
               <div class="field-group">
@@ -762,8 +765,3 @@
 <script src="site.js"></script>
 </body>
 </html>
-
-
-
-
-

@@ -10,15 +10,17 @@ const VISITOR_PREFERENCES_STORAGE_KEY = "afroditi-visitor-preferences";
 const VISITOR_POLICY_VERSION = "2026-05-04-mandatory-analytics";
 const SUPABASE_URL = "https://qnmezrzdkdhhrjsayngn.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFubWV6cnpka2RoaHJqc2F5bmduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMzQxNDYsImV4cCI6MjA5MzYxMDE0Nn0.0GMP74cjB8av3rIzMZmC2CWdwFpCT73oTo50ayMVXp0";
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY,
-  {
-    auth: {
-      persistSession: false,
-    },
-  }
-);
+const supabaseClient = window.supabase?.createClient
+  ? window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY,
+      {
+        auth: {
+          persistSession: false,
+        },
+      }
+    )
+  : null;
 
 document.documentElement.classList.add("js-ready");
 
@@ -247,6 +249,7 @@ const scoreBars = $("[data-score-bars]");
 const reviewList = $("[data-review-list]");
 const bookingForm = $("#booking-form");
 const bookingAccommodationSelect = bookingForm?.querySelector("[data-accommodation-select]") ?? null;
+const bookingAccommodationOptions = $("[data-accommodation-options]");
 const bookingGuestPicker = $("[data-guest-picker]");
 const bookingGuestTrigger = $("#booking-guests-trigger");
 const bookingGuestPanel = $("#booking-guests-panel");
@@ -738,11 +741,12 @@ function setBookingGuestPickerOpen(isOpen) {
     return;
   }
 
-  const shouldOpen = !!isOpen;
+  const shouldOpen = COMPACT_AVAILABILITY.matches ? true : !!isOpen;
   appState.booking.guestPickerOpen = shouldOpen;
   bookingGuestTrigger.setAttribute("aria-expanded", String(shouldOpen));
   bookingGuestPanel.hidden = !shouldOpen;
   bookingGuestPicker?.classList.toggle("is-open", shouldOpen);
+  bookingGuestPicker?.classList.toggle("is-static", COMPACT_AVAILABILITY.matches);
 }
 
 function syncBookingGuestPicker(nextSelection = null) {
@@ -1548,7 +1552,32 @@ function renderAccommodationSelects() {
   bookingAccommodationSelect.value = appState.accommodations.some((item) => item.id === previous)
     ? previous
     : appState.accommodations[0]?.id ?? "";
+  renderBookingAccommodationChoices();
   syncBookingGuestPicker();
+}
+
+function renderBookingAccommodationChoices() {
+  if (!bookingAccommodationOptions || !bookingAccommodationSelect) {
+    return;
+  }
+
+  const activeId = bookingAccommodationSelect.value;
+  bookingAccommodationOptions.innerHTML = appState.accommodations
+    .map((item) => {
+      const isActive = item.id === activeId;
+      return `
+        <button
+          class="booking-accommodation-option${isActive ? " is-active" : ""}"
+          type="button"
+          data-accommodation-option="${escapeHtml(item.id)}"
+          aria-pressed="${isActive ? "true" : "false"}"
+        >
+          <strong>${escapeHtml(item.name)}</strong>
+          <span>${escapeHtml(item.capacity)}</span>
+        </button>
+      `;
+    })
+    .join("");
 }
 
 function renderOwnerAccommodationSelect() {
@@ -2113,7 +2142,13 @@ function composeWhatsAppMessage(payload, accommodation) {
   return lines.join("\n");
 }
 
-function handleBookingSubmit(event) {
+function buildWhatsAppRequestUrl(whatsappNumber, payload, accommodation) {
+  return `https://wa.me/${sanitizePhone(whatsappNumber)}?text=${encodeURIComponent(
+    composeWhatsAppMessage(payload, accommodation),
+  )}`;
+}
+
+async function handleBookingSubmit(event) {
   event.preventDefault();
   if (!bookingForm) {
     return;
@@ -2156,31 +2191,51 @@ function handleBookingSubmit(event) {
     return;
   }
 
-  const { data, error } = await supabaseClient.functions.invoke("create-whatsapp-booking", {
-  body: {
+  const requestPayload = {
     guestName,
     guestPhone,
-    accommodationId: accommodation.id,
-    accommodationName: accommodation.name,
     guestCount,
-    adultCount: guestSelection.adults,
-    childCount: guestSelection.children,
     checkIn,
     checkOut,
-  },
-});
+  };
+  let whatsappUrl = buildWhatsAppRequestUrl(whatsappNumber, requestPayload, accommodation);
 
-if (error) {
+  if (supabaseClient?.functions?.invoke) {
+    try {
+      const { data: bookingResponse, error: bookingError } = await supabaseClient.functions.invoke(
+        "create-whatsapp-booking",
+        {
+          body: {
+            ...requestPayload,
+            accommodationId: accommodation.id,
+            accommodationName: accommodation.name,
+            adultCount: guestSelection.adults,
+            childCount: guestSelection.children,
+          },
+        },
+      );
+
+      if (bookingError) {
+        console.error("Supabase function error:", bookingError);
+      } else if (bookingResponse?.whatsappUrl) {
+        whatsappUrl = bookingResponse.whatsappUrl;
+      }
+    } catch (error) {
+      console.error("Supabase invoke failed, fallback to direct WhatsApp link.", error);
+    }
+  }
+
+/*
   console.error("Supabase function error:", error);
   alert("A apărut o eroare la trimiterea cererii. Te rugăm să încerci din nou.");
   return;
-}
+*/
 
-const popup = window.open(data.whatsappUrl, "_blank", "noopener,noreferrer");
+  const popup = window.open(whatsappUrl, "_blank", "noopener,noreferrer");
 
-if (!popup) {
-  window.location.href = data.whatsappUrl;
-}
+  if (!popup) {
+    window.location.href = whatsappUrl;
+  }
 
   setBookingGuestPickerOpen(false);
   void trackAnalyticsEvent("whatsapp_request");
@@ -2860,6 +2915,29 @@ function initEvents() {
   }
   if (bookingAccommodationSelect) {
     bookingAccommodationSelect.addEventListener("change", () => {
+      renderBookingAccommodationChoices();
+      syncBookingGuestPicker();
+      setStatus("booking-status", "", "");
+    });
+  }
+  if (bookingAccommodationOptions) {
+    bookingAccommodationOptions.addEventListener("click", (event) => {
+      if (!(event.target instanceof Element) || !bookingAccommodationSelect) {
+        return;
+      }
+
+      const button = event.target.closest("[data-accommodation-option]");
+      if (!(button instanceof HTMLButtonElement)) {
+        return;
+      }
+
+      const nextAccommodationId = String(button.dataset.accommodationOption || "").trim();
+      if (!nextAccommodationId || bookingAccommodationSelect.value === nextAccommodationId) {
+        return;
+      }
+
+      bookingAccommodationSelect.value = nextAccommodationId;
+      renderBookingAccommodationChoices();
       syncBookingGuestPicker();
       setStatus("booking-status", "", "");
     });
@@ -3061,10 +3139,12 @@ if (ownerAccommodationSelect) {
   window.addEventListener("resize", () => {
     syncScene();
     window.requestAnimationFrame(() => scrollGalleryTo(galleryState.index, "auto"));
+    syncBookingGuestPicker();
   });
   window.addEventListener("orientationchange", () => {
     syncScene();
     window.requestAnimationFrame(() => scrollGalleryTo(galleryState.index, "auto"));
+    syncBookingGuestPicker();
   });
   if (typeof COMPACT_AVAILABILITY.addEventListener === "function") {
     COMPACT_AVAILABILITY.addEventListener("change", renderAvailabilityOverview);
