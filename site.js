@@ -2156,13 +2156,31 @@ function handleBookingSubmit(event) {
     return;
   }
 
-  const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    composeWhatsAppMessage({ guestName, guestPhone, guestCount, checkIn, checkOut }, accommodation),
-  )}`;
-  const popup = window.open(url, "_blank", "noopener,noreferrer");
-  if (!popup) {
-    window.location.href = url;
-  }
+  const { data, error } = await supabaseClient.functions.invoke("create-whatsapp-booking", {
+  body: {
+    guestName,
+    guestPhone,
+    accommodationId: accommodation.id,
+    accommodationName: accommodation.name,
+    guestCount,
+    adultCount: guestSelection.adults,
+    childCount: guestSelection.children,
+    checkIn,
+    checkOut,
+  },
+});
+
+if (error) {
+  console.error("Supabase function error:", error);
+  alert("A apărut o eroare la trimiterea cererii. Te rugăm să încerci din nou.");
+  return;
+}
+
+const popup = window.open(data.whatsappUrl, "_blank", "noopener,noreferrer");
+
+if (!popup) {
+  window.location.href = data.whatsappUrl;
+}
 
   setBookingGuestPickerOpen(false);
   void trackAnalyticsEvent("whatsapp_request");
