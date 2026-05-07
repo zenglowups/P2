@@ -3,15 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3ERJHNHMFY"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-3ERJHNHMFY');
-</script>
   <title>AFRODITI Studios Grigoriu Luxury Apartments</title>
   <meta
     name="description"
@@ -289,6 +280,18 @@
             <p class="stay-price-note" id="booking-price-note" aria-live="polite">
               Selecteaza un sejur de minimum 4 nopti pentru a vedea suma orientativa.
             </p>
+
+            <div class="consent-check">
+              <label class="consent-check-label" for="booking-contact-consent">
+                <input type="checkbox" id="booking-contact-consent" name="contactConsent" required>
+                <span>
+                  Sunt de acord ca datele introduse sa fie folosite pentru a fi contactat in legatura cu solicitarea mea de cazare.
+                </span>
+              </label>
+              <div class="consent-check-links">
+                <button class="text-link-button" type="button" data-open-terms>Citeste politica de confidentialitate</button>
+              </div>
+            </div>
 
             <p class="booking-callout">
               <strong>Confirmarea telefonica este obligatorie. Clientul trebuie sa sune pentru confirmarea finala a rezervarii.</strong>
@@ -653,7 +656,7 @@
         <span>Studios moderne aproape de plaja, cu atmosfera linistita, terase luminoase si recenzii excelente.</span>
       </div>
       <div class="footer-actions">
-        <button class="footer-action-button" type="button" data-open-terms>Termeni</button>
+        <button class="footer-action-button" type="button" data-open-terms>Termeni si confidentialitate</button>
         <button class="footer-action-button" type="button" data-open-preferences>Cookies si analytics</button>
         <a class="footer-back-top" href="#page-top" data-back-to-top>
           <span aria-hidden="true">&#8593;</span>
@@ -674,35 +677,36 @@
         <p class="eyebrow" id="visitor-preferences-kicker">Informare cookies</p>
         <h3 id="visitor-preferences-title">Bine ai venit la AFRODITI Studios Grigoriu.</h3>
         <p id="visitor-preferences-text">
-          La prima deschidere dintr-o conexiune noua afisam aceasta informare si activam analytics-ul intern obligatoriu al site-ului.
+          La prima vizita iti cerem sa alegi separat daca vrei doar functionarea esentiala a site-ului sau si analytics optional.
         </p>
       </div>
 
       <div class="visitor-modal-body">
         <div class="consent-option-grid">
           <article class="consent-option is-required">
-            <strong>Analytics intern obligatoriu</strong>
-            <span>Masurarea intrarilor, a interactiunilor importante si a cererilor de contact este activa pentru functionarea si administrarea site-ului.</span>
+            <strong>Functionare esentiala</strong>
+            <span>Memoram alegerea ta printr-un identificator tehnic pseudonimizat si pastram functionarea de baza a site-ului, fara analytics optional daca nu il accepti.</span>
           </article>
 
           <article class="consent-option">
             <div>
-              <strong>Memorare pentru vizitatorii cunoscuti</strong>
-              <span>Informarea ramane salvata pentru fiecare vizitator identificat tehnic dupa IP, astfel incat mesajul de deschidere sa nu reapara inutil la urmatoarele accesari.</span>
+              <strong>Analytics optional</strong>
+              <span>Daca accepti, masuram intrarile, interactiunile importante si solicitarile initiate din site pentru administrarea proprietatii.</span>
             </div>
           </article>
         </div>
 
         <p class="visitor-consent-note">
-          Continuarea confirma citirea termenilor, a politicii de confidentialitate si a informarii privind analytics-ul intern obligatoriu.
+          Poti reveni oricand din footer pentru a-ti schimba alegerea si pentru a reciti politica de confidentialitate.
         </p>
 
         <div class="visitor-modal-links">
-          <button class="text-link-button" type="button" data-open-terms>Citeste termenii si informarea completa</button>
+          <button class="text-link-button" type="button" data-open-terms>Citeste politica de confidentialitate si termenii</button>
         </div>
 
         <div class="visitor-modal-actions">
-          <button class="button" type="button" id="visitor-save-preferences">Am inteles</button>
+          <button class="button button-ghost" type="button" id="visitor-save-essential">Continua doar cu esentiale</button>
+          <button class="button" type="button" id="visitor-save-preferences">Accept analytics</button>
         </div>
 
         <p class="form-status" id="visitor-preferences-status" aria-live="polite"></p>
@@ -722,13 +726,21 @@
         <h3>Termeni de utilizare, cereri de cazare si confidentialitate.</h3>
         <p>
           Informatiile de mai jos explica modul in care este folosit site-ul, cum sunt tratate cererile de cazare
-          si cum este salvata informarea despre cookies si analytics.
+          si cum sunt gestionate preferintele de confidentialitate si analytics.
         </p>
       </div>
 
       <div class="policy-richtext">
         <article>
-          <strong>1. Rolul site-ului</strong>
+          <strong>1. Operator si contact</strong>
+          <p>
+            Operatorul acestui site este AFRODITI Studios Grigoriu Luxury Apartments. Pentru intrebari legate de datele transmise prin site,
+            de confirmarea unei cereri sau de stergerea unei solicitari ne poti contacta la numarul afisat in site: +40 742 721 408.
+          </p>
+        </article>
+
+        <article>
+          <strong>2. Rolul site-ului</strong>
           <p>
             Site-ul AFRODITI Studios Grigoriu prezinta proprietatea, facilitatile, fotografiile, calendarul orientativ
             si modalitatile de contact disponibile pentru cereri de cazare.
@@ -736,7 +748,39 @@
         </article>
 
         <article>
-          <strong>2. Disponibilitate si rezervari</strong>
+          <strong>3. Ce date pot fi prelucrate</strong>
+          <p>
+            Prin formularul de cazare pot fi prelucrate numele, numarul de telefon, perioada dorita, unitatea aleasa si numarul de oaspeti.
+            Separat, pot fi folosite preferintele de confidentialitate si un identificator tehnic pseudonimizat pentru memorarea alegerii; daca accepti analytics-ul optional, pot fi folosite si evenimente agregate despre interactiunea cu site-ul.
+          </p>
+        </article>
+
+        <article>
+          <strong>4. Scop si temei</strong>
+          <p>
+            Datele din formular sunt folosite pentru a raspunde solicitarii de cazare si pentru contactul de confirmare.
+            Preferintele de confidentialitate sunt folosite pentru a retine alegerea vizitatorului. Analytics-ul optional este activat doar dupa accept explicit.
+          </p>
+        </article>
+
+        <article>
+          <strong>5. Stocare, furnizori si durata</strong>
+          <p>
+            Site-ul este gazduit prin Vercel, iar cererile trimise prin formular pot fi stocate in Supabase pentru gestionarea solicitarii.
+            Preferintele de confidentialitate si datele tehnice ale analytics-ului optional sunt pastrate limitat in infrastructura site-ului; pentru cererile de cazare se recomanda stergerea lor dupa solutionare si, ca regula practica, in cel mai scurt termen rezonabil.
+          </p>
+        </article>
+
+        <article>
+          <strong>6. Drepturile tale</strong>
+          <p>
+            Poti cere informatii despre datele tale, rectificarea lor sau stergerea unei solicitari transmise prin site.
+            De asemenea, poti reveni la preferintele de cookies si analytics din footer pentru a-ti schimba alegerea.
+          </p>
+        </article>
+
+        <article>
+          <strong>7. Disponibilitate si rezervari</strong>
           <p>
             Calendarul public arata perioadele ocupate cunoscute la momentul afisarii, insa o perioada devine rezervare
             confirmata doar dupa raspunsul explicit al proprietatii. Trimiterea unei cereri nu garanteaza automat disponibilitatea finala.
@@ -744,43 +788,10 @@
         </article>
 
         <article>
-          <strong>3. Cereri trimise prin formular sau mesaj</strong>
-          <p>
-            Datele completate pentru o cerere, precum numele, telefonul, perioada si numarul de oaspeti,
-            sunt folosite exclusiv pentru a raspunde solicitarii si pentru a continua discutia legata de sejur.
-          </p>
-        </article>
-
-        <article>
-          <strong>4. Continut si informatii</strong>
+          <strong>8. Continut si acceptare</strong>
           <p>
             Fotografiile, descrierile si informatiile publicate urmaresc sa reflecte cat mai fidel proprietatea,
-            insa anumite detalii operationale pot fi actualizate in timp fara notificare separata.
-          </p>
-        </article>
-
-        <article>
-          <strong>5. Confidentialitate</strong>
-          <p>
-            Site-ul nu publica datele personale ale vizitatorilor. Datele transmise voluntar prin formularul de contact
-            sunt folosite strict pentru comunicarea privind cazarea si nu sunt afisate public.
-          </p>
-        </article>
-
-        <article>
-          <strong>6. Cookies si analytics obligatoriu</strong>
-          <p>
-            Pentru a retine mesajul de bun venit si a evita reaparisia lui pentru aceeasi conexiune, site-ul salveaza
-            o informare asociata tehnic vizitatorului identificat dupa IP. Analytics-ul intern al site-ului este obligatoriu
-            pentru masurarea intrarilor, a interactiunilor importante si a solicitarilor initiate din site, fara afisarea publica a adreselor IP.
-          </p>
-        </article>
-
-        <article>
-          <strong>7. Acceptarea conditiilor</strong>
-          <p>
-            Continuarea navigarii dupa confirmarea acestei informari arata ca ai citit aceste informatii si ca intelegi
-            rolul orientativ al calendarului public, al continutului din site si al analytics-ului intern folosit pentru administrarea website-ului.
+            insa anumite detalii operationale pot fi actualizate in timp fara notificare separata. Folosirea site-ului dupa citirea acestor informatii inseamna ca ai inteles rolul lui informativ si de contact.
           </p>
         </article>
       </div>

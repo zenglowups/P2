@@ -24,6 +24,9 @@ Deno.serve(async (req) => {
       checkIn,
       checkOut,
       accommodationName,
+      contactConsentAccepted,
+      contactConsentAcceptedAt,
+      contactConsentPolicyVersion,
     } = body ?? {};
 
     if (!guestName || !guestPhone || !accommodationId || !checkIn || !checkOut) {
@@ -33,7 +36,35 @@ Deno.serve(async (req) => {
       );
     }
 
+    if (!contactConsentAccepted) {
+      return Response.json(
+        { error: "Consimtamantul pentru prelucrarea datelor este obligatoriu." },
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
+    const normalizedAdultCount = Number(adultCount ?? 0);
+    const normalizedChildCount = Number(childCount ?? 0);
+
+    if (
+      !Number.isFinite(normalizedAdultCount) ||
+      !Number.isFinite(normalizedChildCount) ||
+      normalizedAdultCount < 0 ||
+      normalizedChildCount < 0 ||
+      (normalizedAdultCount + normalizedChildCount) <= 0
+    ) {
+      return Response.json(
+        { error: "Numarul de oaspeti este invalid." },
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
     const whatsappNumber = Deno.env.get("WHATSAPP_NUMBER")?.replace(/\D+/g, "");
+    const normalizedPolicyVersion = String(contactConsentPolicyVersion || "").trim() || "2026-05-07-privacy-consent";
+    const parsedConsentAcceptedAt = new Date(String(contactConsentAcceptedAt || "").trim() || Date.now());
+    const consentAcceptedAtIso = Number.isNaN(parsedConsentAcceptedAt.getTime())
+      ? new Date().toISOString()
+      : parsedConsentAcceptedAt.toISOString();
 
     if (!whatsappNumber) {
       return Response.json(
@@ -74,11 +105,14 @@ Deno.serve(async (req) => {
       guest_phone: guestPhone,
       accommodation_id: accommodationId,
       guest_count: guestCount || "",
-      adult_count: Number(adultCount ?? 0),
-      child_count: Number(childCount ?? 0),
+      adult_count: normalizedAdultCount,
+      child_count: normalizedChildCount,
       check_in: checkIn,
       check_out: checkOut,
       whatsapp_url: whatsappUrl,
+      consent_accepted: true,
+      consent_accepted_at: consentAcceptedAtIso,
+      consent_policy_version: normalizedPolicyVersion,
     });
 
     if (error) {

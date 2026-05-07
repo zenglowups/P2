@@ -7,7 +7,8 @@ const COMPACT_AVAILABILITY = window.matchMedia("(max-width: 760px)");
 const IS_OWNER_PAGE = document.body?.dataset.page === "owner";
 const INTRO_SESSION_KEY = "afroditi-intro-seen";
 const VISITOR_PREFERENCES_STORAGE_KEY = "afroditi-visitor-preferences";
-const VISITOR_POLICY_VERSION = "2026-05-04-mandatory-analytics";
+const VISITOR_POLICY_VERSION = "2026-05-07-privacy-consent";
+const GOOGLE_ANALYTICS_ID = "G-3ERJHNHMFY";
 const SUPABASE_URL = "https://qnmezrzdkdhhrjsayngn.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFubWV6cnpka2RoaHJqc2F5bmduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMzQxNDYsImV4cCI6MjA5MzYxMDE0Nn0.0GMP74cjB8av3rIzMZmC2CWdwFpCT73oTo50ayMVXp0";
 const supabaseClient = window.supabase?.createClient
@@ -276,6 +277,7 @@ const bookingAdultCountField = $("#booking-adult-count");
 const bookingChildCountField = $("#booking-child-count");
 const bookingGuestCountField = $("#booking-guest-count");
 const bookingPriceNote = $("#booking-price-note");
+const bookingContactConsent = $("#booking-contact-consent");
 const bookingFormNote = $("#booking-form-note");
 const bookingSubmit = $("#booking-submit");
 const availabilityOverview = $("[data-availability-overview]");
@@ -287,6 +289,7 @@ const visitorPreferencesClose = $("#visitor-preferences-close");
 const visitorPreferencesKicker = $("#visitor-preferences-kicker");
 const visitorPreferencesTitle = $("#visitor-preferences-title");
 const visitorPreferencesText = $("#visitor-preferences-text");
+const visitorSaveEssential = $("#visitor-save-essential");
 const visitorSavePreferences = $("#visitor-save-preferences");
 const visitorPreferencesStatus = $("#visitor-preferences-status");
 const visitorBackdrop = $("[data-visitor-backdrop]");
@@ -324,6 +327,8 @@ const galleryState = {
   scrollTicking: false,
 };
 
+let thirdPartyAnalyticsLoaded = false;
+
 const PUBLIC_AVAILABILITY_MIN_VISIBLE_MONTHS = 8;
 const PUBLIC_AVAILABILITY_TAIL_MONTHS = 3;
 
@@ -344,6 +349,31 @@ function escapeHtml(value) {
 
 function sanitizePhone(value) {
   return String(value ?? "").replace(/\D+/g, "");
+}
+
+function setThirdPartyAnalyticsEnabled(isEnabled) {
+  window[`ga-disable-${GOOGLE_ANALYTICS_ID}`] = !isEnabled;
+
+  if (!isEnabled || thirdPartyAnalyticsLoaded || !GOOGLE_ANALYTICS_ID) {
+    return;
+  }
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag =
+    window.gtag ||
+    function gtag() {
+      window.dataLayer.push(arguments);
+    };
+
+  const script = document.createElement("script");
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GOOGLE_ANALYTICS_ID)}`;
+  script.addEventListener("load", () => {
+    window.gtag("js", new Date());
+    window.gtag("config", GOOGLE_ANALYTICS_ID);
+  });
+  document.head.appendChild(script);
+  thirdPartyAnalyticsLoaded = true;
 }
 
 function readLocalVisitorPreferences() {
@@ -1079,6 +1109,7 @@ function applyVisitorPayload(payload = {}) {
   appState.visitor.policyVersion = String(payload.policyVersion || VISITOR_POLICY_VERSION).trim() || VISITOR_POLICY_VERSION;
   appState.visitor.lastSavedAt = String(payload.savedAt || "").trim();
   appState.visitor.storageMode = String(payload.storageMode || appState.visitor.storageMode || "").trim() || "local-only";
+  setThirdPartyAnalyticsEnabled(appState.visitor.analyticsEnabled);
 }
 
 function renderVisitorPreferenceStatus() {
@@ -1087,11 +1118,13 @@ function renderVisitorPreferenceStatus() {
   }
 
   if (!appState.visitor.preferencesSaved) {
-    preferenceStatusLabel.textContent = "Informarea cookies si analytics nu este salvata inca pentru acest vizitator.";
+    preferenceStatusLabel.textContent = "Preferintele de confidentialitate nu sunt salvate inca pentru acest vizitator.";
     return;
   }
 
-  preferenceStatusLabel.textContent = "Informare salvata pentru acest vizitator. Analytics-ul intern al site-ului este activ.";
+  preferenceStatusLabel.textContent = appState.visitor.analyticsEnabled
+    ? "Preferintele sunt salvate. Analytics-ul optional este activ."
+    : "Preferintele sunt salvate. Ruleaza doar functionarea esentiala a site-ului.";
 }
 
 function syncVisitorPreferenceUi() {
@@ -1108,19 +1141,24 @@ function syncVisitorPreferenceUi() {
     visitorPreferencesKicker.textContent = appState.visitor.isNewVisitor ? "Prima vizita" : "Informare cookies";
     visitorPreferencesTitle.textContent = "Bine ai venit la AFRODITI Studios Grigoriu.";
     visitorPreferencesText.textContent =
-      "La prima deschidere dintr-o conexiune noua afisam aceasta informare si activam analytics-ul intern obligatoriu al site-ului, salvat separat pentru fiecare vizitator identificat tehnic dupa IP.";
+      "La prima deschidere iti cerem sa alegi separat intre functionarea esentiala a site-ului si analytics-ul optional folosit pentru masurarea interactiunilor.";
   } else {
     visitorPreferencesKicker.textContent = "Cookies si analytics";
-    visitorPreferencesTitle.textContent = "Informare despre cookies si analytics obligatoriu.";
+    visitorPreferencesTitle.textContent = "Preferinte de confidentialitate si analytics.";
     visitorPreferencesText.textContent =
-      "Site-ul foloseste analytics intern obligatoriu pentru masurarea intrarilor, a interactiunilor importante si pentru administrarea disponibilitatii, iar informarea ramane salvata pentru vizitatorii care au mai accesat site-ul.";
+      "Poti pastra doar functionarea esentiala a site-ului sau poti activa analytics-ul optional pentru statistici de utilizare si administrarea mai buna a cererilor.";
   }
 
   if (visitorSavePreferences) {
     visitorSavePreferences.textContent =
-      appState.visitor.modalLocked || !appState.visitor.preferencesSaved
-        ? "Am inteles"
-        : "Inchide informarea";
+      appState.visitor.analyticsEnabled ? "Analytics activ" : "Accept analytics";
+  }
+
+  if (visitorSaveEssential) {
+    visitorSaveEssential.textContent =
+      appState.visitor.preferencesSaved && !appState.visitor.analyticsEnabled
+        ? "Doar esentiale activ"
+        : "Continua doar cu esentiale";
   }
 
   renderVisitorPreferenceStatus();
@@ -1140,6 +1178,10 @@ function setVisitorModalOpen(isOpen, { locked = false } = {}) {
 
   if (isOpen) {
     window.requestAnimationFrame(() => {
+      if (visitorSaveEssential) {
+        visitorSaveEssential.focus();
+        return;
+      }
       if (visitorSavePreferences) {
         visitorSavePreferences.focus();
         return;
@@ -1186,9 +1228,9 @@ function maybeOpenVisitorWelcome() {
   setVisitorModalOpen(true, { locked: true });
 }
 
-async function persistVisitorPreferences({ source = "manual", silent = false, closeModal = true } = {}) {
+async function persistVisitorPreferences({ source = "manual", silent = false, closeModal = true, analyticsEnabled = false } = {}) {
   const fallbackPayload = {
-    analyticsEnabled: true,
+    analyticsEnabled: !!analyticsEnabled,
     preferencesSaved: true,
     policyVersion: appState.visitor.policyVersion || VISITOR_POLICY_VERSION,
     savedAt: new Date().toISOString(),
@@ -1201,6 +1243,7 @@ async function persistVisitorPreferences({ source = "manual", silent = false, cl
           method: "POST",
           body: JSON.stringify({
             path: getCurrentPath(),
+            analyticsEnabled: !!analyticsEnabled,
             source,
           }),
         })
@@ -1214,7 +1257,13 @@ async function persistVisitorPreferences({ source = "manual", silent = false, cl
     });
     syncVisitorPreferenceUi();
     if (!silent) {
-      setStatus(visitorPreferencesStatus, "Informarea a fost salvata pentru acest vizitator.", "success");
+      setStatus(
+        visitorPreferencesStatus,
+        analyticsEnabled
+          ? "Preferintele au fost salvate, iar analytics-ul optional este activ."
+          : "Preferintele au fost salvate. Site-ul foloseste doar functionarea esentiala.",
+        "success",
+      );
     }
     if (closeModal) {
       window.setTimeout(() => {
@@ -1229,7 +1278,9 @@ async function persistVisitorPreferences({ source = "manual", silent = false, cl
     if (!silent) {
       setStatus(
         visitorPreferencesStatus,
-        "Informarea a fost salvata local pentru acest browser.",
+        analyticsEnabled
+          ? "Preferintele au fost salvate local, iar analytics-ul optional este activ in acest browser."
+          : "Preferintele au fost salvate local si ruleaza doar functionarea esentiala.",
         "success",
       );
     }
@@ -1251,7 +1302,7 @@ async function hydrateVisitorState() {
     !!localPreferences?.preferencesSaved &&
     String(localPreferences?.policyVersion || "").trim() === VISITOR_POLICY_VERSION;
   const localPayload = {
-    analyticsEnabled: localPreferencesSaved ? true : !!localPreferences?.analyticsEnabled,
+    analyticsEnabled: !!localPreferences?.analyticsEnabled,
     preferencesSaved: localPreferencesSaved,
     policyVersion: String(localPreferences?.policyVersion || VISITOR_POLICY_VERSION).trim() || VISITOR_POLICY_VERSION,
     savedAt: String(localPreferences?.savedAt || "").trim(),
@@ -2354,6 +2405,15 @@ async function handleBookingSubmit(event) {
     setStatus("booking-status", "Completeaza numele, telefonul si numarul de oaspeti.", "error");
     return;
   }
+  if (!bookingContactConsent?.checked) {
+    setStatus(
+      "booking-status",
+      "Bifeaza acordul pentru prelucrarea datelor inainte de a trimite solicitarea.",
+      "error",
+    );
+    bookingContactConsent?.focus();
+    return;
+  }
   if (!accommodation) {
     setStatus("booking-status", "Selecteaza o cazare valida pentru cerere.", "error");
     return;
@@ -2383,6 +2443,7 @@ async function handleBookingSubmit(event) {
     checkIn,
     checkOut,
   };
+  const consentAcceptedAt = new Date().toISOString();
   let whatsappUrl = buildWhatsAppRequestUrl(whatsappNumber, requestPayload, accommodation);
 
   if (supabaseClient?.functions?.invoke) {
@@ -2396,6 +2457,9 @@ async function handleBookingSubmit(event) {
             accommodationName: accommodation.name,
             adultCount: guestSelection.adults,
             childCount: guestSelection.children,
+            contactConsentAccepted: true,
+            contactConsentAcceptedAt: consentAcceptedAt,
+            contactConsentPolicyVersion: VISITOR_POLICY_VERSION,
           },
         },
       );
@@ -3149,6 +3213,13 @@ function initEvents() {
       syncBookingDateFields({ report: true });
     });
   }
+  if (bookingContactConsent) {
+    bookingContactConsent.addEventListener("change", () => {
+      if (bookingContactConsent.checked) {
+        setStatus("booking-status", "", "");
+      }
+    });
+  }
   if (bookingGuestTrigger) {
     bookingGuestTrigger.addEventListener("click", () => {
       setBookingGuestPickerOpen(!appState.booking.guestPickerOpen);
@@ -3243,12 +3314,26 @@ function initEvents() {
 
   if (visitorSavePreferences) {
     visitorSavePreferences.addEventListener("click", () => {
-      if (!appState.visitor.modalLocked && appState.visitor.preferencesSaved) {
+      if (!appState.visitor.modalLocked && appState.visitor.preferencesSaved && appState.visitor.analyticsEnabled) {
         setVisitorModalOpen(false);
         return;
       }
       void persistVisitorPreferences({
+        analyticsEnabled: true,
         source: appState.visitor.modalLocked ? "welcome" : "manual",
+      });
+    });
+  }
+
+  if (visitorSaveEssential) {
+    visitorSaveEssential.addEventListener("click", () => {
+      if (!appState.visitor.modalLocked && appState.visitor.preferencesSaved && !appState.visitor.analyticsEnabled) {
+        setVisitorModalOpen(false);
+        return;
+      }
+      void persistVisitorPreferences({
+        analyticsEnabled: false,
+        source: appState.visitor.modalLocked ? "welcome-essential" : "manual-essential",
       });
     });
   }
