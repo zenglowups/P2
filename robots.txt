@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Disallow: /owner
+Disallow: /owner-login.html
+Disallow: /api/
+
+Sitemap: https://afroditistudiosgrigoriu.com/sitemap.xml
