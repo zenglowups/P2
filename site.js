@@ -29,6 +29,18 @@ const CONTACT_SETTINGS = {
   calendarMonth: "",
 };
 
+const MINIMUM_BOOKING_NIGHTS = 4;
+const STAY_PRICING_REFERENCE = Object.freeze([
+  { nights: 4, total: 3032 },
+  { nights: 5, total: 3790 },
+  { nights: 6, total: 4548 },
+  { nights: 7, total: 5306 },
+  { nights: 8, total: 6065 },
+  { nights: 9, total: 6823 },
+]);
+const AVERAGE_STAY_NIGHT_PRICE =
+  STAY_PRICING_REFERENCE.reduce((sum, item) => sum + item.total / item.nights, 0) / STAY_PRICING_REFERENCE.length;
+
 const DEFAULT_ACCOMMODATIONS = [
   {
     id: "studio-double",
@@ -248,8 +260,11 @@ const amenitiesGrid = $("[data-amenities-grid]");
 const scoreBars = $("[data-score-bars]");
 const reviewList = $("[data-review-list]");
 const bookingForm = $("#booking-form");
+const stayPricingGrid = $("[data-stay-pricing]");
 const bookingAccommodationSelect = bookingForm?.querySelector("[data-accommodation-select]") ?? null;
 const bookingAccommodationOptions = $("[data-accommodation-options]");
+const bookingCheckInField = bookingForm?.querySelector('input[name="checkIn"]') ?? null;
+const bookingCheckOutField = bookingForm?.querySelector('input[name="checkOut"]') ?? null;
 const bookingGuestPicker = $("[data-guest-picker]");
 const bookingGuestTrigger = $("#booking-guests-trigger");
 const bookingGuestPanel = $("#booking-guests-panel");
@@ -260,6 +275,7 @@ const bookingChildrenValue = $("#booking-children-value");
 const bookingAdultCountField = $("#booking-adult-count");
 const bookingChildCountField = $("#booking-child-count");
 const bookingGuestCountField = $("#booking-guest-count");
+const bookingPriceNote = $("#booking-price-note");
 const bookingFormNote = $("#booking-form-note");
 const bookingSubmit = $("#booking-submit");
 const availabilityOverview = $("[data-availability-overview]");
@@ -512,14 +528,50 @@ function getNights(checkIn, checkOut) {
   return Math.max(0, Math.round((end.getTime() - start.getTime()) / 86400000));
 }
 
+function addDays(dateString, days) {
+  const date = parseDate(dateString);
+  if (!date) {
+    return "";
+  }
+  date.setDate(date.getDate() + Number(days || 0));
+  return toInputDate(date);
+}
+
 function formatNights(nights) {
   return `${nights} ${nights === 1 ? "noapte" : "nopti"}`;
+}
+
+function formatCurrencyLei(amount) {
+  const numericAmount = Number(amount);
+  if (!Number.isFinite(numericAmount)) {
+    return "-";
+  }
+  return `${new Intl.NumberFormat("ro-RO").format(Math.round(numericAmount))} lei`;
 }
 
 function isValidRange(checkIn, checkOut) {
   const start = parseDate(checkIn);
   const end = parseDate(checkOut);
   return !!(start && end && start.getTime() < end.getTime());
+}
+
+function getStayPriceEstimate(nights) {
+  const normalizedNights = clamp(Number(nights ?? 0), 0, 365);
+  const exactMatch = STAY_PRICING_REFERENCE.find((item) => item.nights === normalizedNights);
+
+  if (exactMatch) {
+    return {
+      nights: normalizedNights,
+      total: exactMatch.total,
+      isApproximate: false,
+    };
+  }
+
+  return {
+    nights: normalizedNights,
+    total: Math.round(AVERAGE_STAY_NIGHT_PRICE * normalizedNights),
+    isApproximate: normalizedNights > 0,
+  };
 }
 
 function deriveHighlights(accommodation) {
@@ -898,6 +950,114 @@ function getConflicts(accommodationId, checkIn, checkOut) {
   return expandDateRange(checkIn, checkOut).filter((day) => busySet.has(day));
 }
 
+function clearBookingDateValidity() {
+  bookingCheckInField?.setCustomValidity("");
+  bookingCheckOutField?.setCustomValidity("");
+}
+
+function updateBookingPriceNote(message = "") {
+  if (!bookingPriceNote) {
+    return;
+  }
+  bookingPriceNote.textContent = message;
+}
+
+function syncBookingDateFields(options = {}) {
+  if (!bookingCheckInField || !bookingCheckOutField || !bookingAccommodationSelect) {
+    return true;
+  }
+
+  const { report = false, keepStatus = false } = options;
+  const today = toInputDate(new Date());
+  const accommodation = getActiveBookingAccommodation();
+  const checkIn = String(bookingCheckInField.value || "").trim();
+  const checkOut = String(bookingCheckOutField.value || "").trim();
+
+  clearBookingDateValidity();
+  bookingCheckInField.min = today;
+  bookingCheckOutField.disabled = !checkIn;
+  bookingCheckOutField.min = checkIn ? addDays(checkIn, MINIMUM_BOOKING_NIGHTS) : today;
+
+  if (!checkIn) {
+    updateBookingPriceNote(`Selecteaza un sejur de minimum ${MINIMUM_BOOKING_NIGHTS} nopti pentru a vedea suma orientativa.`);
+    if (!keepStatus) {
+      setStatus("booking-status", "", "");
+    }
+    return true;
+  }
+
+  const minimumCheckoutDate = addDays(checkIn, MINIMUM_BOOKING_NIGHTS);
+  const minimumStayConflicts = accommodation ? getConflicts(accommodation.id, checkIn, minimumCheckoutDate) : [];
+
+  if (!accommodation || !isValidRange(checkIn, minimumCheckoutDate) || minimumStayConflicts.length) {
+    const message = `Data de check-in trebuie sa porneasca un interval liber de minimum ${MINIMUM_BOOKING_NIGHTS} nopti.`;
+    bookingCheckInField.setCustomValidity(message);
+    bookingCheckOutField.value = "";
+    bookingCheckOutField.disabled = true;
+    updateBookingPriceNote(message);
+    if (!keepStatus) {
+      setStatus("booking-status", message, "error");
+    }
+    if (report) {
+      bookingCheckInField.reportValidity();
+    }
+    return false;
+  }
+
+  bookingCheckOutField.disabled = false;
+
+  if (!checkOut) {
+    updateBookingPriceNote(
+      `Pentru ${formatNights(MINIMUM_BOOKING_NIGHTS)} pornesti de la ${formatCurrencyLei(
+        getStayPriceEstimate(MINIMUM_BOOKING_NIGHTS).total,
+      )}.`,
+    );
+    if (!keepStatus) {
+      setStatus("booking-status", "", "");
+    }
+    return true;
+  }
+
+  const nights = getNights(checkIn, checkOut);
+  if (!isValidRange(checkIn, checkOut) || nights < MINIMUM_BOOKING_NIGHTS) {
+    const message = `Se accepta rezervari de minimum ${MINIMUM_BOOKING_NIGHTS} nopti.`;
+    bookingCheckOutField.setCustomValidity(message);
+    updateBookingPriceNote(message);
+    if (!keepStatus) {
+      setStatus("booking-status", message, "error");
+    }
+    if (report) {
+      bookingCheckOutField.reportValidity();
+    }
+    return false;
+  }
+
+  const conflicts = accommodation ? getConflicts(accommodation.id, checkIn, checkOut) : [];
+  if (conflicts.length) {
+    const message = "Intervalul ales include zile deja ocupate. Alege un interval complet liber din calendar.";
+    bookingCheckOutField.setCustomValidity(message);
+    updateBookingPriceNote(message);
+    if (!keepStatus) {
+      setStatus("booking-status", message, "error");
+    }
+    if (report) {
+      bookingCheckOutField.reportValidity();
+    }
+    return false;
+  }
+
+  const estimate = getStayPriceEstimate(nights);
+  updateBookingPriceNote(
+    estimate.isApproximate
+      ? `Estimare orientativa pentru ${formatNights(nights)}: aproximativ ${formatCurrencyLei(estimate.total)}.`
+      : `Estimare pentru ${formatNights(nights)}: de la ${formatCurrencyLei(estimate.total)}.`,
+  );
+  if (!keepStatus) {
+    setStatus("booking-status", "", "");
+  }
+  return true;
+}
+
 function setStatus(target, message, type = "") {
   const element = typeof target === "string" ? document.getElementById(target) : target;
   if (!element) {
@@ -1173,6 +1333,7 @@ function scheduleOwnerDataRefresh() {
     ownerRefreshFrame = 0;
     renderRoomTypes();
     renderAvailabilityOverview();
+    syncBookingDateFields({ keepStatus: true });
     renderOwnerPanel();
   });
 }
@@ -1554,6 +1715,7 @@ function renderAccommodationSelects() {
     : appState.accommodations[0]?.id ?? "";
   renderBookingAccommodationChoices();
   syncBookingGuestPicker();
+  syncBookingDateFields({ keepStatus: true });
 }
 
 function renderBookingAccommodationChoices() {
@@ -1578,6 +1740,22 @@ function renderBookingAccommodationChoices() {
       `;
     })
     .join("");
+}
+
+function renderStayPricing() {
+  if (!stayPricingGrid) {
+    return;
+  }
+
+  stayPricingGrid.innerHTML = STAY_PRICING_REFERENCE.map(
+    (item) => `
+      <article class="stay-pricing-card${item.nights === MINIMUM_BOOKING_NIGHTS ? " is-featured" : ""}">
+        <strong>${escapeHtml(formatNights(item.nights))}</strong>
+        <span>${escapeHtml(formatCurrencyLei(item.total))}</span>
+        <small>${item.nights === MINIMUM_BOOKING_NIGHTS ? "sejur minim Booking" : "tarif orientativ"}</small>
+      </article>
+    `,
+  ).join("");
 }
 
 function renderOwnerAccommodationSelect() {
@@ -2119,7 +2297,7 @@ function syncBookingSetupState() {
   bookingSubmit.disabled = !hasWhatsAppNumber;
   bookingSubmit.setAttribute("aria-disabled", String(!hasWhatsAppNumber));
   bookingFormNote.textContent = hasWhatsAppNumber
-    ? "Trimite perioada dorita, unitatea preferata si numarul de oaspeti pentru confirmare."
+    ? `Se accepta doar sejururi de minimum ${MINIMUM_BOOKING_NIGHTS} nopti, iar datele ocupate sunt respinse automat din formular.`
     : "Momentan formularul nu poate fi trimis, pentru ca numarul WhatsApp nu este setat.";
 }
 
@@ -2180,8 +2358,15 @@ async function handleBookingSubmit(event) {
     setStatus("booking-status", "Selecteaza o cazare valida pentru cerere.", "error");
     return;
   }
+  if (!syncBookingDateFields({ report: true })) {
+    return;
+  }
   if (!isValidRange(checkIn, checkOut)) {
     setStatus("booking-status", "Intervalul ales nu este valid.", "error");
+    return;
+  }
+  if (getNights(checkIn, checkOut) < MINIMUM_BOOKING_NIGHTS) {
+    setStatus("booking-status", `Se accepta rezervari de minimum ${MINIMUM_BOOKING_NIGHTS} nopti.`, "error");
     return;
   }
 
@@ -2917,7 +3102,7 @@ function initEvents() {
     bookingAccommodationSelect.addEventListener("change", () => {
       renderBookingAccommodationChoices();
       syncBookingGuestPicker();
-      setStatus("booking-status", "", "");
+      syncBookingDateFields();
     });
   }
   if (bookingAccommodationOptions) {
@@ -2939,7 +3124,29 @@ function initEvents() {
       bookingAccommodationSelect.value = nextAccommodationId;
       renderBookingAccommodationChoices();
       syncBookingGuestPicker();
-      setStatus("booking-status", "", "");
+      syncBookingDateFields();
+    });
+  }
+  if (bookingCheckInField) {
+    bookingCheckInField.addEventListener("change", () => {
+      if (bookingCheckOutField && bookingCheckOutField.value) {
+        const minimumCheckoutDate = addDays(bookingCheckInField.value, MINIMUM_BOOKING_NIGHTS);
+        const currentCheckOutDate = parseDate(bookingCheckOutField.value);
+        const minimumCheckOutDate = parseDate(minimumCheckoutDate);
+        if (
+          currentCheckOutDate &&
+          minimumCheckOutDate &&
+          currentCheckOutDate.getTime() < minimumCheckOutDate.getTime()
+        ) {
+          bookingCheckOutField.value = "";
+        }
+      }
+      syncBookingDateFields({ report: true });
+    });
+  }
+  if (bookingCheckOutField) {
+    bookingCheckOutField.addEventListener("change", () => {
+      syncBookingDateFields({ report: true });
     });
   }
   if (bookingGuestTrigger) {
@@ -3177,8 +3384,10 @@ async function init() {
   renderGalleryCarousel();
   renderAmenities();
   renderReviews();
+  renderStayPricing();
   renderAccommodationSelects();
   syncBookingSetupState();
+  syncBookingDateFields({ keepStatus: true });
   renderRoomTypes();
   renderAvailabilityOverview();
   renderOwnerAccess();

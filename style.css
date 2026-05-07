@@ -1112,6 +1112,90 @@ body.intro-active .site-intro {
   line-height: 1.6;
 }
 
+.stay-pricing-strip {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding: 20px 22px;
+  border: 1px solid rgba(23, 53, 68, 0.08);
+  border-radius: 28px;
+  background: rgba(255, 253, 249, 0.9);
+}
+
+.stay-pricing-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.stay-pricing-head strong {
+  font-size: 1.02rem;
+  color: var(--ink);
+}
+
+.stay-pricing-head span {
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+  text-align: right;
+}
+
+.stay-pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stay-pricing-card {
+  display: grid;
+  gap: 4px;
+  padding: 14px 14px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(23, 53, 68, 0.1);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.stay-pricing-card strong {
+  font-size: 0.96rem;
+  color: var(--ink);
+}
+
+.stay-pricing-card span {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #a86c0f;
+}
+
+.stay-pricing-card small {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+.stay-pricing-card.is-featured {
+  border-color: rgba(215, 176, 111, 0.5);
+  background: linear-gradient(180deg, rgba(255, 246, 229, 0.92), rgba(255, 253, 249, 0.82));
+  box-shadow: inset 0 0 0 1px rgba(215, 176, 111, 0.18);
+}
+
+.stay-price-note {
+  margin: -2px 0 0;
+  color: #7f5615;
+  font-size: 0.93rem;
+  font-weight: 700;
+}
+
+.booking-callout {
+  margin: -2px 0 0;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(169, 62, 62, 0.14);
+  background: rgba(255, 243, 240, 0.88);
+  color: #8f2e2e;
+  line-height: 1.55;
+}
+
 .card-heading {
   display: grid;
   gap: 10px;
@@ -4400,6 +4484,7 @@ body.visitor-modal-open {
 
   .hero-metrics,
   .booking-accommodation-options,
+  .stay-pricing-grid,
   .field-grid-2,
   .field-grid-3,
   .info-cards,
@@ -4555,6 +4640,24 @@ body.visitor-modal-open {
 
   .guest-card {
     max-width: none;
+  }
+
+  .stay-pricing-strip {
+    padding: 18px;
+    border-radius: 24px;
+  }
+
+  .stay-pricing-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .stay-pricing-head span {
+    text-align: left;
+  }
+
+  .stay-pricing-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .guest-picker-trigger {
