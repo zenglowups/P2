@@ -4566,6 +4566,11 @@ body.visitor-modal-open {
   font-weight: 700;
 }
 
+.footer-rights {
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
 .footer-action-button {
   min-height: 42px;
 }
