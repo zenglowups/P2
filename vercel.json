@@ -31,6 +31,40 @@
       ]
     }
   ],
+  "rewrites": [
+    {
+      "source": "/cazare-paralia-katerinis",
+      "destination": "/cazare-paralia-katerinis.html"
+    },
+    {
+      "source": "/studio-paralia-katerinis",
+      "destination": "/studio-paralia-katerinis.html"
+    },
+    {
+      "source": "/camere-paralia-katerinis",
+      "destination": "/camere-paralia-katerinis.html"
+    },
+    {
+      "source": "/cazare-aproape-de-plaja-paralia-katerinis",
+      "destination": "/cazare-aproape-de-plaja-paralia-katerinis.html"
+    },
+    {
+      "source": "/locatie",
+      "destination": "/locatie.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact.html"
+    },
+    {
+      "source": "/studio-double",
+      "destination": "/studio-double.html"
+    },
+    {
+      "source": "/studio-deluxe",
+      "destination": "/studio-deluxe.html"
+    }
+  ],
   "redirects": [
     {
       "source": "/owner",
