@@ -1,0 +1,33 @@
+# Environment and secrets
+.env
+.env.*
+
+# Browser/test artifacts
+chrome-profile*/
+edge-profile*/
+chrome-qa/
+preview*.png
+preview*.jpg
+preview*.html
+server-test-*.log
+*.log
+*.tmp
+*.dmp
+
+# Development-only files
+.vscode/
+node_modules/
+local-server.cjs
+start-server.bat
+scripts/
+*.md
+
+# Private schema/migration material
+supabase/
+*.sql
+
+# Source maps and original unminified public assets
+*.map
+style.css
+seo-pages.css
+site.js
