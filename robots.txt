@@ -5,4 +5,4 @@ Disallow: /owner
 Disallow: /owner-login.html
 Disallow: /api/
 
-Sitemap: https://afroditistudiosgrigoriu.com/sitemap.xml
+Sitemap: https://www.afroditistudiosgrigoriu.com/sitemap.xml
