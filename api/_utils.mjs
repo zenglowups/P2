@@ -27,7 +27,13 @@ export async function readRequestJson(request) {
 export function requestHeadersFromRequest(request) {
   return {
     cookie: request.headers.get("cookie") || "",
+    "cf-connecting-ip": request.headers.get("cf-connecting-ip") || "",
     host: request.headers.get("host") || "",
+    origin: request.headers.get("origin") || "",
+    "user-agent": request.headers.get("user-agent") || "",
+    "x-real-ip": request.headers.get("x-real-ip") || "",
+    "x-vercel-forwarded-for": request.headers.get("x-vercel-forwarded-for") || "",
+    "x-forwarded-for": request.headers.get("x-forwarded-for") || "",
     "x-forwarded-proto": request.headers.get("x-forwarded-proto") || "",
   };
 }

@@ -9,19 +9,6 @@ const INTRO_SESSION_KEY = "afroditi-intro-seen";
 const VISITOR_PREFERENCES_STORAGE_KEY = "afroditi-visitor-preferences";
 const VISITOR_POLICY_VERSION = "2026-05-07-privacy-consent";
 const GOOGLE_ANALYTICS_ID = "G-3ERJHNHMFY";
-const SUPABASE_URL = "https://qnmezrzdkdhhrjsayngn.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFubWV6cnpka2RoaHJqc2F5bmduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMzQxNDYsImV4cCI6MjA5MzYxMDE0Nn0.0GMP74cjB8av3rIzMZmC2CWdwFpCT73oTo50ayMVXp0";
-const supabaseClient = window.supabase?.createClient
-  ? window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY,
-      {
-        auth: {
-          persistSession: false,
-        },
-      }
-    )
-  : null;
 
 document.documentElement.classList.add("js-ready");
 
@@ -83,6 +70,10 @@ const DEFAULT_ACCOMMODATIONS = [
 const SOURCE_RESERVATIONS = [];
 
 const GALLERY_FILES = [
+  "cazare-paralia-katerinis-afroditi-studios-exterior.jpg",
+  "intrare-afroditi-studios-paralia-katerinis-grecia.jpg",
+  "terasa-afroditi-studios-paralia-katerinis-1.jpg",
+  "terasa-afroditi-studios-paralia-katerinis-2.jpg",
   "693837072.jpg",
   "694257536.jpg",
   "694258214.jpg",
@@ -95,10 +86,7 @@ const GALLERY_FILES = [
   "694797456.jpg",
   "694797681.jpg",
   "696111317.jpg",
-  "696118350.jpg",
-  "696118666.jpg",
   "696119957.jpg",
-  "696120235.jpg",
   "696793852.jpg",
   "696793921.jpg",
   "696793943.jpg",
@@ -106,17 +94,28 @@ const GALLERY_FILES = [
   "696795514.jpg",
   "698803324.jpg",
   "698803810.jpg",
-  "698809319.jpg",
   "699517290.jpg",
   "701075281.jpg",
   "701075456.jpg",
-  "718798500.jpg",
-  "718807158.jpg",
   "821243420.jpg",
   "846839553.jpg",
   "846843696.jpg",
   "847487317.jpg",
 ];
+
+const GALLERY_IMAGE_ALT_TEXT = {
+  "cazare-paralia-katerinis-afroditi-studios-exterior.jpg":
+    "Exteriorul cladirii AFRODITI Studios Grigoriu, cazare in Paralia Katerinis Grecia",
+  "intrare-afroditi-studios-paralia-katerinis-grecia.jpg":
+    "Intrarea AFRODITI Studios Grigoriu din Paralia Katerinis, Grecia",
+  "terasa-afroditi-studios-paralia-katerinis-1.jpg":
+    "Terasa spatioasa AFRODITI Studios Grigoriu pentru vacanta in Paralia Katerinis",
+  "terasa-afroditi-studios-paralia-katerinis-2.jpg":
+    "Terasa luminoasa cu vedere deschisa la AFRODITI Studios Grigoriu Paralia Katerinis",
+  "694257536.jpg": "Dormitor luminos cu pat dublu pentru cazare in Paralia Katerinis",
+  "694797681.jpg": "Balcon privat cu masa si scaune la AFRODITI Studios Grigoriu",
+  "699517290.jpg": "Studio modern cu pat dublu, canapea si chicineta in Paralia Katerinis",
+};
 
 const AMENITIES = [
   ["Apartamente", "Studios luminoase, bine organizate, potrivite pentru sejururi relaxate la mare."],
@@ -295,6 +294,9 @@ const bookingPriceNote = $("#booking-price-note");
 const bookingContactConsent = $("#booking-contact-consent");
 const bookingFormNote = $("#booking-form-note");
 const bookingSubmit = $("#booking-submit");
+const bookingRenderedAtField = $("#booking-form-rendered-at");
+const bookingTurnstileField = $("#booking-turnstile-token");
+const bookingTurnstileContainer = $("#booking-turnstile");
 const availabilityOverview = $("[data-availability-overview]");
 const preferenceStatusLabel = $("[data-preference-status]");
 const openTermsButtons = $$("[data-open-terms]");
@@ -367,7 +369,8 @@ function escapeHtml(value) {
 }
 
 function getGalleryImageAlt(index) {
-  return `Fotografia ${index + 1} din galeria AFRODITI Studios Grigoriu`;
+  const file = GALLERY_FILES[index];
+  return GALLERY_IMAGE_ALT_TEXT[file] || `Fotografia ${index + 1} din galeria AFRODITI Studios Grigoriu`;
 }
 
 function waitForTimeout(delay) {
@@ -813,6 +816,11 @@ function createAppState() {
       adults: clamp(2, 1, initialGuestLimits.maxAdults),
       children: 0,
       guestPickerOpen: false,
+      formRenderedAt: Date.now(),
+      captchaEnabled: false,
+      captchaSiteKey: "",
+      captchaWidgetId: null,
+      captchaLoading: false,
     },
     owner: {
       isAvailable: CAN_USE_OWNER_API,
@@ -2416,36 +2424,113 @@ function syncBookingSetupState() {
   }
 
   const hasWhatsAppNumber = !!sanitizePhone(appState.settings.whatsappNumber);
-  bookingSubmit.disabled = !hasWhatsAppNumber;
-  bookingSubmit.setAttribute("aria-disabled", String(!hasWhatsAppNumber));
+  const hasServerEndpoint = CAN_USE_OWNER_API;
+  bookingSubmit.disabled = !hasWhatsAppNumber || !hasServerEndpoint;
+  bookingSubmit.setAttribute("aria-disabled", String(!hasWhatsAppNumber || !hasServerEndpoint));
+  if (!hasServerEndpoint) {
+    bookingFormNote.textContent = "Formularul de cazare este disponibil doar prin varianta securizata a site-ului.";
+    return;
+  }
   bookingFormNote.textContent = hasWhatsAppNumber
     ? `Se accepta doar sejururi de minimum ${MINIMUM_BOOKING_NIGHTS} nopti, iar datele ocupate sunt respinse automat din formular.`
     : "Momentan formularul nu poate fi trimis, pentru ca numarul WhatsApp nu este setat.";
 }
 
-function composeWhatsAppMessage(payload, accommodation) {
-  const lines = [
-    "Buna!",
-    `Am o cerere noua pentru ${PROPERTY_NAME}.`,
-    "",
-    `Nume client: ${payload.guestName}`,
-    `Telefon client: ${payload.guestPhone}`,
-    `Cazare dorita: ${accommodation.name}`,
-    `Numar oaspeti: ${payload.guestCount}`,
-    `Check-in: ${formatDate(payload.checkIn)}`,
-    `Check-out: ${formatDate(payload.checkOut)}`,
-    `Durata: ${formatNights(getNights(payload.checkIn, payload.checkOut))}`,
-    `Locatie: ${PROPERTY_LOCATION}`,
-    "",
-    "Perioada dorita se verifica inainte de confirmare.",
-  ];
-  return lines.join("\n");
+function markBookingFormRendered() {
+  if (!bookingRenderedAtField) {
+    return;
+  }
+  appState.booking.formRenderedAt = Date.now();
+  bookingRenderedAtField.value = String(appState.booking.formRenderedAt);
 }
 
-function buildWhatsAppRequestUrl(whatsappNumber, payload, accommodation) {
-  return `https://wa.me/${sanitizePhone(whatsappNumber)}?text=${encodeURIComponent(
-    composeWhatsAppMessage(payload, accommodation),
-  )}`;
+function resetBookingCaptcha() {
+  if (bookingTurnstileField) {
+    bookingTurnstileField.value = "";
+  }
+  if (window.turnstile && appState.booking.captchaWidgetId !== null) {
+    try {
+      window.turnstile.reset(appState.booking.captchaWidgetId);
+    } catch {
+      // CAPTCHA-ul este optional in lipsa configurarii complete.
+    }
+  }
+}
+
+function renderBookingTurnstile() {
+  if (
+    !bookingTurnstileContainer ||
+    !appState.booking.captchaEnabled ||
+    !appState.booking.captchaSiteKey ||
+    !window.turnstile ||
+    appState.booking.captchaWidgetId !== null
+  ) {
+    return;
+  }
+
+  bookingTurnstileContainer.hidden = false;
+  appState.booking.captchaWidgetId = window.turnstile.render(bookingTurnstileContainer, {
+    sitekey: appState.booking.captchaSiteKey,
+    callback(token) {
+      if (bookingTurnstileField) {
+        bookingTurnstileField.value = token || "";
+      }
+    },
+    "expired-callback"() {
+      if (bookingTurnstileField) {
+        bookingTurnstileField.value = "";
+      }
+    },
+    "error-callback"() {
+      if (bookingTurnstileField) {
+        bookingTurnstileField.value = "";
+      }
+    },
+  });
+}
+
+function loadBookingTurnstileScript() {
+  if (window.turnstile) {
+    renderBookingTurnstile();
+    return;
+  }
+  if (appState.booking.captchaLoading) {
+    return;
+  }
+
+  appState.booking.captchaLoading = true;
+  const script = document.createElement("script");
+  script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+  script.async = true;
+  script.defer = true;
+  script.addEventListener("load", () => {
+    appState.booking.captchaLoading = false;
+    renderBookingTurnstile();
+  });
+  script.addEventListener("error", () => {
+    appState.booking.captchaLoading = false;
+    setStatus("booking-status", "Verificarea anti-spam nu a putut fi incarcata. Reincearca in cateva secunde.", "error");
+  });
+  document.head.appendChild(script);
+}
+
+async function hydrateBookingSecurityConfig() {
+  markBookingFormRendered();
+  if (!bookingForm || !CAN_USE_OWNER_API) {
+    return;
+  }
+
+  try {
+    const config = await fetchJson("/api/security-config");
+    appState.booking.captchaEnabled = !!config?.captchaEnabled;
+    appState.booking.captchaSiteKey = String(config?.captchaSiteKey || "").trim();
+    if (appState.booking.captchaEnabled && appState.booking.captchaSiteKey) {
+      loadBookingTurnstileScript();
+    }
+  } catch {
+    appState.booking.captchaEnabled = false;
+    appState.booking.captchaSiteKey = "";
+  }
 }
 
 async function handleBookingSubmit(event) {
@@ -2457,6 +2542,7 @@ async function handleBookingSubmit(event) {
   const data = new FormData(bookingForm);
   const guestName = String(data.get("guestName") ?? "").trim();
   const guestPhone = String(data.get("guestPhone") ?? "").trim();
+  const guestEmail = String(data.get("guestEmail") ?? "").trim();
   const accommodationId = String(data.get("accommodationId") ?? "").trim();
   const guestSelection = syncBookingGuestPicker({
     adults: data.get("adultCount"),
@@ -2510,56 +2596,76 @@ async function handleBookingSubmit(event) {
   const requestPayload = {
     guestName,
     guestPhone,
+    guestEmail,
     guestCount,
     checkIn,
     checkOut,
   };
   const consentAcceptedAt = new Date().toISOString();
-  let whatsappUrl = buildWhatsAppRequestUrl(whatsappNumber, requestPayload, accommodation);
+  const renderedAt = Number(bookingRenderedAtField?.value || appState.booking.formRenderedAt || Date.now());
+  const submittedAt = Date.now();
+  const turnstileToken = String(bookingTurnstileField?.value || "").trim();
 
-  if (supabaseClient?.functions?.invoke) {
-    try {
-      const { data: bookingResponse, error: bookingError } = await supabaseClient.functions.invoke(
-        "create-whatsapp-booking",
-        {
-          body: {
-            ...requestPayload,
-            accommodationId: accommodation.id,
-            accommodationName: accommodation.name,
-            adultCount: guestSelection.adults,
-            childCount: guestSelection.children,
-            contactConsentAccepted: true,
-            contactConsentAcceptedAt: consentAcceptedAt,
-            contactConsentPolicyVersion: VISITOR_POLICY_VERSION,
-          },
-        },
-      );
-
-      if (bookingError) {
-        console.error("Supabase function error:", bookingError);
-      } else if (bookingResponse?.whatsappUrl) {
-        whatsappUrl = bookingResponse.whatsappUrl;
-      }
-    } catch (error) {
-      console.error("Supabase invoke failed, fallback to direct WhatsApp link.", error);
-    }
+  if (appState.booking.captchaEnabled && !turnstileToken) {
+    setStatus("booking-status", "Completeaza verificarea anti-spam inainte de trimitere.", "error");
+    return;
   }
 
-/*
-  console.error("Supabase function error:", error);
-  alert("A apărut o eroare la trimiterea cererii. Te rugăm să încerci din nou.");
-  return;
-*/
+  bookingSubmit.disabled = true;
+  bookingSubmit.setAttribute("aria-disabled", "true");
+  setStatus("booking-status", "Validam cererea in mod securizat...", "");
 
-  const popup = window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+  let bookingResponse;
+  try {
+    bookingResponse = await fetchJson("/api/booking-request", {
+      method: "POST",
+      body: JSON.stringify({
+        ...requestPayload,
+        accommodationId: accommodation.id,
+        accommodationName: accommodation.name,
+        adultCount: guestSelection.adults,
+        childCount: guestSelection.children,
+        contactConsentAccepted: true,
+        contactConsentAcceptedAt: consentAcceptedAt,
+        contactConsentPolicyVersion: VISITOR_POLICY_VERSION,
+        website: String(data.get("website") ?? ""),
+        formRenderedAt: renderedAt,
+        submittedAt,
+        submitElapsedMs: submittedAt - renderedAt,
+        turnstileToken,
+      }),
+    });
+  } catch (error) {
+    resetBookingCaptcha();
+    setStatus(
+      "booking-status",
+      error.message || "Nu am putut trimite cererea. Te rugam sa incerci din nou.",
+      "error",
+    );
+    syncBookingSetupState();
+    return;
+  }
+
+  if (!bookingResponse?.whatsappUrl) {
+    resetBookingCaptcha();
+    markBookingFormRendered();
+    setStatus("booking-status", bookingResponse?.message || "Mesajul a fost primit.", "success");
+    syncBookingSetupState();
+    return;
+  }
+
+  const popup = window.open(bookingResponse.whatsappUrl, "_blank", "noopener,noreferrer");
 
   if (!popup) {
-    window.location.href = whatsappUrl;
+    window.location.href = bookingResponse.whatsappUrl;
   }
 
   setBookingGuestPickerOpen(false);
   void trackAnalyticsEvent("whatsapp_request");
   setStatus("booking-status", "Am deschis WhatsApp cu cererea completata.", "success");
+  resetBookingCaptcha();
+  markBookingFormRendered();
+  syncBookingSetupState();
 }
 
 async function fetchJson(url, options = {}) {
@@ -3819,6 +3925,7 @@ async function init() {
   renderReviews();
   renderStayPricing();
   renderAccommodationSelects();
+  markBookingFormRendered();
   syncBookingSetupState();
   syncBookingDateFields({ keepStatus: true });
   renderRoomTypes();
@@ -3833,7 +3940,7 @@ async function init() {
   updateScrolledHeader();
   syncSectionHighlights();
   updateSpiralScene();
-  await Promise.all([hydrateVisitorState(), hydrateOwnerState()]);
+  await Promise.all([hydrateVisitorState(), hydrateOwnerState(), hydrateBookingSecurityConfig()]);
   resetScrollOnReload();
 }
 

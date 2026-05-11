@@ -1843,6 +1843,24 @@ textarea {
   min-height: 120px;
 }
 
+.form-honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.booking-turnstile {
+  min-height: 65px;
+}
+
+.booking-turnstile[hidden] {
+  display: none;
+}
+
 .booking-accommodation-picker {
   position: relative;
   display: grid;

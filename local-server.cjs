@@ -9,6 +9,7 @@ const HOST = process.env.HOST || "0.0.0.0";
 const PORT = Number(process.env.PORT || 8787);
 const ownerBackendPromise = import(pathToFileURL(path.join(ROOT_DIR, "lib", "owner-backend.mjs")).href);
 const siteBackendPromise = import(pathToFileURL(path.join(ROOT_DIR, "lib", "site-backend.mjs")).href);
+const bookingSecurityPromise = import(pathToFileURL(path.join(ROOT_DIR, "lib", "booking-security.mjs")).href);
 
 const MIME_TYPES = {
   ".css": "text/css; charset=utf-8",
@@ -58,13 +59,13 @@ function redirect(response, location) {
   response.end();
 }
 
-async function readJsonBody(request) {
+async function readJsonBody(request, maxBytes = 1024 * 1024) {
   return new Promise((resolve, reject) => {
     let body = "";
 
     request.on("data", (chunk) => {
       body += chunk;
-      if (body.length > 1024 * 1024) {
+      if (Buffer.byteLength(body, "utf8") > maxBytes) {
         reject(new Error("Cererea este prea mare."));
         request.destroy();
       }
@@ -163,6 +164,7 @@ async function handleApi(request, response) {
   const url = new URL(request.url || "/", `http://${request.headers.host || `${HOST}:${PORT}`}`);
   const ownerBackend = await ownerBackendPromise;
   const siteBackend = await siteBackendPromise;
+  const bookingSecurity = await bookingSecurityPromise;
 
   if (request.method === "GET" && url.pathname === "/api/health") {
     sendJson(response, 200, { ok: true });
@@ -184,6 +186,23 @@ async function handleApi(request, response) {
         pathname: url.searchParams.get("path") || "/",
       }),
     );
+    return;
+  }
+
+  if (request.method === "GET" && url.pathname === "/api/security-config") {
+    sendJson(response, 200, bookingSecurity.getPublicBookingSecurityConfig());
+    return;
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/booking-request") {
+    const payload = await readJsonBody(request, 16 * 1024);
+    const result = await bookingSecurity.handlePublicBookingRequest({
+      payload,
+      headers: request.headers,
+      socketAddress: request.socket?.remoteAddress,
+    });
+
+    sendJson(response, result.statusCode, result.payload);
     return;
   }
 
