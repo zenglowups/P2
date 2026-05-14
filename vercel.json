@@ -67,6 +67,17 @@
   ],
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "afroditistudiosgrigoriu.com"
+        }
+      ],
+      "destination": "https://www.afroditistudiosgrigoriu.com/:path*",
+      "permanent": true
+    },
+    {
       "source": "/owner",
       "destination": "/owner-login.html",
       "permanent": false
