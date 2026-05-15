@@ -6,6 +6,7 @@ const DESKTOP_SPIRAL = window.matchMedia("(min-width: 1081px)");
 const COMPACT_AVAILABILITY = window.matchMedia("(max-width: 760px)");
 const IS_OWNER_PAGE = document.body?.dataset.page === "owner";
 const INTRO_SESSION_KEY = "afroditi-intro-seen";
+const SUMMER_PROMO_SESSION_KEY = "afroditi-summer-promo-dismissed";
 const VISITOR_PREFERENCES_STORAGE_KEY = "afroditi-visitor-preferences";
 const VISITOR_POLICY_VERSION = "2026-05-07-privacy-consent";
 const GOOGLE_ANALYTICS_ID = "G-3ERJHNHMFY";
@@ -24,6 +25,7 @@ const SEASONAL_PRICE_RANGES = Object.freeze([
     month: 6,
     startDay: 1,
     endDay: 14,
+    originalNightly: 85,
     nightly: 71,
     note: "tarif de inceput de sezon, bun pentru rezervari rapide",
   },
@@ -32,6 +34,7 @@ const SEASONAL_PRICE_RANGES = Object.freeze([
     month: 6,
     startDay: 15,
     endDay: 30,
+    originalNightly: 119,
     nightly: 99,
     note: "perioada calda de vara, aproape de plaja si promenada",
   },
@@ -40,6 +43,7 @@ const SEASONAL_PRICE_RANGES = Object.freeze([
     month: 7,
     startDay: 1,
     endDay: 14,
+    originalNightly: 137,
     nightly: 114,
     weeklyTotal: 798,
     note: "exemplu 7 nopti, tarif calculat transparent",
@@ -49,6 +53,7 @@ const SEASONAL_PRICE_RANGES = Object.freeze([
     month: 7,
     startDay: 15,
     endDay: 31,
+    originalNightly: 144,
     nightly: 120,
     weeklyTotal: 840,
     note: "perioada de varf, potrivita pentru vacanta la mare",
@@ -58,6 +63,7 @@ const SEASONAL_PRICE_RANGES = Object.freeze([
     month: 8,
     startDay: 1,
     endDay: 31,
+    originalNightly: 144,
     nightly: 120,
     weeklyTotal: 840,
     note: "luna de varf, disponibilitatea se confirma rapid",
@@ -68,14 +74,14 @@ const DEFAULT_ACCOMMODATIONS = [
   {
     id: "studio-double",
     name: "Apartament studio cu 1 pat dublu",
-    capacity: "2 adulti",
+    capacity: "2 adulti + 1 copil",
     maxAdults: 2,
-    maxChildren: 0,
-    summary: "Studio luminos cu pat dublu, baie privata, balcon si acces rapid spre plaja.",
+    maxChildren: 1,
+    summary: "Studio luminos cu pat dublu, baie privata, balcon si acces rapid spre plaja, potrivit si pentru 1 copil pana la 12 ani.",
     highlights: [
       "pat dublu si decor modern",
       "baie privata si aer conditionat",
-      "balcon pentru cafeaua de dimineata",
+      "accepta 1 copil pana la 12 ani",
     ],
   },
   {
@@ -326,6 +332,9 @@ const galleryLightboxPrev = $("#gallery-lightbox-prev");
 const galleryLightboxNext = $("#gallery-lightbox-next");
 const siteFooter = $(".site-footer");
 const mobileQuickActions = $("[data-mobile-quick-actions]");
+const summerPromoPopup = $("[data-summer-promo]");
+const summerPromoClose = $("[data-summer-promo-close]");
+const summerPromoLink = $("[data-summer-promo-link]");
 const roomTypesGrid = $("[data-room-types]");
 const amenitiesGrid = $("[data-amenities-grid]");
 const scoreBars = $("[data-score-bars]");
@@ -346,6 +355,8 @@ const bookingChildrenValue = $("#booking-children-value");
 const bookingAdultCountField = $("#booking-adult-count");
 const bookingChildCountField = $("#booking-child-count");
 const bookingGuestCountField = $("#booking-guest-count");
+const bookingChildAgeField = $("#booking-child-age-field");
+const bookingChildAgeInput = $("#booking-child-age");
 const bookingPriceNote = $("#booking-price-note");
 const bookingContactConsent = $("#booking-contact-consent");
 const bookingFormNote = $("#booking-form-note");
@@ -735,13 +746,17 @@ function getStayPriceEstimate(checkIn, checkOut) {
   }
 
   const nightlyRates = ranges.map((range) => range.nightly);
+  const originalNightlyRates = ranges.map((range) => range.originalNightly ?? range.nightly);
   const total = nightlyRates.reduce((sum, nightly) => sum + nightly, 0);
+  const originalTotal = originalNightlyRates.reduce((sum, nightly) => sum + nightly, 0);
   const minNightly = Math.min(...nightlyRates);
   const maxNightly = Math.max(...nightlyRates);
 
   return {
     nights: days.length,
     total,
+    originalTotal,
+    savingsTotal: Math.max(0, originalTotal - total),
     hasPublishedRate: true,
     minNightly,
     maxNightly,
@@ -757,6 +772,14 @@ function formatNightlyRate(estimate) {
   return estimate.isMixedRate
     ? `${formatCurrencyEuro(estimate.minNightly)} - ${formatCurrencyEuro(estimate.maxNightly)} / noapte`
     : `${formatCurrencyEuro(estimate.minNightly)} / noapte`;
+}
+
+function formatStaySavings(estimate) {
+  if (!estimate?.hasPublishedRate || !estimate.savingsTotal) {
+    return "";
+  }
+
+  return ` Economisesti ${formatCurrencyEuro(estimate.savingsTotal)} fata de tariful standard.`;
 }
 
 function deriveHighlights(accommodation) {
@@ -1024,8 +1047,20 @@ function syncBookingGuestPicker(nextSelection = null) {
   if (bookingGuestHint) {
     bookingGuestHint.textContent =
       limits.maxChildren > 0
-        ? `Maxim ${maxSummary} pentru aceasta unitate.`
+        ? `Maxim ${maxSummary} pentru aceasta unitate. Copilul trebuie sa aiba maximum 12 ani.`
         : `Maxim ${limits.maxAdults} ${limits.maxAdults === 1 ? "adult" : "adulti"} pentru aceasta unitate.`;
+  }
+  if (bookingChildAgeField && bookingChildAgeInput) {
+    const needsChildAge = selection.children > 0;
+    bookingChildAgeField.hidden = !needsChildAge;
+    bookingChildAgeInput.required = needsChildAge;
+    bookingChildAgeInput.disabled = !needsChildAge;
+    bookingChildAgeInput.max = "12";
+    bookingChildAgeInput.min = "0";
+    if (!needsChildAge) {
+      bookingChildAgeInput.value = "";
+      bookingChildAgeInput.setCustomValidity("");
+    }
   }
 
   bookingGuestPanel
@@ -1202,7 +1237,7 @@ function syncBookingDateFields(options = {}) {
       minimumStayEstimate.hasPublishedRate
         ? `Pentru ${formatNights(MINIMUM_BOOKING_NIGHTS)} in perioada aleasa: de la ${formatCurrencyEuro(
             minimumStayEstimate.total,
-          )} (${formatNightlyRate(minimumStayEstimate)}).`
+          )} tarif redus (${formatNightlyRate(minimumStayEstimate)}).${formatStaySavings(minimumStayEstimate)}`
         : "Tariful pentru perioada aleasa se confirma direct, in functie de disponibilitate.",
     );
     if (!keepStatus) {
@@ -1246,7 +1281,7 @@ function syncBookingDateFields(options = {}) {
     updateBookingPriceNote(
       `Estimare pentru ${formatNights(nights)}: ${formatCurrencyEuro(estimate.total)} (${formatNightlyRate(
         estimate,
-      )}). Contactul direct ajuta la confirmarea rapida a perioadei.`,
+      )}).${formatStaySavings(estimate)} Contactul direct ajuta la confirmarea rapida a perioadei.`,
     );
   }
   if (!keepStatus) {
@@ -1345,6 +1380,15 @@ function setVisitorModalOpen(isOpen, { locked = false } = {}) {
 
   if (isOpen) {
     window.requestAnimationFrame(() => {
+      const modalShell = visitorPreferencesModal.querySelector(".visitor-modal-shell");
+      if (modalShell instanceof HTMLElement) {
+        modalShell.tabIndex = -1;
+        modalShell.scrollTop = 0;
+        if (COMPACT_AVAILABILITY.matches) {
+          modalShell.focus({ preventScroll: true });
+          return;
+        }
+      }
       if (visitorSaveEssential) {
         visitorSaveEssential.focus();
         return;
@@ -1393,6 +1437,82 @@ function maybeOpenVisitorWelcome() {
   }
 
   setVisitorModalOpen(true, { locked: true });
+}
+
+function hasDismissedSummerPromo() {
+  try {
+    return window.sessionStorage.getItem(SUMMER_PROMO_SESSION_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function markSummerPromoDismissed() {
+  try {
+    window.sessionStorage.setItem(SUMMER_PROMO_SESSION_KEY, "1");
+  } catch {
+    // ignoram lipsa sessionStorage
+  }
+}
+
+function closeSummerPromo({ remember = true } = {}) {
+  if (!summerPromoPopup) {
+    return;
+  }
+
+  if (remember) {
+    markSummerPromoDismissed();
+  }
+
+  summerPromoPopup.classList.remove("is-visible");
+  body.classList.remove("summer-promo-open");
+  summerPromoPopup.setAttribute("aria-hidden", "true");
+  window.setTimeout(() => {
+    if (!summerPromoPopup.classList.contains("is-visible")) {
+      summerPromoPopup.hidden = true;
+    }
+  }, 220);
+}
+
+function showSummerPromo() {
+  if (!summerPromoPopup || IS_OWNER_PAGE || hasDismissedSummerPromo()) {
+    return;
+  }
+
+  summerPromoPopup.hidden = false;
+  summerPromoPopup.setAttribute("aria-hidden", "false");
+  body.classList.add("summer-promo-open");
+  window.requestAnimationFrame(() => {
+    summerPromoPopup.classList.add("is-visible");
+  });
+}
+
+function scheduleSummerPromo(attempt = 0) {
+  if (!summerPromoPopup || IS_OWNER_PAGE || hasDismissedSummerPromo()) {
+    return;
+  }
+
+  const delay = attempt === 0 ? 1800 : 1400;
+  window.setTimeout(() => {
+    if (hasDismissedSummerPromo()) {
+      return;
+    }
+
+    const hasBlockingModal =
+      body.classList.contains("intro-active") ||
+      appState.visitor.modalOpen ||
+      (siteTermsModal && !siteTermsModal.hidden) ||
+      galleryState.lightboxOpen;
+
+    if (hasBlockingModal) {
+      if (attempt < 8) {
+        scheduleSummerPromo(attempt + 1);
+      }
+      return;
+    }
+
+    showSummerPromo();
+  }, delay);
 }
 
 async function persistVisitorPreferences({ source = "manual", silent = false, closeModal = true, analyticsEnabled = false } = {}) {
@@ -1973,13 +2093,24 @@ function renderStayPricing() {
   }
 
   stayPricingGrid.innerHTML = SEASONAL_PRICE_RANGES.map(
-    (item) => `
+    (item) => {
+      const saving = Math.max(0, Number(item.originalNightly || 0) - Number(item.nightly || 0));
+      const weeklyText = item.weeklyTotal
+        ? `${formatCurrencyEuro(item.weeklyTotal)} pentru 7 nopti - ${item.note}`
+        : item.note;
+
+      return `
       <article class="stay-pricing-card${item.nightly === 71 ? " is-featured" : ""}">
         <strong>${escapeHtml(item.label)}</strong>
-        <span>${escapeHtml(`${formatCurrencyEuro(item.nightly)} / noapte`)}</span>
-        <small>${escapeHtml(item.weeklyTotal ? `${formatCurrencyEuro(item.weeklyTotal)} pentru 7 nopti · ${item.note}` : item.note)}</small>
+        <div class="stay-pricing-rate">
+          <del>${escapeHtml(`${formatCurrencyEuro(item.originalNightly)} / noapte`)}</del>
+          <span>${escapeHtml(`${formatCurrencyEuro(item.nightly)} / noapte`)}</span>
+        </div>
+        <em>${escapeHtml(`Reducere de vara activa - economisesti ${formatCurrencyEuro(saving)} / noapte`)}</em>
+        <small>${escapeHtml(weeklyText)}</small>
       </article>
-    `,
+    `;
+    },
   ).join("");
 }
 
@@ -2644,6 +2775,8 @@ async function handleBookingSubmit(event) {
     children: data.get("childCount"),
   });
   const guestCount = formatGuestPartyLabel(guestSelection.adults, guestSelection.children);
+  const childAgeText = String(data.get("childAge") ?? "").trim();
+  const childAge = Number.parseInt(childAgeText, 10);
   const checkIn = String(data.get("checkIn") ?? "").trim();
   const checkOut = String(data.get("checkOut") ?? "").trim();
   const whatsappNumber = sanitizePhone(appState.settings.whatsappNumber);
@@ -2668,6 +2801,14 @@ async function handleBookingSubmit(event) {
   }
   if (!accommodation) {
     setStatus("booking-status", "Selecteaza o cazare valida pentru cerere.", "error");
+    return;
+  }
+  if (
+    guestSelection.children > 0
+    && (!/^\d{1,2}$/.test(childAgeText) || !Number.isInteger(childAge) || childAge < 0 || childAge > 12)
+  ) {
+    setStatus("booking-status", "Completeaza varsta copilului, intre 0 si 12 ani.", "error");
+    bookingChildAgeInput?.focus();
     return;
   }
   if (!syncBookingDateFields({ report: true })) {
@@ -2720,6 +2861,7 @@ async function handleBookingSubmit(event) {
         accommodationName: accommodation.name,
         adultCount: guestSelection.adults,
         childCount: guestSelection.children,
+        childAge: guestSelection.children > 0 ? childAge : null,
         contactConsentAccepted: true,
         contactConsentAcceptedAt: consentAcceptedAt,
         contactConsentPolicyVersion: VISITOR_POLICY_VERSION,
@@ -3662,6 +3804,12 @@ function initEvents() {
   if (bookingForm) {
     bookingForm.addEventListener("submit", handleBookingSubmit);
   }
+  if (summerPromoClose) {
+    summerPromoClose.addEventListener("click", () => closeSummerPromo());
+  }
+  if (summerPromoLink) {
+    summerPromoLink.addEventListener("click", () => closeSummerPromo());
+  }
   if (bookingAccommodationSelect) {
     bookingAccommodationSelect.addEventListener("change", () => {
       renderBookingAccommodationChoices();
@@ -3974,6 +4122,10 @@ if (ownerAccommodationSelect) {
       setVisitorModalOpen(false);
       return;
     }
+    if (event.key === "Escape" && summerPromoPopup?.classList.contains("is-visible")) {
+      closeSummerPromo();
+      return;
+    }
     if (event.key === "Escape" && appState.owner.panelOpen) {
       closeOwnerModal();
     }
@@ -4036,6 +4188,7 @@ async function init() {
   syncSectionHighlights();
   updateSpiralScene();
   await Promise.all([hydrateVisitorState(), hydrateOwnerState(), hydrateBookingSecurityConfig()]);
+  scheduleSummerPromo();
   resetScrollOnReload();
 }
 

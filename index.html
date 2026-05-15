@@ -250,6 +250,22 @@
             <a class="button button-ghost" href="#reviews">Citeste recenziile</a>
           </div>
 
+          <a class="hero-promo-banner reveal" href="#prices" data-analytics-event="booking_interest">
+            <div class="hero-promo-top">
+              <span class="hero-promo-badge">Reduceri vara 2026</span>
+              <span class="hero-promo-saving">economii 14-24 euro/noapte</span>
+            </div>
+            <strong>Tarife reduse de la 71 euro/noapte in Paralia Katerinis</strong>
+            <small>Preturile standard pornesc de la 85 euro/noapte. Reducerea este deja aplicata pentru perioadele de vara.</small>
+            <div class="hero-promo-price-grid" aria-hidden="true">
+              <span class="hero-promo-price-item"><small>1-14 iun.</small><del>85 euro</del><b>71 euro</b></span>
+              <span class="hero-promo-price-item"><small>15-30 iun.</small><del>119 euro</del><b>99 euro</b></span>
+              <span class="hero-promo-price-item"><small>1-14 iul.</small><del>137 euro</del><b>114 euro</b></span>
+              <span class="hero-promo-price-item"><small>Iul.-aug.</small><del>144 euro</del><b>120 euro</b></span>
+            </div>
+            <span class="hero-promo-action">Vezi disponibilitatea</span>
+          </a>
+
           <div class="hero-metrics reveal">
             <article>
               <strong>9.9 / 10</strong>
@@ -316,8 +332,8 @@
 
           <div class="stay-pricing-strip panel-surface">
             <div class="stay-pricing-head">
-              <strong>Tarife directe pe sezon</strong>
-              <span>Sejur minim 4 nopti, cu estimare automata in euro</span>
+              <strong>Reduceri de vara active</strong>
+              <span>Pret standard vs. tarif redus, sejur minim 4 nopti</span>
             </div>
             <div class="stay-pricing-grid" data-stay-pricing></div>
           </div>
@@ -380,7 +396,7 @@
                     <div class="guest-picker-row">
                       <div class="guest-picker-copy">
                         <strong>Copii</strong>
-                        <span>Sub 18 ani</span>
+                        <span>Pana la 12 ani</span>
                       </div>
                       <div class="guest-picker-stepper" aria-label="Numar copii">
                         <button type="button" class="guest-picker-step" data-guest-field="children" data-guest-step="-1" aria-label="Scade numarul de copii">-</button>
@@ -391,6 +407,10 @@
                   </div>
 
                   <p class="guest-picker-hint" id="booking-guests-hint">Maxim 2 adulti pentru aceasta unitate.</p>
+                  <label class="child-age-field" id="booking-child-age-field" hidden>
+                    <span>Varsta copilului</span>
+                    <input type="number" name="childAge" id="booking-child-age" min="0" max="12" inputmode="numeric" placeholder="Ex: 8">
+                  </label>
                   <input type="hidden" name="adultCount" id="booking-adult-count" value="2">
                   <input type="hidden" name="childCount" id="booking-child-count" value="0">
                   <input type="hidden" name="guestCount" id="booking-guest-count" value="2 adulti">
@@ -847,6 +867,33 @@
       </div>
     </section>
   </main>
+
+  <aside class="summer-promo-popup" data-summer-promo hidden aria-hidden="true" aria-label="Reduceri de vara active">
+    <button class="summer-promo-close" type="button" data-summer-promo-close aria-label="Inchide oferta de vara">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span class="summer-promo-kicker">Oferta vara 2026</span>
+    <strong class="summer-promo-title">Prinde reducerea de vara inainte sa se ocupe perioada.</strong>
+    <div class="summer-promo-deal">
+      <span>de la</span>
+      <b>71 euro</b>
+      <small>/ noapte</small>
+    </div>
+    <p>Tarifele standard sunt afisate taiate, iar preturile reduse sunt deja aplicate pentru lunile iunie, iulie si august.</p>
+    <ul class="summer-promo-list" aria-label="Exemple de reduceri pe noapte">
+      <li><span>Iunie</span><del>85 euro</del><b>71 euro</b></li>
+      <li><span>Final iunie</span><del>119 euro</del><b>99 euro</b></li>
+      <li><span>Iulie</span><del>137 euro</del><b>114 euro</b></li>
+      <li><span>Varf sezon</span><del>144 euro</del><b>120 euro</b></li>
+    </ul>
+    <a class="summer-promo-cta" href="#prices" data-summer-promo-link data-analytics-event="booking_interest">Vezi reducerile</a>
+  </aside>
+
+  <a class="sticky-discount-button" href="#prices" aria-label="Vezi reducerile si preturile pe noapte" data-analytics-event="booking_interest">
+    <span>Reduceri</span>
+    <strong>Vara 2026</strong>
+    <small>Vezi preturi/noapte</small>
+  </a>
 
   <div class="mobile-quick-actions" data-mobile-quick-actions aria-label="Actiuni rapide de contact">
     <a class="mobile-quick-action is-call" href="tel:+40742721408" data-analytics-event="social_click">

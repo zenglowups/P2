@@ -334,6 +334,52 @@ body.intro-active .site-intro {
   }
 }
 
+@keyframes promoShine {
+  0% {
+    transform: translateX(-120%) rotate(10deg);
+  }
+
+  42%,
+  100% {
+    transform: translateX(240%) rotate(10deg);
+  }
+}
+
+@keyframes promoPulse {
+  0%,
+  100% {
+    box-shadow: 0 28px 64px rgba(4, 13, 18, 0.28), 0 0 0 rgba(232, 68, 74, 0), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  50% {
+    box-shadow: 0 34px 74px rgba(4, 13, 18, 0.34), 0 0 32px rgba(232, 68, 74, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  }
+}
+
+@keyframes stickyDealPulse {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 20px 42px rgba(160, 28, 43, 0.28), 0 0 0 0 rgba(232, 68, 74, 0.28);
+  }
+
+  50% {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 26px 52px rgba(160, 28, 43, 0.38), 0 0 0 10px rgba(232, 68, 74, 0);
+  }
+}
+
+@keyframes summerPromoFloat {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-6px) scale(1.01);
+  }
+}
+
 .header-inner {
   display: flex;
   align-items: center;
@@ -690,6 +736,159 @@ body.intro-active .site-intro {
   flex-wrap: wrap;
   gap: 14px;
   margin-top: 6px;
+}
+
+.hero-promo-banner {
+  position: relative;
+  width: min(100%, 680px);
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 253, 249, 0.22);
+  background:
+    radial-gradient(circle at 10% 12%, rgba(232, 68, 74, 0.46), transparent 28%),
+    linear-gradient(135deg, rgba(78, 11, 28, 0.93), rgba(34, 111, 132, 0.76)),
+    rgba(255, 253, 249, 0.1);
+  color: var(--white);
+  box-shadow: 0 28px 64px rgba(4, 13, 18, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(18px);
+  overflow: hidden;
+  animation: promoPulse 3.8s ease-in-out infinite;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.hero-promo-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(234, 210, 163, 0.72), rgba(125, 210, 229, 0.2));
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.hero-promo-banner::after {
+  content: "";
+  position: absolute;
+  inset: -30% auto -30% -18%;
+  width: 22%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  transform: translateX(-120%) rotate(10deg);
+  animation: promoShine 4.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.hero-promo-banner:hover,
+.hero-promo-banner:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(255, 253, 249, 0.38);
+  box-shadow: 0 34px 74px rgba(4, 13, 18, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.hero-promo-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hero-promo-badge,
+.hero-promo-saving {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-promo-badge {
+  min-height: 38px;
+  padding: 0 13px;
+  background: linear-gradient(135deg, #ffef9f, #ff364f);
+  color: #2b0710;
+}
+
+.hero-promo-saving {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 105, 116, 0.36);
+  color: #ffe6df;
+  background: rgba(232, 68, 74, 0.22);
+}
+
+.hero-promo-banner strong {
+  display: block;
+  color: var(--white);
+  max-width: 15ch;
+  font-size: clamp(1.55rem, 3vw, 2.45rem);
+  font-weight: 900;
+  line-height: 0.98;
+}
+
+.hero-promo-banner small {
+  color: rgba(255, 253, 249, 0.78);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.hero-promo-price-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.hero-promo-price-item {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 11px 10px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 105, 116, 0.22);
+  background: rgba(255, 253, 249, 0.1);
+}
+
+.hero-promo-price-item small {
+  color: rgba(255, 253, 249, 0.68);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hero-promo-price-item del {
+  color: rgba(255, 253, 249, 0.58);
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-decoration-thickness: 2px;
+}
+
+.hero-promo-price-item b {
+  color: #ffef9f;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.hero-promo-action {
+  width: fit-content;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffef9f, #ff364f);
+  color: #2b0710;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .hero-metrics {
@@ -1287,10 +1486,35 @@ body.intro-active .site-intro {
   color: var(--ink);
 }
 
-.stay-pricing-card span {
+.stay-pricing-rate {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.stay-pricing-rate del {
+  color: rgba(100, 115, 123, 0.82);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-decoration-thickness: 2px;
+}
+
+.stay-pricing-rate span {
   font-size: 1rem;
   font-weight: 800;
   color: #a86c0f;
+}
+
+.stay-pricing-card em {
+  width: fit-content;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(47, 139, 163, 0.1);
+  color: var(--sea-deep);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 800;
 }
 
 .stay-pricing-card small {
@@ -2075,6 +2299,36 @@ textarea {
   margin: 0;
   font-size: 0.84rem;
   color: var(--ink-soft);
+}
+
+.child-age-field {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.child-age-field[hidden] {
+  display: none;
+}
+
+.child-age-field span {
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+}
+
+.child-age-field input {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid rgba(23, 53, 68, 0.14);
+  border-radius: 14px;
+  background: rgba(255, 253, 249, 0.94);
+  color: var(--ink);
+}
+
+.child-age-field input:focus {
+  outline: none;
+  border-color: rgba(47, 139, 163, 0.42);
+  box-shadow: 0 0 0 4px rgba(47, 139, 163, 0.12);
 }
 
 .form-status {
@@ -4301,6 +4555,267 @@ body.visitor-modal-open .mobile-quick-actions {
   transform: translateY(14px);
 }
 
+.summer-promo-popup {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 136;
+  width: min(520px, calc(100vw - 28px));
+  display: grid;
+  gap: 14px;
+  padding: 26px;
+  border-radius: 34px;
+  border: 1px solid rgba(255, 247, 239, 0.24);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 54, 79, 0.46), transparent 28%),
+    radial-gradient(circle at 92% 12%, rgba(255, 239, 159, 0.18), transparent 26%),
+    linear-gradient(145deg, rgba(61, 7, 24, 0.98), rgba(22, 73, 90, 0.98)),
+    rgba(255, 253, 249, 0.08);
+  color: var(--white);
+  box-shadow: 0 34px 84px rgba(4, 14, 20, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(16px) scale(0.985);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.summer-promo-popup[hidden] {
+  display: none;
+}
+
+.summer-promo-popup.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+  animation: summerPromoFloat 4.4s ease-in-out infinite;
+}
+
+.summer-promo-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 253, 249, 0.16);
+  border-radius: 50%;
+  background: rgba(255, 253, 249, 0.08);
+  color: var(--white);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.summer-promo-close:hover,
+.summer-promo-close:focus-visible {
+  background: rgba(255, 253, 249, 0.16);
+  outline: none;
+}
+
+.summer-promo-kicker {
+  width: fit-content;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffef9f, #ff364f);
+  color: #2b0710;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.summer-promo-title {
+  max-width: 16rem;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 2.18rem;
+  font-weight: 700;
+  line-height: 0.94;
+  color: var(--white);
+}
+
+.summer-promo-deal {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 8px;
+  width: fit-content;
+  padding: 10px 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 105, 116, 0.24);
+  background: rgba(232, 68, 74, 0.16);
+}
+
+.summer-promo-deal span,
+.summer-promo-deal small {
+  color: rgba(255, 253, 249, 0.72);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.summer-promo-deal b {
+  color: #ffef9f;
+  font-size: clamp(2rem, 5vw, 3.35rem);
+  font-weight: 900;
+  line-height: 0.9;
+}
+
+.summer-promo-popup p {
+  max-width: 42ch;
+  color: rgba(255, 253, 249, 0.78);
+  font-size: 0.96rem;
+  line-height: 1.55;
+}
+
+.summer-promo-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.summer-promo-list li {
+  display: grid;
+  gap: 3px;
+  padding: 11px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 105, 116, 0.2);
+  background: rgba(255, 253, 249, 0.09);
+}
+
+.summer-promo-list span {
+  color: rgba(255, 253, 249, 0.68);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.summer-promo-list del {
+  color: rgba(255, 253, 249, 0.58);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration-thickness: 2px;
+}
+
+.summer-promo-list b {
+  color: #ffef9f;
+  font-size: 1.08rem;
+  font-weight: 900;
+}
+
+.summer-promo-cta {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffef9f, #ff364f);
+  color: #2b0710;
+  font-size: 0.86rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: transform 180ms ease, background-color 180ms ease;
+}
+
+.summer-promo-cta:hover,
+.summer-promo-cta:focus-visible {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, #fff6c4, #ff5369);
+  outline: none;
+}
+
+body.visitor-modal-open .summer-promo-popup,
+body.gallery-lightbox-open .summer-promo-popup {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(16px) scale(0.985);
+}
+
+.sticky-discount-button {
+  position: fixed;
+  left: 22px;
+  bottom: 22px;
+  z-index: 137;
+  width: 174px;
+  min-height: 74px;
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  padding: 13px 16px 14px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background:
+    radial-gradient(circle at 20% 12%, rgba(255, 239, 159, 0.48), transparent 34%),
+    linear-gradient(135deg, #ff364f, #b90f2b 58%, #5c0719);
+  color: #fffdf9;
+  box-shadow: 0 20px 42px rgba(160, 28, 43, 0.28);
+  text-align: left;
+  overflow: hidden;
+  animation: stickyDealPulse 2.6s ease-in-out infinite;
+}
+
+.sticky-discount-button::after {
+  content: "";
+  position: absolute;
+  inset: -30% auto -30% -24%;
+  width: 32%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.36), transparent);
+  transform: translateX(-130%) rotate(12deg);
+  animation: promoShine 3.4s ease-in-out infinite 0.6s;
+}
+
+.sticky-discount-button span {
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 239, 159, 0.94);
+  color: #2b0710;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sticky-discount-button strong {
+  font-size: 1.1rem;
+  font-weight: 950;
+  letter-spacing: 0.02em;
+}
+
+.sticky-discount-button small {
+  color: rgba(255, 253, 249, 0.82);
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.sticky-discount-button:hover,
+.sticky-discount-button:focus-visible {
+  outline: none;
+  transform: translateY(-3px) scale(1.03);
+}
+
+body.visitor-modal-open .sticky-discount-button,
+body.gallery-lightbox-open .sticky-discount-button,
+body.menu-open .sticky-discount-button,
+body.summer-promo-open .sticky-discount-button {
+  opacity: 0;
+  pointer-events: none;
+}
+
+body.summer-promo-open .mobile-quick-actions {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(14px);
+}
+
 .policy-section {
   background:
     linear-gradient(180deg, rgba(252, 247, 240, 0.9), rgba(245, 239, 230, 0.82)),
@@ -4829,7 +5344,12 @@ body.visitor-modal-open {
   .hero-main-shot,
   .hero-side-stack figure,
   .site-intro-mark,
-  .site-intro-progress span {
+  .site-intro-progress span,
+  .hero-promo-banner,
+  .hero-promo-banner::after,
+  .summer-promo-popup.is-visible,
+  .sticky-discount-button,
+  .sticky-discount-button::after {
     animation: none;
   }
 
@@ -5066,15 +5586,55 @@ body.visitor-modal-open {
   }
 
   .visitor-modal {
-    padding: 14px;
+    padding: 10px 0;
+    align-items: flex-start;
+    justify-items: center;
+    overflow-y: auto;
   }
 
   .visitor-modal-shell,
   .visitor-modal-shell-wide {
-    width: min(100vw - 20px, 920px);
+    width: min(330px, calc(100vw - 46px));
     max-height: calc(100vh - 20px);
-    padding: 24px;
+    padding: 18px;
     border-radius: 26px;
+    overflow-x: hidden;
+  }
+
+  .visitor-modal-head,
+  .visitor-modal-body,
+  .consent-option,
+  .consent-option > *,
+  .visitor-modal-links,
+  .visitor-modal-actions {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .visitor-modal-head p,
+  .visitor-consent-note,
+  .consent-option span {
+    overflow-wrap: anywhere;
+  }
+
+  .visitor-modal-links .text-link-button {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    text-align: left;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .visitor-modal-actions .button {
+    min-height: 54px;
+    padding: 12px 14px;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.25;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
   }
 
   .site-header.menu-open .site-nav {
@@ -5097,7 +5657,8 @@ body.visitor-modal-open {
   }
 
   .hero h1 {
-    max-width: 9ch;
+    max-width: 11.4ch;
+    font-size: clamp(2.55rem, 10.7vw, 3.55rem);
   }
 
   .hero-text {
@@ -5113,6 +5674,35 @@ body.visitor-modal-open {
 
   .hero-actions .button {
     width: 100%;
+  }
+
+  .hero-promo-banner {
+    padding: 18px;
+    border-radius: 26px;
+    gap: 12px;
+  }
+
+  .hero-promo-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .hero-promo-banner strong {
+    max-width: 12ch;
+  }
+
+  .hero-promo-price-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .hero-promo-price-item {
+    padding: 10px;
+    border-radius: 16px;
+  }
+
+  .hero-promo-price-item b {
+    font-size: 0.92rem;
   }
 
   .hero-metrics,
@@ -5399,6 +5989,7 @@ body.visitor-modal-open {
   .consent-option {
     align-items: flex-start;
     flex-direction: column;
+    padding: 16px;
   }
 
   .consent-option-toggle {
@@ -5683,6 +6274,62 @@ body.visitor-modal-open {
     letter-spacing: 0.06em;
   }
 
+  .summer-promo-popup {
+    left: 12px;
+    right: 12px;
+    bottom: 86px;
+    width: auto;
+    max-height: calc(100vh - 168px);
+    overflow-y: auto;
+    padding: 18px;
+    border-radius: 24px;
+  }
+
+  .summer-promo-title {
+    max-width: 14rem;
+    font-size: 1.72rem;
+  }
+
+  .summer-promo-deal {
+    grid-template-columns: auto auto;
+  }
+
+  .summer-promo-deal small {
+    grid-column: 1 / -1;
+  }
+
+  .summer-promo-popup p {
+    max-width: 30ch;
+    font-size: 0.88rem;
+  }
+
+  .summer-promo-list {
+    grid-template-columns: 1fr;
+  }
+
+  .sticky-discount-button {
+    top: 88px;
+    right: 12px;
+    left: auto;
+    bottom: auto;
+    width: 152px;
+    min-height: 66px;
+    padding: 11px 13px 12px;
+    border-radius: 22px;
+  }
+
+  .sticky-discount-button span {
+    font-size: 0.62rem;
+  }
+
+  .sticky-discount-button strong {
+    font-size: 0.98rem;
+  }
+
+  .sticky-discount-button small {
+    font-size: 0.66rem;
+  }
+
   .footer-actions {
     width: 100%;
     justify-content: space-between;
@@ -5830,7 +6477,7 @@ body.visitor-modal-open {
   }
 
   .hero h1 {
-    max-width: 8.5ch;
+    max-width: 11.2ch;
   }
 
   .availability-summary {
