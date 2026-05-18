@@ -348,35 +348,11 @@ body.intro-active .site-intro {
 @keyframes promoPulse {
   0%,
   100% {
-    box-shadow: 0 28px 64px rgba(4, 13, 18, 0.28), 0 0 0 rgba(232, 68, 74, 0), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    box-shadow: 0 28px 64px rgba(4, 13, 18, 0.28), 0 0 0 rgba(47, 139, 163, 0), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   }
 
   50% {
-    box-shadow: 0 34px 74px rgba(4, 13, 18, 0.34), 0 0 32px rgba(232, 68, 74, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.16);
-  }
-}
-
-@keyframes stickyDealPulse {
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-    box-shadow: 0 20px 42px rgba(160, 28, 43, 0.28), 0 0 0 0 rgba(232, 68, 74, 0.28);
-  }
-
-  50% {
-    transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 26px 52px rgba(160, 28, 43, 0.38), 0 0 0 10px rgba(232, 68, 74, 0);
-  }
-}
-
-@keyframes summerPromoFloat {
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-  }
-
-  50% {
-    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 34px 74px rgba(4, 13, 18, 0.34), 0 0 28px rgba(47, 139, 163, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.16);
   }
 }
 
@@ -747,8 +723,8 @@ body.intro-active .site-intro {
   border-radius: 30px;
   border: 1px solid rgba(255, 253, 249, 0.22);
   background:
-    radial-gradient(circle at 10% 12%, rgba(232, 68, 74, 0.46), transparent 28%),
-    linear-gradient(135deg, rgba(78, 11, 28, 0.93), rgba(34, 111, 132, 0.76)),
+    radial-gradient(circle at 10% 12%, rgba(241, 211, 160, 0.28), transparent 28%),
+    linear-gradient(135deg, rgba(14, 64, 78, 0.94), rgba(34, 111, 132, 0.76)),
     rgba(255, 253, 249, 0.1);
   color: var(--white);
   box-shadow: 0 28px 64px rgba(4, 13, 18, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -811,16 +787,16 @@ body.intro-active .site-intro {
 .hero-promo-badge {
   min-height: 38px;
   padding: 0 13px;
-  background: linear-gradient(135deg, #ffef9f, #ff364f);
-  color: #2b0710;
+  background: linear-gradient(135deg, #f7e2ba, #d7b06f);
+  color: #102028;
 }
 
 .hero-promo-saving {
   min-height: 34px;
   padding: 0 12px;
-  border: 1px solid rgba(255, 105, 116, 0.36);
-  color: #ffe6df;
-  background: rgba(232, 68, 74, 0.22);
+  border: 1px solid rgba(255, 253, 249, 0.2);
+  color: rgba(255, 253, 249, 0.82);
+  background: rgba(255, 253, 249, 0.1);
 }
 
 .hero-promo-banner strong {
@@ -850,7 +826,7 @@ body.intro-active .site-intro {
   min-width: 0;
   padding: 11px 10px;
   border-radius: 18px;
-  border: 1px solid rgba(255, 105, 116, 0.22);
+  border: 1px solid rgba(255, 253, 249, 0.16);
   background: rgba(255, 253, 249, 0.1);
 }
 
@@ -870,7 +846,7 @@ body.intro-active .site-intro {
 }
 
 .hero-promo-price-item b {
-  color: #ffef9f;
+  color: #f7e2ba;
   font-size: 1rem;
   font-weight: 900;
 }
@@ -883,8 +859,8 @@ body.intro-active .site-intro {
   justify-content: center;
   padding: 0 16px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #ffef9f, #ff364f);
-  color: #2b0710;
+  background: linear-gradient(135deg, #f7e2ba, #d7b06f);
+  color: #102028;
   font-size: 0.8rem;
   font-weight: 900;
   letter-spacing: 0.08em;
@@ -1468,7 +1444,7 @@ body.intro-active .site-intro {
 
 .stay-pricing-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -4555,267 +4531,6 @@ body.visitor-modal-open .mobile-quick-actions {
   transform: translateY(14px);
 }
 
-.summer-promo-popup {
-  position: fixed;
-  right: 22px;
-  bottom: 22px;
-  z-index: 136;
-  width: min(520px, calc(100vw - 28px));
-  display: grid;
-  gap: 14px;
-  padding: 26px;
-  border-radius: 34px;
-  border: 1px solid rgba(255, 247, 239, 0.24);
-  background:
-    radial-gradient(circle at 12% 10%, rgba(255, 54, 79, 0.46), transparent 28%),
-    radial-gradient(circle at 92% 12%, rgba(255, 239, 159, 0.18), transparent 26%),
-    linear-gradient(145deg, rgba(61, 7, 24, 0.98), rgba(22, 73, 90, 0.98)),
-    rgba(255, 253, 249, 0.08);
-  color: var(--white);
-  box-shadow: 0 34px 84px rgba(4, 14, 20, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(20px);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(16px) scale(0.985);
-  transition: opacity 220ms ease, transform 220ms ease;
-}
-
-.summer-promo-popup[hidden] {
-  display: none;
-}
-
-.summer-promo-popup.is-visible {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0) scale(1);
-  animation: summerPromoFloat 4.4s ease-in-out infinite;
-}
-
-.summer-promo-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(255, 253, 249, 0.16);
-  border-radius: 50%;
-  background: rgba(255, 253, 249, 0.08);
-  color: var(--white);
-  font-size: 1.25rem;
-  line-height: 1;
-}
-
-.summer-promo-close:hover,
-.summer-promo-close:focus-visible {
-  background: rgba(255, 253, 249, 0.16);
-  outline: none;
-}
-
-.summer-promo-kicker {
-  width: fit-content;
-  padding: 7px 11px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #ffef9f, #ff364f);
-  color: #2b0710;
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.summer-promo-title {
-  max-width: 16rem;
-  font-family: "Cormorant Garamond", serif;
-  font-size: 2.18rem;
-  font-weight: 700;
-  line-height: 0.94;
-  color: var(--white);
-}
-
-.summer-promo-deal {
-  display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr);
-  align-items: baseline;
-  gap: 8px;
-  width: fit-content;
-  padding: 10px 14px;
-  border-radius: 22px;
-  border: 1px solid rgba(255, 105, 116, 0.24);
-  background: rgba(232, 68, 74, 0.16);
-}
-
-.summer-promo-deal span,
-.summer-promo-deal small {
-  color: rgba(255, 253, 249, 0.72);
-  font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.summer-promo-deal b {
-  color: #ffef9f;
-  font-size: clamp(2rem, 5vw, 3.35rem);
-  font-weight: 900;
-  line-height: 0.9;
-}
-
-.summer-promo-popup p {
-  max-width: 42ch;
-  color: rgba(255, 253, 249, 0.78);
-  font-size: 0.96rem;
-  line-height: 1.55;
-}
-
-.summer-promo-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.summer-promo-list li {
-  display: grid;
-  gap: 3px;
-  padding: 11px 12px;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 105, 116, 0.2);
-  background: rgba(255, 253, 249, 0.09);
-}
-
-.summer-promo-list span {
-  color: rgba(255, 253, 249, 0.68);
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.summer-promo-list del {
-  color: rgba(255, 253, 249, 0.58);
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-decoration-thickness: 2px;
-}
-
-.summer-promo-list b {
-  color: #ffef9f;
-  font-size: 1.08rem;
-  font-weight: 900;
-}
-
-.summer-promo-cta {
-  width: 100%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 54px;
-  padding: 0 20px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #ffef9f, #ff364f);
-  color: #2b0710;
-  font-size: 0.86rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition: transform 180ms ease, background-color 180ms ease;
-}
-
-.summer-promo-cta:hover,
-.summer-promo-cta:focus-visible {
-  transform: translateY(-1px);
-  background: linear-gradient(135deg, #fff6c4, #ff5369);
-  outline: none;
-}
-
-body.visitor-modal-open .summer-promo-popup,
-body.gallery-lightbox-open .summer-promo-popup {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(16px) scale(0.985);
-}
-
-.sticky-discount-button {
-  position: fixed;
-  left: 22px;
-  bottom: 22px;
-  z-index: 137;
-  width: 174px;
-  min-height: 74px;
-  display: grid;
-  align-content: center;
-  gap: 2px;
-  padding: 13px 16px 14px;
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background:
-    radial-gradient(circle at 20% 12%, rgba(255, 239, 159, 0.48), transparent 34%),
-    linear-gradient(135deg, #ff364f, #b90f2b 58%, #5c0719);
-  color: #fffdf9;
-  box-shadow: 0 20px 42px rgba(160, 28, 43, 0.28);
-  text-align: left;
-  overflow: hidden;
-  animation: stickyDealPulse 2.6s ease-in-out infinite;
-}
-
-.sticky-discount-button::after {
-  content: "";
-  position: absolute;
-  inset: -30% auto -30% -24%;
-  width: 32%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.36), transparent);
-  transform: translateX(-130%) rotate(12deg);
-  animation: promoShine 3.4s ease-in-out infinite 0.6s;
-}
-
-.sticky-discount-button span {
-  width: fit-content;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: rgba(255, 239, 159, 0.94);
-  color: #2b0710;
-  font-size: 0.68rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.sticky-discount-button strong {
-  font-size: 1.1rem;
-  font-weight: 950;
-  letter-spacing: 0.02em;
-}
-
-.sticky-discount-button small {
-  color: rgba(255, 253, 249, 0.82);
-  font-size: 0.72rem;
-  font-weight: 850;
-}
-
-.sticky-discount-button:hover,
-.sticky-discount-button:focus-visible {
-  outline: none;
-  transform: translateY(-3px) scale(1.03);
-}
-
-body.visitor-modal-open .sticky-discount-button,
-body.gallery-lightbox-open .sticky-discount-button,
-body.menu-open .sticky-discount-button,
-body.summer-promo-open .sticky-discount-button {
-  opacity: 0;
-  pointer-events: none;
-}
-
-body.summer-promo-open .mobile-quick-actions {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(14px);
-}
-
 .policy-section {
   background:
     linear-gradient(180deg, rgba(252, 247, 240, 0.9), rgba(245, 239, 230, 0.82)),
@@ -5346,10 +5061,7 @@ body.visitor-modal-open {
   .site-intro-mark,
   .site-intro-progress span,
   .hero-promo-banner,
-  .hero-promo-banner::after,
-  .summer-promo-popup.is-visible,
-  .sticky-discount-button,
-  .sticky-discount-button::after {
+  .hero-promo-banner::after {
     animation: none;
   }
 
@@ -6272,62 +5984,6 @@ body.visitor-modal-open {
     min-height: 56px;
     font-size: 0.84rem;
     letter-spacing: 0.06em;
-  }
-
-  .summer-promo-popup {
-    left: 12px;
-    right: 12px;
-    bottom: 86px;
-    width: auto;
-    max-height: calc(100vh - 168px);
-    overflow-y: auto;
-    padding: 18px;
-    border-radius: 24px;
-  }
-
-  .summer-promo-title {
-    max-width: 14rem;
-    font-size: 1.72rem;
-  }
-
-  .summer-promo-deal {
-    grid-template-columns: auto auto;
-  }
-
-  .summer-promo-deal small {
-    grid-column: 1 / -1;
-  }
-
-  .summer-promo-popup p {
-    max-width: 30ch;
-    font-size: 0.88rem;
-  }
-
-  .summer-promo-list {
-    grid-template-columns: 1fr;
-  }
-
-  .sticky-discount-button {
-    top: 88px;
-    right: 12px;
-    left: auto;
-    bottom: auto;
-    width: 152px;
-    min-height: 66px;
-    padding: 11px 13px 12px;
-    border-radius: 22px;
-  }
-
-  .sticky-discount-button span {
-    font-size: 0.62rem;
-  }
-
-  .sticky-discount-button strong {
-    font-size: 0.98rem;
-  }
-
-  .sticky-discount-button small {
-    font-size: 0.66rem;
   }
 
   .footer-actions {
