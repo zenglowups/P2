@@ -252,16 +252,16 @@
 
           <a class="hero-promo-banner reveal" href="#prices" data-analytics-event="booking_interest">
             <div class="hero-promo-top">
-              <span class="hero-promo-badge">Tarife vara 2026</span>
-              <span class="hero-promo-saving">sejur minim 4 nopti</span>
+              <span class="hero-promo-badge">Promotie activa 2026</span>
+              <span class="hero-promo-saving">de la 80 euro/noapte</span>
             </div>
-            <strong>Tarife de la 128 euro/noapte in Paralia Katerinis</strong>
-            <small>Iunie si septembrie: 128 euro/noapte. Iulie si august: 134 euro/noapte.</small>
+            <strong>Promotie iunie si septembrie in Paralia Katerinis</strong>
+            <small>1-15 iunie: 80 euro/noapte. 15-30 iunie: 100 euro/noapte. Septembrie: 110 euro/noapte.</small>
             <div class="hero-promo-price-grid" aria-hidden="true">
-              <span class="hero-promo-price-item"><small>Iunie</small><b>128 euro</b></span>
+              <span class="hero-promo-price-item"><small>1-15 iun.</small><del>128 euro</del><b>80 euro</b></span>
+              <span class="hero-promo-price-item"><small>15-30 iun.</small><del>128 euro</del><b>100 euro</b></span>
+              <span class="hero-promo-price-item"><small>Sept.</small><del>128 euro</del><b>110 euro</b></span>
               <span class="hero-promo-price-item"><small>Iulie</small><b>134 euro</b></span>
-              <span class="hero-promo-price-item"><small>August</small><b>134 euro</b></span>
-              <span class="hero-promo-price-item"><small>Septembrie</small><b>128 euro</b></span>
             </div>
             <span class="hero-promo-action">Vezi disponibilitatea</span>
           </a>
@@ -332,8 +332,8 @@
 
           <div class="stay-pricing-strip panel-surface">
             <div class="stay-pricing-head">
-              <strong>Tarife sezon 2026</strong>
-              <span>Iunie si septembrie 128 euro/noapte; iulie si august 134 euro/noapte</span>
+              <strong>Promotii sezon 2026</strong>
+              <span>1-15 iunie 80 euro, 15-30 iunie 100 euro, septembrie 110 euro/noapte</span>
             </div>
             <div class="stay-pricing-grid" data-stay-pricing></div>
           </div>
@@ -867,6 +867,33 @@
       </div>
     </section>
   </main>
+
+  <aside class="summer-promo-popup" data-summer-promo hidden aria-hidden="true" aria-label="Promotie activa pentru iunie si septembrie">
+    <button class="summer-promo-close" type="button" data-summer-promo-close aria-label="Inchide promotia">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span class="summer-promo-kicker">Promotie activa 2026</span>
+    <strong class="summer-promo-title">Rezerva iunie sau septembrie la tarif promotional.</strong>
+    <div class="summer-promo-deal">
+      <span>de la</span>
+      <b>80 euro</b>
+      <small>/ noapte</small>
+    </div>
+    <p>Tarife speciale pentru perioadele 1-15 iunie, 15-30 iunie si toata luna septembrie. Locurile libere se confirma direct.</p>
+    <ul class="summer-promo-list" aria-label="Tarife promotionale pe noapte">
+      <li><span>1-15 iunie</span><del>128 euro</del><b>80 euro</b></li>
+      <li><span>15-30 iunie</span><del>128 euro</del><b>100 euro</b></li>
+      <li><span>Septembrie</span><del>128 euro</del><b>110 euro</b></li>
+      <li><span>Iulie-august</span><b>134 euro</b></li>
+    </ul>
+    <a class="summer-promo-cta" href="#prices" data-summer-promo-link data-analytics-event="booking_interest">Vezi promotia</a>
+  </aside>
+
+  <a class="sticky-discount-button" href="#prices" aria-label="Vezi promotia si preturile pe noapte" data-analytics-event="booking_interest">
+    <span>Promotie</span>
+    <strong>de la 80 euro</strong>
+    <small>Iunie si septembrie</small>
+  </a>
 
   <div class="mobile-quick-actions" data-mobile-quick-actions aria-label="Actiuni rapide de contact">
     <a class="mobile-quick-action is-call" href="tel:+40742721408" data-analytics-event="social_click">
