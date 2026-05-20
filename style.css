@@ -475,6 +475,49 @@ body.intro-active .site-intro {
   opacity: 1;
 }
 
+.language-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 253, 249, 0.18);
+  background: rgba(255, 253, 249, 0.1);
+  backdrop-filter: blur(12px);
+  flex-shrink: 0;
+}
+
+.site-header.is-scrolled .language-switcher {
+  border-color: rgba(23, 53, 68, 0.12);
+  background: rgba(255, 253, 249, 0.74);
+}
+
+.language-option {
+  min-width: 38px;
+  height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.language-option:hover,
+.language-option:focus-visible {
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.language-option.is-active {
+  background: linear-gradient(135deg, #f7e2ba, #d7b06f);
+  color: #102028;
+}
+
 .site-header:not(.is-scrolled) .site-nav a.is-active {
   color: #f7e2ba;
 }
@@ -584,6 +627,7 @@ body.intro-active .site-intro {
 :where(
   .button,
   .nav-toggle,
+  .language-option,
   .site-nav a,
   .booking-tabs a,
   .gallery-arrow,
@@ -607,6 +651,7 @@ body.intro-active .site-intro {
 :where(
   .button,
   .nav-toggle,
+  .language-option,
   .site-nav a,
   .booking-tabs a,
   .gallery-arrow,
@@ -630,6 +675,7 @@ body.intro-active .site-intro {
 :where(
   .button,
   .nav-toggle,
+  .language-option,
   .gallery-arrow,
   .availability-month-button,
   .availability-month-pill,
@@ -5534,6 +5580,19 @@ body.visitor-modal-open {
     height: 58px;
   }
 
+  .language-switcher {
+    order: 2;
+    margin-left: auto;
+    padding: 3px;
+  }
+
+  .language-option {
+    min-width: 34px;
+    height: 32px;
+    padding: 0 8px;
+    font-size: 0.68rem;
+  }
+
   .owner-page-topbar-inner {
     flex-direction: column;
     align-items: flex-start;
@@ -5551,7 +5610,8 @@ body.visitor-modal-open {
 
   .nav-toggle {
     display: inline-flex;
-    margin-left: auto;
+    order: 3;
+    margin-left: 8px;
   }
 
   .site-nav {

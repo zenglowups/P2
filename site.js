@@ -293,6 +293,498 @@ const EXTRACTED_REVIEWS = [
   },
 ];
 
+const LANGUAGE_STORAGE_KEY = "afroditi-site-language";
+const SUPPORTED_LANGUAGES = new Set(["ro", "en", "el"]);
+const LANGUAGE_LOCALES = {
+  ro: "ro-RO",
+  en: "en-US",
+  el: "el-GR",
+};
+const LANGUAGE_TITLES = {
+  ro: "AFRODITI Studios Grigoriu | Cazare Paralia Katerinis, Grecia",
+  en: "AFRODITI Studios Grigoriu | Accommodation in Paralia Katerinis, Greece",
+  el: "AFRODITI Studios Grigoriu | Διαμονή στην Παραλία Κατερίνης, Ελλάδα",
+};
+const TRANSLATABLE_ATTRIBUTES = ["aria-label", "alt", "placeholder", "title"];
+const TRANSLATIONS = {
+  en: {
+    "Camere luminoase, aproape de plaja, pentru sejururi calme la mare.": "Bright rooms close to the beach for calm seaside stays.",
+    "Luxury Apartments": "Luxury Apartments",
+    "Deschide meniul": "Open menu",
+    "Prezentare": "Overview",
+    "Galerie": "Gallery",
+    "Disponibilitate": "Availability",
+    "Recenzii": "Reviews",
+    "Contact": "Contact",
+    "Alege limba": "Choose language",
+    "Paralia Katerinis, Grecia": "Paralia Katerinis, Greece",
+    "Cazare in Paralia Katerinis, Grecia, in studio-uri luminoase aproape de plaja.": "Accommodation in Paralia Katerinis, Greece, in bright studios close to the beach.",
+    "Daca cauti cazare in Paralia Katerinis, Grecia, cazare aproape de plaja sau studio-uri moderne pe Riviera Olimpului, AFRODITI Studios Grigoriu Luxury Apartments aduce exact atmosfera aceea cautata la mare: camere foarte curate, tonuri luminoase, balcoane primitoare, bai moderne, terasa si o zona linistita, la o plimbare scurta de plaja. Este o alegere potrivita pentru cupluri si familii mici care vor confort, proximitate fata de apa si o gazda atenta la detalii.": "If you are looking for accommodation in Paralia Katerinis, Greece, close to the beach or in modern studios on the Olympic Riviera, AFRODITI Studios Grigoriu Luxury Apartments brings the seaside atmosphere you want: very clean rooms, bright tones, welcoming balconies, modern bathrooms, a terrace and a quiet area just a short walk from the beach. It is a good choice for couples and small families who want comfort, proximity to the sea and a host who pays attention to details.",
+    "Verifica disponibilitatea": "Check availability",
+    "Citeste recenziile": "Read reviews",
+    "Promotie activa 2026": "Active promotion 2026",
+    "de la 80 euro/noapte": "from 80 euro/night",
+    "Promotie iunie si septembrie in Paralia Katerinis": "June and September promotion in Paralia Katerinis",
+    "1-15 iunie: 80 euro/noapte. 15-30 iunie: 100 euro/noapte. Septembrie: 110 euro/noapte.": "June 1-15: 80 euro/night. June 15-30: 100 euro/night. September: 110 euro/night.",
+    "1-15 iun.": "Jun 1-15",
+    "15-30 iun.": "Jun 15-30",
+    "Sept.": "Sept.",
+    "Iulie": "July",
+    "August": "August",
+    "Septembrie": "September",
+    "Vezi disponibilitatea": "View availability",
+    "evaluare generala din recenziile oaspetilor": "overall score from guest reviews",
+    "La o strada de mare": "One street from the sea",
+    "plaja este aproape, iar serile raman linistite si relaxate": "the beach is close, while evenings stay quiet and relaxed",
+    "Camere noi si luminoase": "New, bright rooms",
+    "interioare ingrijite, balcoane private si detalii foarte curate": "well-kept interiors, private balconies and very clean details",
+    "Prezentare generala": "Overview",
+    "Facilitati": "Facilities",
+    "Recenzii oaspeti": "Guest reviews",
+    "Alege luna si vezi rapid ce zile mai sunt libere.": "Choose a month and quickly see which days are still free.",
+    "Compara usor Studio Double si Studio Deluxe, verifica lunile ramase disponibile si alege perioada potrivita fara sa deschizi un calendar mare.": "Easily compare Studio Double and Studio Deluxe, check the remaining available months and choose the right period without opening a large calendar.",
+    "Cerere de cazare": "Accommodation request",
+    "Spune-ne perioada si numarul de oaspeti.": "Tell us the period and number of guests.",
+    "Cererea ajunge direct pentru confirmarea perioadei si a unitatii alese.": "The request is sent directly for confirmation of the dates and selected unit.",
+    "Promotii sezon 2026": "2026 season promotions",
+    "1-15 iunie 80 euro, 15-30 iunie 100 euro, septembrie 110 euro/noapte": "June 1-15 80 euro, June 15-30 100 euro, September 110 euro/night",
+    "Nume": "Name",
+    "Telefon": "Phone",
+    "Email optional": "Optional email",
+    "Cazare": "Accommodation",
+    "Alege cazarea": "Choose accommodation",
+    "Oaspeti": "Guests",
+    "Selecteaza oaspetii": "Select guests",
+    "2 adulti": "2 adults",
+    "Adulti": "Adults",
+    "Varsta 18+": "Age 18+",
+    "Numar adulti": "Number of adults",
+    "Scade numarul de adulti": "Decrease number of adults",
+    "Creste numarul de adulti": "Increase number of adults",
+    "Copii": "Children",
+    "Pana la 12 ani": "Up to 12 years old",
+    "Numar copii": "Number of children",
+    "Scade numarul de copii": "Decrease number of children",
+    "Creste numarul de copii": "Increase number of children",
+    "Maxim 2 adulti pentru aceasta unitate.": "Maximum 2 adults for this unit.",
+    "Varsta copilului": "Child age",
+    "Selecteaza un sejur de minimum 4 nopti pentru a vedea estimarea in euro.": "Select a stay of at least 4 nights to see the euro estimate.",
+    "Sunt de acord ca datele introduse sa fie folosite pentru a fi contactat in legatura cu solicitarea mea de cazare.": "I agree that the details entered may be used to contact me about my accommodation request.",
+    "Citeste politica de confidentialitate": "Read the privacy policy",
+    "Confirmarea telefonica este obligatorie. Clientul trebuie sa sune pentru confirmarea finala a rezervarii.": "Phone confirmation is required. The guest must call for final reservation confirmation.",
+    "Se accepta doar sejururi de minimum 4 nopti, iar datele ocupate sunt respinse automat din formular.": "Only stays of at least 4 nights are accepted, and occupied dates are rejected automatically by the form.",
+    "Trimite pe WhatsApp": "Send on WhatsApp",
+    "Disponibilitate pe luni": "Monthly availability",
+    "Vezi dintr-o privire cate zile raman libere pentru fiecare studio.": "See at a glance how many days remain free for each studio.",
+    "Schimba luna pentru fiecare unitate, vezi intervalele libere si compara rapid disponibilitatea.": "Change the month for each unit, view free periods and quickly compare availability.",
+    "Sejururi gandite pentru relaxare": "Stays designed for relaxation",
+    "Studio Double este ideal pentru cupluri, iar Studio Deluxe ofera mai mult spatiu pentru sejururi mai lungi sau familii mici.": "Studio Double is ideal for couples, while Studio Deluxe offers more space for longer stays or small families.",
+    "Poti merge doar din luna curenta inainte, iar fiecare studio isi pastreaza separat luna selectata.": "You can move only from the current month onward, and each studio keeps its selected month separately.",
+    "Despre proprietate": "About the property",
+    "Camere noi, terase albe si o atmosfera relaxata, la cativa pasi de plaja.": "New rooms, white terraces and a relaxed atmosphere just a few steps from the beach.",
+    "Proprietatea transmite senzatia aceea de vacanta bine asezata: lumina naturala, finisaje curate, bai moderne, paturi pregatite atent si colturi exterioare in care incepi ziua incet, cu cafea si aer sarat.": "The property gives the feeling of a well-set holiday: natural light, clean finishes, modern bathrooms, carefully prepared beds and outdoor corners where you can start the day slowly, with coffee and salty air.",
+    "Fie ca alegi un sejur de cuplu sau cateva nopti cu familia, cazarea ramane usor de apreciat: aproape de apa, retrasa suficient cat sa fie liniste si completata de o gazda primitoare.": "Whether you choose a couples' stay or a few nights with family, the accommodation is easy to appreciate: close to the sea, quiet enough for rest and supported by a welcoming host.",
+    "Camere noi si curate": "New and clean rooms",
+    "spatiile au un aer proaspat, bine ingrijit, cu finisaje luminoase si ordine vizibila in fiecare cadru.": "the spaces feel fresh and well cared for, with bright finishes and visible order in every corner.",
+    "Aproape de plaja": "Close to the beach",
+    "marea este la o plimbare scurta, iar zona ramane placuta pentru intoarcerile linistite de seara.": "the sea is a short walk away, and the area stays pleasant for quiet evening returns.",
+    "Host foarte apreciat": "Highly rated host",
+    "ospitalitatea si disponibilitatea gazdei apar constant in impresiile lasate de oaspeti.": "the host's hospitality and availability appear constantly in guest impressions.",
+    "Cautari utile": "Useful searches",
+    "Cazare Paralia Katerinis, Grecia, pentru cautari reale de vacanta la mare.": "Accommodation in Paralia Katerinis, Greece, for real seaside holiday searches.",
+    "Site-ul foloseste pagini si texte clare pentru intentii diferite: cazare in Paralia Katerinis, cazare in Grecia aproape de plaja, studio pentru cuplu, Studio Deluxe pentru familie mica si contact direct pentru rezervare. Asa informatia ramane naturala pentru cititori si mai usor de inteles pentru Google.": "The site uses clear pages and text for different needs: accommodation in Paralia Katerinis, accommodation in Greece close to the beach, a studio for couples, Studio Deluxe for a small family and direct booking contact. This keeps the information natural for readers and easier for Google to understand.",
+    "Cazare Paralia Katerinis": "Accommodation in Paralia Katerinis",
+    "Pagina principala si pagina dedicata de cazare acopera cautarile generale pentru sejur in Grecia.": "The main page and dedicated accommodation page cover general searches for a stay in Greece.",
+    "O pagina separata raspunde cautarilor de tip cazare aproape de plaja in Paralia Katerinis.": "A separate page answers searches for accommodation close to the beach in Paralia Katerinis.",
+    "Studio Double si Studio Deluxe": "Studio Double and Studio Deluxe",
+    "Paginile pe tipuri de unitati sustin cautarile pentru studio, camere si apartamente in Paralia Katerinis.": "The unit-type pages support searches for studios, rooms and apartments in Paralia Katerinis.",
+    "Galerie foto": "Photo gallery",
+    "Exterior modern, interior luminos, cadre din Paralia Katerinis si balcoane care prelungesc starea de vacanta.": "Modern exterior, bright interiors, scenes from Paralia Katerinis and balconies that extend the holiday feeling.",
+    "Fotografiile surprind exact lucrurile pe care le cauti intr-un sejur la mare: camere curate, pat confortabil, terasa, exteriorul proprietatii, plaja, promenada si detalii simple, bine ingrijite.": "The photos show exactly what you look for in a seaside stay: clean rooms, a comfortable bed, terrace, property exterior, beach, promenade and simple, well-kept details.",
+    "Fotografii ale proprietatii si zonei": "Photos of the property and area",
+    "38 fotografii ale proprietatii si zonei": "38 photos of the property and area",
+    "Navigare galerie": "Gallery navigation",
+    "Imagine anterioara": "Previous image",
+    "Imagine urmatoare": "Next image",
+    "Galerie foto Afroditi Studios": "Afroditi Studios photo gallery",
+    "Gliseaza sau foloseste sagetile pentru a trece rapid prin fotografii, apoi apasa pe o poza pentru marire.": "Swipe or use the arrows to move quickly through the photos, then tap a photo to enlarge it.",
+    "Atmosfera": "Atmosphere",
+    "Seri linistite, lumina calda si ritmul acela de vacanta care te face sa ramai mai mult afara.": "Quiet evenings, warm light and that holiday rhythm that makes you stay outside longer.",
+    "Tot ce ai nevoie pentru un sejur comod, fara graba.": "Everything you need for a comfortable, unhurried stay.",
+    "De la aer conditionat si WiFi pana la balcon, terasa si parcare gratuita, facilitatile sustin exact genul de vacanta relaxata pe care o cauti la mare.": "From air conditioning and WiFi to a balcony, terrace and free parking, the facilities support exactly the relaxed seaside holiday you are looking for.",
+    "Oaspetii vorbesc cel mai des despre curatenie, liniste, apropierea de plaja si gazda atenta.": "Guests most often mention cleanliness, quiet, proximity to the beach and the attentive host.",
+    "Impresiile de sejur pastreaza acelasi fir rosu: camere impecabile, atmosfera placuta, locatie buna si sentimentul ca totul este pregatit cu grija.": "Guest impressions follow the same thread: spotless rooms, pleasant atmosphere, good location and the feeling that everything is prepared with care.",
+    "Exceptional": "Exceptional",
+    "19 evaluari ale oaspetilor": "19 guest reviews",
+    "Ce spun cel mai des oaspetii": "What guests mention most",
+    "Curatenie impecabila, camere noi si o atmosfera calda, aproape de mare.": "Spotless cleanliness, new rooms and a warm atmosphere close to the sea.",
+    "De la cupluri la familii, aceleasi puncte revin constant: gazda ajutatoare, zona linistita si confortul unui spatiu foarte bine intretinut.": "From couples to families, the same points come up again and again: helpful host, quiet area and the comfort of a very well-maintained space.",
+    "curatenie impecabila": "spotless cleanliness",
+    "gazda foarte bine vazuta": "highly rated host",
+    "aproape de plaja": "close to the beach",
+    "camere noi": "new rooms",
+    "atmosfera linistita": "quiet atmosphere",
+    "19 evaluari": "19 reviews",
+    "Mai jos sunt prezentate impresii care descriu clar atmosfera sejurului.": "Below are impressions that clearly describe the atmosphere of the stay.",
+    "Recenzii selectate": "Selected reviews",
+    "Impresii din sejururi recente care surprind cel mai bine atmosfera proprietatii.": "Impressions from recent stays that best capture the property's atmosphere.",
+    "8 recenzii prezentate": "8 featured reviews",
+    "curatenia, linistea si apropierea de plaja apar cel mai des": "cleanliness, quiet and proximity to the beach appear most often",
+    "Plaja": "Beach",
+    "Curatenie": "Cleanliness",
+    "Terasa": "Terrace",
+    "Liniste": "Quiet",
+    "Gazda": "Host",
+    "Alege varianta de contact cea mai simpla pentru perioada dorita.": "Choose the simplest contact option for your desired period.",
+    "Pentru intrebari rapide, WhatsApp-ul merge foarte bine. Daca vrei un raspuns direct si clar pe loc, apelul telefonic ramane cea mai comoda varianta.": "For quick questions, WhatsApp works very well. If you want a direct and clear answer on the spot, a phone call remains the easiest option.",
+    "Solicita cazare": "Request accommodation",
+    "Apel direct": "Direct call",
+    "Potrivit pentru verificarea rapida a disponibilitatii, a perioadei si a detaliilor importante.": "Good for quickly checking availability, dates and important details.",
+    "Mesaj rapid": "Quick message",
+    "Scrie pe WhatsApp": "Write on WhatsApp",
+    "Trimite perioada dorita, numarul de oaspeti si intrebarile esentiale intr-un singur mesaj.": "Send the desired period, number of guests and essential questions in one message.",
+    "Gazda proprietatii": "Property host",
+    "Contact direct": "Direct contact",
+    "Gazda AFRODITI Studios": "AFRODITI Studios host",
+    "Un contact direct, calm si atent la detalii face tot sejurul mai simplu.": "Direct, calm and detail-oriented contact makes the whole stay easier.",
+    "raspuns rapid": "fast reply",
+    "confirmare clara": "clear confirmation",
+    "comunicare directa": "direct communication",
+    "Harta si locatie": "Map and location",
+    "Locatia este aproape de plaja si usor de gasit odata ce deschizi ruta.": "The location is close to the beach and easy to find once you open the route.",
+    "Deschide harta pentru traseul exact, orientare rapida si punctele utile din jurul proprietatii.": "Open the map for the exact route, quick orientation and useful points around the property.",
+    "Vezi ruta in Google Maps": "View route in Google Maps",
+    "Cadre reale si mici update-uri din atmosfera proprietatii.": "Real moments and small updates from the property's atmosphere.",
+    "Promotie activa pentru iunie si septembrie": "Active promotion for June and September",
+    "Inchide promotia": "Close promotion",
+    "Rezerva iunie sau septembrie la tarif promotional.": "Book June or September at a promotional rate.",
+    "de la": "from",
+    "/ noapte": "/ night",
+    "Tarife speciale pentru perioadele 1-15 iunie, 15-30 iunie si toata luna septembrie. Locurile libere se confirma direct.": "Special rates for June 1-15, June 15-30 and the whole month of September. Free dates are confirmed directly.",
+    "Tarife promotionale pe noapte": "Promotional nightly rates",
+    "1-15 iunie": "June 1-15",
+    "15-30 iunie": "June 15-30",
+    "Iulie-august": "July-August",
+    "Vezi promotia": "View promotion",
+    "Vezi promotia si preturile pe noapte": "View the promotion and nightly rates",
+    "Iunie si septembrie": "June and September",
+    "Actiuni rapide de contact": "Quick contact actions",
+    "Suna acum": "Call now",
+    "Studios moderne aproape de plaja, cu atmosfera linistita, terase luminoase si recenzii excelente.": "Modern studios close to the beach, with a quiet atmosphere, bright terraces and excellent reviews.",
+    "© 2026 AFRODITI Studios Grigoriu. Toate drepturile rezervate.": "© 2026 AFRODITI Studios Grigoriu. All rights reserved.",
+    "Termeni si confidentialitate": "Terms and privacy",
+    "Cookies si analytics": "Cookies and analytics",
+    "Inapoi sus": "Back to top",
+    "Vizualizare marita": "Enlarged view",
+    "1 / 38 imagini": "1 / 38 images",
+    "Navigare galerie marita": "Enlarged gallery navigation",
+    "Inchide imaginea marita": "Close enlarged image",
+    "Informare cookies": "Cookie notice",
+    "Bine ai venit la AFRODITI Studios Grigoriu.": "Welcome to AFRODITI Studios Grigoriu.",
+    "Functionare esentiala": "Essential functionality",
+    "Memoram alegerea ta printr-un identificator tehnic pseudonimizat si pastram functionarea de baza a site-ului, fara analytics optional daca nu il accepti.": "We remember your choice through a pseudonymized technical identifier and keep the basic site functionality, without optional analytics unless you accept it.",
+    "Analytics optional": "Optional analytics",
+    "Daca accepti, masuram intrarile, interactiunile importante si solicitarile initiate din site pentru administrarea proprietatii.": "If you accept, we measure visits, important interactions and requests started from the site for property administration.",
+    "Citeste politica de confidentialitate si termenii": "Read the privacy policy and terms",
+    "Continua doar cu esentiale": "Continue with essentials only",
+    "Accept analytics": "Accept analytics",
+    "Termeni si politica": "Terms and policy",
+    "Termeni de utilizare, cereri de cazare si confidentialitate.": "Terms of use, accommodation requests and privacy.",
+    "Apartament studio cu 1 pat dublu": "Studio apartment with 1 double bed",
+    "2 adulti + 1 copil": "2 adults + 1 child",
+    "Studio luminos cu pat dublu, baie privata, balcon si acces rapid spre plaja, potrivit si pentru 1 copil pana la 12 ani.": "Bright studio with double bed, private bathroom, balcony and quick access to the beach, suitable for 1 child up to 12 years old.",
+    "pat dublu si decor modern": "double bed and modern decor",
+    "baie privata si aer conditionat": "private bathroom and air conditioning",
+    "accepta 1 copil pana la 12 ani": "accepts 1 child up to 12 years old",
+    "Unitate spatioasa cu pat dublu, canapea, chicineta si atmosfera premium.": "Spacious unit with double bed, sofa, kitchenette and premium atmosphere.",
+    "chicineta utilata": "equipped kitchenette",
+    "spatiu bun pentru familie mica": "good space for a small family",
+    "look calm, nou si foarte curat": "calm, new and very clean look",
+    "promotie pentru inceput de iunie": "promotion for early June",
+    "promotie pentru final de iunie": "promotion for late June",
+    "perioada de varf, potrivita pentru vacanta la mare": "peak period, suitable for a seaside holiday",
+    "luna de varf, disponibilitatea se confirma rapid": "peak month, availability is confirmed quickly",
+    "promotie pentru toata luna septembrie": "promotion for the whole month of September",
+    "Apartamente": "Apartments",
+    "Studios luminoase, bine organizate, potrivite pentru sejururi relaxate la mare.": "Bright, well-organized studios suitable for relaxed seaside stays.",
+    "Parcare gratuita": "Free parking",
+    "Confort in plus pentru sosiri cu masina si deplasari fara graba.": "Extra comfort for arrivals by car and unhurried trips.",
+    "WiFi gratuit inclus": "Free WiFi included",
+    "Util pentru conectivitate zilnica, planuri de plaja sau cateva ore de lucru.": "Useful for daily connectivity, beach plans or a few hours of work.",
+    "Transfer de la si/sau la aeroport": "Airport transfer",
+    "Optiune practica pentru un drum mai usor pana la cazare.": "A practical option for an easier trip to the accommodation.",
+    "Gratar": "Barbecue",
+    "Un detaliu care completeaza atmosfera relaxata a proprietatii.": "A detail that completes the relaxed atmosphere of the property.",
+    "Camere pentru nefumatori": "Non-smoking rooms",
+    "Un plus de confort pentru cupluri, familii si sejururi mai lungi.": "Extra comfort for couples, families and longer stays.",
+    "Balcon": "Balcony",
+    "Spatiu bun pentru cafeaua de dimineata sau o pauza linistita seara.": "Good space for morning coffee or a quiet evening break.",
+    "Vedere la mare": "Sea view",
+    "Un detaliu care aduce si mai mult din senzatia de vacanta.": "A detail that adds even more holiday feeling.",
+    "Aer conditionat": "Air conditioning",
+    "Confort important in zilele calde de vara.": "Important comfort on hot summer days.",
+    "Una dintre cele mai placute zone pentru relaxare in aer liber.": "One of the most pleasant areas for outdoor relaxation.",
+    "Personal": "Staff",
+    "Curatenie": "Cleanliness",
+    "Confort": "Comfort",
+    "Raport calitate-pret": "Value for money",
+    "Locatie": "Location",
+    "Disponibil": "Available",
+    "Ocupat": "Booked",
+    "Perioada curenta este deja rezervata pentru aceasta unitate.": "The current period is already booked for this unit.",
+    "Momentan nu apar rezervari in lunile urmatoare.": "There are currently no reservations in the coming months.",
+    "cuplu": "couple",
+    "familie": "family",
+    "Romania": "Romania",
+    "Ungaria": "Hungary",
+    "Bulgaria": "Bulgaria",
+    "Macedonia de Nord": "North Macedonia",
+    "Germania": "Germany",
+    "Un sejur perfect.": "A perfect stay.",
+    "Excelent": "Excellent",
+    "Nice and comfort place": "Nice and comfortable place",
+    "Impresie lasata de un oaspete dupa sejur.": "Impression left by a guest after the stay."
+  },
+  el: {
+    "Camere luminoase, aproape de plaja, pentru sejururi calme la mare.": "Φωτεινά δωμάτια κοντά στην παραλία για ήρεμες διακοπές στη θάλασσα.",
+    "Luxury Apartments": "Πολυτελή Διαμερίσματα",
+    "Deschide meniul": "Άνοιγμα μενού",
+    "Prezentare": "Επισκόπηση",
+    "Galerie": "Γκαλερί",
+    "Disponibilitate": "Διαθεσιμότητα",
+    "Recenzii": "Κριτικές",
+    "Contact": "Επικοινωνία",
+    "Alege limba": "Επιλογή γλώσσας",
+    "Paralia Katerinis, Grecia": "Παραλία Κατερίνης, Ελλάδα",
+    "Cazare in Paralia Katerinis, Grecia, in studio-uri luminoase aproape de plaja.": "Διαμονή στην Παραλία Κατερίνης, Ελλάδα, σε φωτεινά στούντιο κοντά στην παραλία.",
+    "Daca cauti cazare in Paralia Katerinis, Grecia, cazare aproape de plaja sau studio-uri moderne pe Riviera Olimpului, AFRODITI Studios Grigoriu Luxury Apartments aduce exact atmosfera aceea cautata la mare: camere foarte curate, tonuri luminoase, balcoane primitoare, bai moderne, terasa si o zona linistita, la o plimbare scurta de plaja. Este o alegere potrivita pentru cupluri si familii mici care vor confort, proximitate fata de apa si o gazda atenta la detalii.": "Αν αναζητάτε διαμονή στην Παραλία Κατερίνης, κοντά στην παραλία ή σε μοντέρνα στούντιο στην Ολυμπιακή Ριβιέρα, το AFRODITI Studios Grigoriu Luxury Apartments προσφέρει την ατμόσφαιρα που θέλετε στη θάλασσα: πολύ καθαρά δωμάτια, φωτεινούς χώρους, φιλόξενα μπαλκόνια, μοντέρνα μπάνια, βεράντα και ήσυχη περιοχή σε μικρή απόσταση με τα πόδια από την παραλία. Είναι καλή επιλογή για ζευγάρια και μικρές οικογένειες που θέλουν άνεση, κοντινή απόσταση από τη θάλασσα και προσεκτικό οικοδεσπότη.",
+    "Verifica disponibilitatea": "Έλεγχος διαθεσιμότητας",
+    "Citeste recenziile": "Διαβάστε κριτικές",
+    "Promotie activa 2026": "Ενεργή προσφορά 2026",
+    "de la 80 euro/noapte": "από 80 ευρώ/νύχτα",
+    "Promotie iunie si septembrie in Paralia Katerinis": "Προσφορά Ιουνίου και Σεπτεμβρίου στην Παραλία Κατερίνης",
+    "1-15 iunie: 80 euro/noapte. 15-30 iunie: 100 euro/noapte. Septembrie: 110 euro/noapte.": "1-15 Ιουνίου: 80 ευρώ/νύχτα. 15-30 Ιουνίου: 100 ευρώ/νύχτα. Σεπτέμβριος: 110 ευρώ/νύχτα.",
+    "1-15 iun.": "1-15 Ιουν.",
+    "15-30 iun.": "15-30 Ιουν.",
+    "Sept.": "Σεπτ.",
+    "Iulie": "Ιούλιος",
+    "August": "Αύγουστος",
+    "Septembrie": "Σεπτέμβριος",
+    "Vezi disponibilitatea": "Δείτε διαθεσιμότητα",
+    "evaluare generala din recenziile oaspetilor": "γενική βαθμολογία από κριτικές επισκεπτών",
+    "La o strada de mare": "Ένας δρόμος από τη θάλασσα",
+    "plaja este aproape, iar serile raman linistite si relaxate": "η παραλία είναι κοντά και τα βράδια παραμένουν ήρεμα",
+    "Camere noi si luminoase": "Νέα και φωτεινά δωμάτια",
+    "interioare ingrijite, balcoane private si detalii foarte curate": "προσεγμένοι εσωτερικοί χώροι, ιδιωτικά μπαλκόνια και πολύ καθαρές λεπτομέρειες",
+    "Prezentare generala": "Γενική εικόνα",
+    "Facilitati": "Παροχές",
+    "Recenzii oaspeti": "Κριτικές επισκεπτών",
+    "Alege luna si vezi rapid ce zile mai sunt libere.": "Επιλέξτε μήνα και δείτε γρήγορα ποιες ημέρες είναι διαθέσιμες.",
+    "Compara usor Studio Double si Studio Deluxe, verifica lunile ramase disponibile si alege perioada potrivita fara sa deschizi un calendar mare.": "Συγκρίνετε εύκολα το Studio Double και το Studio Deluxe, δείτε τους διαθέσιμους μήνες και επιλέξτε την κατάλληλη περίοδο χωρίς μεγάλο ημερολόγιο.",
+    "Cerere de cazare": "Αίτημα διαμονής",
+    "Spune-ne perioada si numarul de oaspeti.": "Πείτε μας την περίοδο και τον αριθμό των επισκεπτών.",
+    "Cererea ajunge direct pentru confirmarea perioadei si a unitatii alese.": "Το αίτημα αποστέλλεται απευθείας για επιβεβαίωση της περιόδου και της μονάδας.",
+    "Promotii sezon 2026": "Προσφορές σεζόν 2026",
+    "1-15 iunie 80 euro, 15-30 iunie 100 euro, septembrie 110 euro/noapte": "1-15 Ιουνίου 80 ευρώ, 15-30 Ιουνίου 100 ευρώ, Σεπτέμβριος 110 ευρώ/νύχτα",
+    "Nume": "Όνομα",
+    "Telefon": "Τηλέφωνο",
+    "Email optional": "Προαιρετικό email",
+    "Cazare": "Διαμονή",
+    "Alege cazarea": "Επιλέξτε διαμονή",
+    "Oaspeti": "Επισκέπτες",
+    "Selecteaza oaspetii": "Επιλέξτε επισκέπτες",
+    "2 adulti": "2 ενήλικες",
+    "Adulti": "Ενήλικες",
+    "Varsta 18+": "Ηλικία 18+",
+    "Numar adulti": "Αριθμός ενηλίκων",
+    "Scade numarul de adulti": "Μείωση ενηλίκων",
+    "Creste numarul de adulti": "Αύξηση ενηλίκων",
+    "Copii": "Παιδιά",
+    "Pana la 12 ani": "Έως 12 ετών",
+    "Numar copii": "Αριθμός παιδιών",
+    "Scade numarul de copii": "Μείωση παιδιών",
+    "Creste numarul de copii": "Αύξηση παιδιών",
+    "Maxim 2 adulti pentru aceasta unitate.": "Μέγιστο 2 ενήλικες για αυτή τη μονάδα.",
+    "Varsta copilului": "Ηλικία παιδιού",
+    "Selecteaza un sejur de minimum 4 nopti pentru a vedea estimarea in euro.": "Επιλέξτε διαμονή τουλάχιστον 4 νυχτών για να δείτε την εκτίμηση σε ευρώ.",
+    "Sunt de acord ca datele introduse sa fie folosite pentru a fi contactat in legatura cu solicitarea mea de cazare.": "Συμφωνώ τα στοιχεία μου να χρησιμοποιηθούν για επικοινωνία σχετικά με το αίτημα διαμονής.",
+    "Citeste politica de confidentialitate": "Διαβάστε την πολιτική απορρήτου",
+    "Confirmarea telefonica este obligatorie. Clientul trebuie sa sune pentru confirmarea finala a rezervarii.": "Η τηλεφωνική επιβεβαίωση είναι υποχρεωτική. Ο επισκέπτης πρέπει να καλέσει για την τελική επιβεβαίωση της κράτησης.",
+    "Se accepta doar sejururi de minimum 4 nopti, iar datele ocupate sunt respinse automat din formular.": "Γίνονται δεκτές μόνο διαμονές τουλάχιστον 4 νυχτών και οι κατειλημμένες ημερομηνίες απορρίπτονται αυτόματα.",
+    "Trimite pe WhatsApp": "Αποστολή στο WhatsApp",
+    "Disponibilitate pe luni": "Διαθεσιμότητα ανά μήνα",
+    "Vezi dintr-o privire cate zile raman libere pentru fiecare studio.": "Δείτε γρήγορα πόσες ημέρες μένουν διαθέσιμες για κάθε στούντιο.",
+    "Schimba luna pentru fiecare unitate, vezi intervalele libere si compara rapid disponibilitatea.": "Αλλάξτε μήνα για κάθε μονάδα, δείτε τα ελεύθερα διαστήματα και συγκρίνετε τη διαθεσιμότητα.",
+    "Sejururi gandite pentru relaxare": "Διαμονές σχεδιασμένες για χαλάρωση",
+    "Studio Double este ideal pentru cupluri, iar Studio Deluxe ofera mai mult spatiu pentru sejururi mai lungi sau familii mici.": "Το Studio Double είναι ιδανικό για ζευγάρια, ενώ το Studio Deluxe προσφέρει περισσότερο χώρο για μεγαλύτερες διαμονές ή μικρές οικογένειες.",
+    "Poti merge doar din luna curenta inainte, iar fiecare studio isi pastreaza separat luna selectata.": "Μπορείτε να κινηθείτε μόνο από τον τρέχοντα μήνα και μετά, και κάθε στούντιο κρατά ξεχωριστά τον επιλεγμένο μήνα.",
+    "Despre proprietate": "Σχετικά με το κατάλυμα",
+    "Camere noi, terase albe si o atmosfera relaxata, la cativa pasi de plaja.": "Νέα δωμάτια, λευκές βεράντες και χαλαρή ατμόσφαιρα λίγα βήματα από την παραλία.",
+    "Proprietatea transmite senzatia aceea de vacanta bine asezata: lumina naturala, finisaje curate, bai moderne, paturi pregatite atent si colturi exterioare in care incepi ziua incet, cu cafea si aer sarat.": "Το κατάλυμα δίνει την αίσθηση ήρεμων διακοπών: φυσικό φως, καθαρά φινιρίσματα, μοντέρνα μπάνια, προσεγμένα κρεβάτια και εξωτερικές γωνιές για καφέ και θαλασσινό αέρα.",
+    "Fie ca alegi un sejur de cuplu sau cateva nopti cu familia, cazarea ramane usor de apreciat: aproape de apa, retrasa suficient cat sa fie liniste si completata de o gazda primitoare.": "Είτε ταξιδεύετε ως ζευγάρι είτε με οικογένεια, η διαμονή εκτιμάται εύκολα: κοντά στη θάλασσα, αρκετά ήσυχη και με φιλόξενο οικοδεσπότη.",
+    "Camere noi si curate": "Νέα και καθαρά δωμάτια",
+    "spatiile au un aer proaspat, bine ingrijit, cu finisaje luminoase si ordine vizibila in fiecare cadru.": "οι χώροι είναι φρέσκοι, προσεγμένοι, με φωτεινά τελειώματα και ορατή καθαριότητα παντού.",
+    "Aproape de plaja": "Κοντά στην παραλία",
+    "marea este la o plimbare scurta, iar zona ramane placuta pentru intoarcerile linistite de seara.": "η θάλασσα είναι σε μικρή απόσταση με τα πόδια και η περιοχή είναι ευχάριστη για ήσυχες βραδινές επιστροφές.",
+    "Host foarte apreciat": "Πολύ αγαπητός οικοδεσπότης",
+    "ospitalitatea si disponibilitatea gazdei apar constant in impresiile lasate de oaspeti.": "η φιλοξενία και η διαθεσιμότητα του οικοδεσπότη εμφανίζονται συνεχώς στις εντυπώσεις των επισκεπτών.",
+    "Cautari utile": "Χρήσιμες αναζητήσεις",
+    "Cazare Paralia Katerinis, Grecia, pentru cautari reale de vacanta la mare.": "Διαμονή στην Παραλία Κατερίνης, Ελλάδα, για πραγματικές αναζητήσεις διακοπών στη θάλασσα.",
+    "Site-ul foloseste pagini si texte clare pentru intentii diferite: cazare in Paralia Katerinis, cazare in Grecia aproape de plaja, studio pentru cuplu, Studio Deluxe pentru familie mica si contact direct pentru rezervare. Asa informatia ramane naturala pentru cititori si mai usor de inteles pentru Google.": "Ο ιστότοπος χρησιμοποιεί σαφείς σελίδες και κείμενα για διαφορετικές ανάγκες: διαμονή στην Παραλία Κατερίνης, διαμονή κοντά στην παραλία στην Ελλάδα, στούντιο για ζευγάρι, Studio Deluxe για μικρή οικογένεια και άμεση επικοινωνία για κράτηση.",
+    "Cazare Paralia Katerinis": "Διαμονή στην Παραλία Κατερίνης",
+    "Pagina principala si pagina dedicata de cazare acopera cautarile generale pentru sejur in Grecia.": "Η αρχική και η ειδική σελίδα διαμονής καλύπτουν τις γενικές αναζητήσεις για διακοπές στην Ελλάδα.",
+    "O pagina separata raspunde cautarilor de tip cazare aproape de plaja in Paralia Katerinis.": "Μια ξεχωριστή σελίδα απαντά σε αναζητήσεις για διαμονή κοντά στην παραλία στην Παραλία Κατερίνης.",
+    "Studio Double si Studio Deluxe": "Studio Double και Studio Deluxe",
+    "Paginile pe tipuri de unitati sustin cautarile pentru studio, camere si apartamente in Paralia Katerinis.": "Οι σελίδες ανά τύπο μονάδας υποστηρίζουν αναζητήσεις για στούντιο, δωμάτια και διαμερίσματα στην Παραλία Κατερίνης.",
+    "Galerie foto": "Φωτογραφική γκαλερί",
+    "Exterior modern, interior luminos, cadre din Paralia Katerinis si balcoane care prelungesc starea de vacanta.": "Μοντέρνο εξωτερικό, φωτεινοί εσωτερικοί χώροι, εικόνες από την Παραλία Κατερίνης και μπαλκόνια που παρατείνουν τη διάθεση διακοπών.",
+    "Fotografiile surprind exact lucrurile pe care le cauti intr-un sejur la mare: camere curate, pat confortabil, terasa, exteriorul proprietatii, plaja, promenada si detalii simple, bine ingrijite.": "Οι φωτογραφίες δείχνουν όσα αναζητάτε σε μια διαμονή στη θάλασσα: καθαρά δωμάτια, άνετο κρεβάτι, βεράντα, εξωτερικό χώρο, παραλία, πεζόδρομο και απλές προσεγμένες λεπτομέρειες.",
+    "Fotografii ale proprietatii si zonei": "Φωτογραφίες του καταλύματος και της περιοχής",
+    "38 fotografii ale proprietatii si zonei": "38 φωτογραφίες του καταλύματος και της περιοχής",
+    "Navigare galerie": "Πλοήγηση γκαλερί",
+    "Imagine anterioara": "Προηγούμενη εικόνα",
+    "Imagine urmatoare": "Επόμενη εικόνα",
+    "Galerie foto Afroditi Studios": "Φωτογραφική γκαλερί Afroditi Studios",
+    "Gliseaza sau foloseste sagetile pentru a trece rapid prin fotografii, apoi apasa pe o poza pentru marire.": "Σύρετε ή χρησιμοποιήστε τα βέλη για να δείτε γρήγορα τις φωτογραφίες και πατήστε σε μία για μεγέθυνση.",
+    "Atmosfera": "Ατμόσφαιρα",
+    "Seri linistite, lumina calda si ritmul acela de vacanta care te face sa ramai mai mult afara.": "Ήσυχα βράδια, ζεστό φως και εκείνος ο ρυθμός διακοπών που σε κρατά έξω περισσότερο.",
+    "Tot ce ai nevoie pentru un sejur comod, fara graba.": "Όλα όσα χρειάζεστε για μια άνετη, χαλαρή διαμονή.",
+    "De la aer conditionat si WiFi pana la balcon, terasa si parcare gratuita, facilitatile sustin exact genul de vacanta relaxata pe care o cauti la mare.": "Από κλιματισμό και WiFi έως μπαλκόνι, βεράντα και δωρεάν στάθμευση, οι παροχές υποστηρίζουν τις χαλαρές διακοπές που αναζητάτε στη θάλασσα.",
+    "Oaspetii vorbesc cel mai des despre curatenie, liniste, apropierea de plaja si gazda atenta.": "Οι επισκέπτες μιλούν συχνότερα για την καθαριότητα, την ησυχία, την κοντινή απόσταση από την παραλία και τον προσεκτικό οικοδεσπότη.",
+    "Impresiile de sejur pastreaza acelasi fir rosu: camere impecabile, atmosfera placuta, locatie buna si sentimentul ca totul este pregatit cu grija.": "Οι εντυπώσεις ακολουθούν το ίδιο μοτίβο: άψογα δωμάτια, ευχάριστη ατμόσφαιρα, καλή τοποθεσία και αίσθηση ότι όλα είναι προσεγμένα.",
+    "Exceptional": "Εξαιρετικό",
+    "19 evaluari ale oaspetilor": "19 κριτικές επισκεπτών",
+    "Ce spun cel mai des oaspetii": "Τι αναφέρουν πιο συχνά οι επισκέπτες",
+    "Curatenie impecabila, camere noi si o atmosfera calda, aproape de mare.": "Άψογη καθαριότητα, νέα δωμάτια και ζεστή ατμόσφαιρα κοντά στη θάλασσα.",
+    "De la cupluri la familii, aceleasi puncte revin constant: gazda ajutatoare, zona linistita si confortul unui spatiu foarte bine intretinut.": "Από ζευγάρια έως οικογένειες, τα ίδια σημεία επαναλαμβάνονται: βοηθητικός οικοδεσπότης, ήσυχη περιοχή και άνεση σε πολύ καλά συντηρημένο χώρο.",
+    "curatenie impecabila": "άψογη καθαριότητα",
+    "gazda foarte bine vazuta": "πολύ αγαπητός οικοδεσπότης",
+    "aproape de plaja": "κοντά στην παραλία",
+    "camere noi": "νέα δωμάτια",
+    "atmosfera linistita": "ήσυχη ατμόσφαιρα",
+    "19 evaluari": "19 κριτικές",
+    "Mai jos sunt prezentate impresii care descriu clar atmosfera sejurului.": "Παρακάτω παρουσιάζονται εντυπώσεις που περιγράφουν καθαρά την ατμόσφαιρα της διαμονής.",
+    "Recenzii selectate": "Επιλεγμένες κριτικές",
+    "Impresii din sejururi recente care surprind cel mai bine atmosfera proprietatii.": "Εντυπώσεις από πρόσφατες διαμονές που αποτυπώνουν καλύτερα την ατμόσφαιρα του καταλύματος.",
+    "8 recenzii prezentate": "8 προβαλλόμενες κριτικές",
+    "curatenia, linistea si apropierea de plaja apar cel mai des": "η καθαριότητα, η ησυχία και η κοντινή απόσταση από την παραλία εμφανίζονται συχνότερα",
+    "Plaja": "Παραλία",
+    "Curatenie": "Καθαριότητα",
+    "Terasa": "Βεράντα",
+    "Liniste": "Ησυχία",
+    "Gazda": "Οικοδεσπότης",
+    "Alege varianta de contact cea mai simpla pentru perioada dorita.": "Επιλέξτε τον πιο απλό τρόπο επικοινωνίας για την περίοδο που θέλετε.",
+    "Pentru intrebari rapide, WhatsApp-ul merge foarte bine. Daca vrei un raspuns direct si clar pe loc, apelul telefonic ramane cea mai comoda varianta.": "Για γρήγορες ερωτήσεις, το WhatsApp είναι πολύ πρακτικό. Αν θέλετε άμεση και σαφή απάντηση, η τηλεφωνική κλήση παραμένει η πιο άνετη επιλογή.",
+    "Solicita cazare": "Ζητήστε διαμονή",
+    "Apel direct": "Άμεση κλήση",
+    "Potrivit pentru verificarea rapida a disponibilitatii, a perioadei si a detaliilor importante.": "Κατάλληλο για γρήγορο έλεγχο διαθεσιμότητας, περιόδου και σημαντικών λεπτομερειών.",
+    "Mesaj rapid": "Γρήγορο μήνυμα",
+    "Scrie pe WhatsApp": "Γράψτε στο WhatsApp",
+    "Trimite perioada dorita, numarul de oaspeti si intrebarile esentiale intr-un singur mesaj.": "Στείλτε την επιθυμητή περίοδο, τον αριθμό επισκεπτών και τις βασικές ερωτήσεις σε ένα μήνυμα.",
+    "Gazda proprietatii": "Οικοδεσπότης καταλύματος",
+    "Contact direct": "Άμεση επικοινωνία",
+    "Gazda AFRODITI Studios": "Οικοδεσπότης AFRODITI Studios",
+    "Un contact direct, calm si atent la detalii face tot sejurul mai simplu.": "Η άμεση, ήρεμη και προσεκτική επικοινωνία κάνει όλη τη διαμονή πιο απλή.",
+    "raspuns rapid": "γρήγορη απάντηση",
+    "confirmare clara": "σαφής επιβεβαίωση",
+    "comunicare directa": "άμεση επικοινωνία",
+    "Harta si locatie": "Χάρτης και τοποθεσία",
+    "Locatia este aproape de plaja si usor de gasit odata ce deschizi ruta.": "Η τοποθεσία είναι κοντά στην παραλία και εύκολη να τη βρείτε μόλις ανοίξετε τη διαδρομή.",
+    "Deschide harta pentru traseul exact, orientare rapida si punctele utile din jurul proprietatii.": "Ανοίξτε τον χάρτη για την ακριβή διαδρομή, γρήγορο προσανατολισμό και χρήσιμα σημεία γύρω από το κατάλυμα.",
+    "Vezi ruta in Google Maps": "Δείτε τη διαδρομή στο Google Maps",
+    "Cadre reale si mici update-uri din atmosfera proprietatii.": "Πραγματικές εικόνες και μικρές ενημερώσεις από την ατμόσφαιρα του καταλύματος.",
+    "Promotie activa pentru iunie si septembrie": "Ενεργή προσφορά για Ιούνιο και Σεπτέμβριο",
+    "Inchide promotia": "Κλείσιμο προσφοράς",
+    "Rezerva iunie sau septembrie la tarif promotional.": "Κλείστε Ιούνιο ή Σεπτέμβριο με προσφορά.",
+    "de la": "από",
+    "/ noapte": "/ νύχτα",
+    "Tarife speciale pentru perioadele 1-15 iunie, 15-30 iunie si toata luna septembrie. Locurile libere se confirma direct.": "Ειδικές τιμές για 1-15 Ιουνίου, 15-30 Ιουνίου και όλο τον Σεπτέμβριο. Οι διαθέσιμες ημερομηνίες επιβεβαιώνονται απευθείας.",
+    "Tarife promotionale pe noapte": "Προωθητικές τιμές ανά νύχτα",
+    "1-15 iunie": "1-15 Ιουνίου",
+    "15-30 iunie": "15-30 Ιουνίου",
+    "Iulie-august": "Ιούλιος-Αύγουστος",
+    "Vezi promotia": "Δείτε την προσφορά",
+    "Vezi promotia si preturile pe noapte": "Δείτε την προσφορά και τις τιμές ανά νύχτα",
+    "Iunie si septembrie": "Ιούνιος και Σεπτέμβριος",
+    "Actiuni rapide de contact": "Γρήγορες ενέργειες επικοινωνίας",
+    "Suna acum": "Καλέστε τώρα",
+    "Studios moderne aproape de plaja, cu atmosfera linistita, terase luminoase si recenzii excelente.": "Μοντέρνα στούντιο κοντά στην παραλία, με ήσυχη ατμόσφαιρα, φωτεινές βεράντες και εξαιρετικές κριτικές.",
+    "© 2026 AFRODITI Studios Grigoriu. Toate drepturile rezervate.": "© 2026 AFRODITI Studios Grigoriu. Με επιφύλαξη παντός δικαιώματος.",
+    "Termeni si confidentialitate": "Όροι και απόρρητο",
+    "Cookies si analytics": "Cookies και analytics",
+    "Inapoi sus": "Πίσω επάνω",
+    "Vizualizare marita": "Μεγεθυμένη προβολή",
+    "1 / 38 imagini": "1 / 38 εικόνες",
+    "Navigare galerie marita": "Πλοήγηση μεγεθυμένης γκαλερί",
+    "Inchide imaginea marita": "Κλείσιμο εικόνας",
+    "Informare cookies": "Ενημέρωση cookies",
+    "Bine ai venit la AFRODITI Studios Grigoriu.": "Καλώς ήρθατε στο AFRODITI Studios Grigoriu.",
+    "Functionare esentiala": "Απαραίτητη λειτουργία",
+    "Memoram alegerea ta printr-un identificator tehnic pseudonimizat si pastram functionarea de baza a site-ului, fara analytics optional daca nu il accepti.": "Θυμόμαστε την επιλογή σας μέσω ψευδωνυμοποιημένου τεχνικού αναγνωριστικού και διατηρούμε τη βασική λειτουργία του ιστότοπου, χωρίς προαιρετικά analytics αν δεν τα αποδεχτείτε.",
+    "Analytics optional": "Προαιρετικά analytics",
+    "Daca accepti, masuram intrarile, interactiunile importante si solicitarile initiate din site pentru administrarea proprietatii.": "Αν αποδεχτείτε, μετράμε επισκέψεις, σημαντικές αλληλεπιδράσεις και αιτήματα από τον ιστότοπο για τη διαχείριση του καταλύματος.",
+    "Citeste politica de confidentialitate si termenii": "Διαβάστε την πολιτική απορρήτου και τους όρους",
+    "Continua doar cu esentiale": "Συνέχεια μόνο με τα απαραίτητα",
+    "Accept analytics": "Αποδοχή analytics",
+    "Termeni si politica": "Όροι και πολιτική",
+    "Termeni de utilizare, cereri de cazare si confidentialitate.": "Όροι χρήσης, αιτήματα διαμονής και απόρρητο.",
+    "Apartament studio cu 1 pat dublu": "Στούντιο διαμέρισμα με 1 διπλό κρεβάτι",
+    "2 adulti + 1 copil": "2 ενήλικες + 1 παιδί",
+    "Studio luminos cu pat dublu, baie privata, balcon si acces rapid spre plaja, potrivit si pentru 1 copil pana la 12 ani.": "Φωτεινό στούντιο με διπλό κρεβάτι, ιδιωτικό μπάνιο, μπαλκόνι και γρήγορη πρόσβαση στην παραλία, κατάλληλο και για 1 παιδί έως 12 ετών.",
+    "pat dublu si decor modern": "διπλό κρεβάτι και μοντέρνα διακόσμηση",
+    "baie privata si aer conditionat": "ιδιωτικό μπάνιο και κλιματισμός",
+    "accepta 1 copil pana la 12 ani": "δέχεται 1 παιδί έως 12 ετών",
+    "Unitate spatioasa cu pat dublu, canapea, chicineta si atmosfera premium.": "Ευρύχωρη μονάδα με διπλό κρεβάτι, καναπέ, μικρή κουζίνα και premium ατμόσφαιρα.",
+    "chicineta utilata": "εξοπλισμένη μικρή κουζίνα",
+    "spatiu bun pentru familie mica": "καλός χώρος για μικρή οικογένεια",
+    "look calm, nou si foarte curat": "ήρεμη, νέα και πολύ καθαρή εικόνα",
+    "promotie pentru inceput de iunie": "προσφορά για αρχές Ιουνίου",
+    "promotie pentru final de iunie": "προσφορά για τέλη Ιουνίου",
+    "perioada de varf, potrivita pentru vacanta la mare": "περίοδος αιχμής, κατάλληλη για διακοπές στη θάλασσα",
+    "luna de varf, disponibilitatea se confirma rapid": "μήνας αιχμής, η διαθεσιμότητα επιβεβαιώνεται γρήγορα",
+    "promotie pentru toata luna septembrie": "προσφορά για όλο τον Σεπτέμβριο",
+    "Apartamente": "Διαμερίσματα",
+    "Studios luminoase, bine organizate, potrivite pentru sejururi relaxate la mare.": "Φωτεινά και καλά οργανωμένα στούντιο, κατάλληλα για χαλαρές διακοπές στη θάλασσα.",
+    "Parcare gratuita": "Δωρεάν στάθμευση",
+    "Confort in plus pentru sosiri cu masina si deplasari fara graba.": "Περισσότερη άνεση για αφίξεις με αυτοκίνητο και μετακινήσεις χωρίς βιασύνη.",
+    "WiFi gratuit inclus": "Δωρεάν WiFi",
+    "Util pentru conectivitate zilnica, planuri de plaja sau cateva ore de lucru.": "Χρήσιμο για καθημερινή σύνδεση, σχέδια παραλίας ή λίγες ώρες εργασίας.",
+    "Transfer de la si/sau la aeroport": "Μεταφορά από/προς αεροδρόμιο",
+    "Optiune practica pentru un drum mai usor pana la cazare.": "Πρακτική επιλογή για πιο εύκολη διαδρομή έως το κατάλυμα.",
+    "Gratar": "Μπάρμπεκιου",
+    "Un detaliu care completeaza atmosfera relaxata a proprietatii.": "Μια λεπτομέρεια που συμπληρώνει τη χαλαρή ατμόσφαιρα του καταλύματος.",
+    "Camere pentru nefumatori": "Δωμάτια μη καπνιστών",
+    "Un plus de confort pentru cupluri, familii si sejururi mai lungi.": "Περισσότερη άνεση για ζευγάρια, οικογένειες και μεγαλύτερες διαμονές.",
+    "Balcon": "Μπαλκόνι",
+    "Spatiu bun pentru cafeaua de dimineata sau o pauza linistita seara.": "Καλός χώρος για πρωινό καφέ ή ήσυχη βραδινή παύση.",
+    "Vedere la mare": "Θέα στη θάλασσα",
+    "Un detaliu care aduce si mai mult din senzatia de vacanta.": "Μια λεπτομέρεια που προσθέτει ακόμη περισσότερη αίσθηση διακοπών.",
+    "Aer conditionat": "Κλιματισμός",
+    "Confort important in zilele calde de vara.": "Σημαντική άνεση στις ζεστές καλοκαιρινές ημέρες.",
+    "Una dintre cele mai placute zone pentru relaxare in aer liber.": "Ένας από τους πιο ευχάριστους χώρους για χαλάρωση έξω.",
+    "Personal": "Προσωπικό",
+    "Curatenie": "Καθαριότητα",
+    "Confort": "Άνεση",
+    "Raport calitate-pret": "Σχέση ποιότητας-τιμής",
+    "Locatie": "Τοποθεσία",
+    "Disponibil": "Διαθέσιμο",
+    "Ocupat": "Κλεισμένο",
+    "Perioada curenta este deja rezervata pentru aceasta unitate.": "Η τρέχουσα περίοδος είναι ήδη κλεισμένη για αυτή τη μονάδα.",
+    "Momentan nu apar rezervari in lunile urmatoare.": "Προς το παρόν δεν εμφανίζονται κρατήσεις για τους επόμενους μήνες.",
+    "cuplu": "ζευγάρι",
+    "familie": "οικογένεια",
+    "Romania": "Ρουμανία",
+    "Ungaria": "Ουγγαρία",
+    "Bulgaria": "Βουλγαρία",
+    "Macedonia de Nord": "Βόρεια Μακεδονία",
+    "Germania": "Γερμανία",
+    "Un sejur perfect.": "Μια τέλεια διαμονή.",
+    "Excelent": "Εξαιρετικό",
+    "Nice and comfort place": "Ωραίο και άνετο μέρος",
+    "Impresie lasata de un oaspete dupa sejur.": "Εντύπωση που άφησε επισκέπτης μετά τη διαμονή."
+  },
+};
+
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 const LOCAL_OWNER_HOSTS = new Set(["127.0.0.1", "localhost"]);
@@ -303,6 +795,8 @@ const CAN_USE_OWNER_API = HAS_HTTP_PROTOCOL;
 const header = $(".site-header");
 const navToggle = $(".nav-toggle");
 const body = document.body;
+const languageSwitcher = $("[data-language-switcher]");
+const languageButtons = $$("[data-language-option]");
 const introOverlay = $("#site-intro");
 const backToTopLinks = $$("[data-back-to-top]");
 const sectionAnchorLinks = $$('a[href^="#"]:not([data-back-to-top])');
@@ -416,6 +910,13 @@ const galleryState = {
 };
 
 let thirdPartyAnalyticsLoaded = false;
+let activeLanguage = "ro";
+let languageObserver = null;
+let isApplyingLanguage = false;
+let languageRefreshScheduled = false;
+
+const originalTextNodes = new WeakMap();
+const originalAttributes = new WeakMap();
 
 const PUBLIC_AVAILABILITY_MIN_VISIBLE_MONTHS = 8;
 const PUBLIC_AVAILABILITY_TAIL_MONTHS = 3;
@@ -433,6 +934,287 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+function normalizeTranslationKey(value) {
+  return String(value ?? "").replace(/\s+/g, " ").trim();
+}
+
+function withOriginalSpacing(originalValue, translatedValue) {
+  const original = String(originalValue ?? "");
+  const prefix = original.match(/^\s*/)?.[0] ?? "";
+  const suffix = original.match(/\s*$/)?.[0] ?? "";
+  return `${prefix}${translatedValue}${suffix}`;
+}
+
+function getLanguageLocale(language = activeLanguage) {
+  return LANGUAGE_LOCALES[language] || LANGUAGE_LOCALES.ro;
+}
+
+function readStoredLanguage() {
+  try {
+    const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    return SUPPORTED_LANGUAGES.has(stored) ? stored : "ro";
+  } catch {
+    return "ro";
+  }
+}
+
+function writeStoredLanguage(language) {
+  try {
+    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+  } catch {
+    // ignoram localStorage indisponibil
+  }
+}
+
+function translateDynamicText(key, language) {
+  if (language === "ro") {
+    return key;
+  }
+
+  const weeklyMatch = key.match(/^([\d.]+|[\d,\s]+) euro pentru 7 nopti$/);
+  if (weeklyMatch) {
+    return language === "el" ? `${weeklyMatch[1]} ευρώ για 7 νύχτες` : `${weeklyMatch[1]} euro for 7 nights`;
+  }
+
+  const promoSavingMatch = key.match(/^Promotie activa - economisesti (.+) \/ noapte$/);
+  if (promoSavingMatch) {
+    return language === "el"
+      ? `Ενεργή προσφορά - εξοικονόμηση ${promoSavingMatch[1]} / νύχτα`
+      : `Active promotion - save ${promoSavingMatch[1]} / night`;
+  }
+
+  const capacityMatch = key.match(/^capacitate: (.+)$/);
+  if (capacityMatch) {
+    const translatedCapacity = translateText(capacityMatch[1], language);
+    return language === "el" ? `χωρητικότητα: ${translatedCapacity}` : `capacity: ${translatedCapacity}`;
+  }
+
+  const occupiedMatch = key.match(/^(\d+) zile ocupate in (.+)$/);
+  if (occupiedMatch) {
+    return language === "el"
+      ? `${occupiedMatch[1]} κατειλημμένες ημέρες τον/την ${occupiedMatch[2]}`
+      : `${occupiedMatch[1]} booked days in ${occupiedMatch[2]}`;
+  }
+
+  const noOccupiedMatch = key.match(/^nicio zi ocupata in (.+)$/);
+  if (noOccupiedMatch) {
+    return language === "el"
+      ? `καμία κατειλημμένη ημέρα τον/την ${noOccupiedMatch[1]}`
+      : `no booked days in ${noOccupiedMatch[1]}`;
+  }
+
+  const freeDaysMatch = key.match(/^(\d+) zile libere$/);
+  if (freeDaysMatch) {
+    return language === "el" ? `${freeDaysMatch[1]} ελεύθερες ημέρες` : `${freeDaysMatch[1]} free days`;
+  }
+
+  if (key === "Nicio zi libera") {
+    return language === "el" ? "Καμία ελεύθερη ημέρα" : "No free days";
+  }
+
+  const nextBusyDayMatch = key.match(/^Urmatoarea zi deja rezervata este (.+)\.$/);
+  if (nextBusyDayMatch) {
+    return language === "el"
+      ? `Η επόμενη ήδη κλεισμένη ημέρα είναι ${nextBusyDayMatch[1]}.`
+      : `The next already booked day is ${nextBusyDayMatch[1]}.`;
+  }
+
+  const nightStayMatch = key.match(/^(\d+) nopti \| (.+)$/);
+  if (nightStayMatch) {
+    const group = translateText(nightStayMatch[2], language);
+    return language === "el" ? `${nightStayMatch[1]} νύχτες | ${group}` : `${nightStayMatch[1]} nights | ${group}`;
+  }
+
+  const oneNightStayMatch = key.match(/^1 noapte \| (.+)$/);
+  if (oneNightStayMatch) {
+    const group = translateText(oneNightStayMatch[1], language);
+    return language === "el" ? `1 νύχτα | ${group}` : `1 night | ${group}`;
+  }
+
+  const estimateMatch = key.match(/^Estimare pentru (.+): (.+) \((.+)\)\.(.*)$/);
+  if (estimateMatch) {
+    const savings = estimateMatch[4] ? translateText(estimateMatch[4].trim(), language) : "";
+    return language === "el"
+      ? `Εκτίμηση για ${translateText(estimateMatch[1], language)}: ${estimateMatch[2]} (${translateText(estimateMatch[3], language)}).${savings ? ` ${savings}` : ""}`
+      : `Estimate for ${translateText(estimateMatch[1], language)}: ${estimateMatch[2]} (${translateText(estimateMatch[3], language)}).${savings ? ` ${savings}` : ""}`;
+  }
+
+  const perNightMatch = key.match(/^(.+) \/ noapte$/);
+  if (perNightMatch) {
+    return language === "el" ? `${perNightMatch[1]} / νύχτα` : `${perNightMatch[1]} / night`;
+  }
+
+  return "";
+}
+
+function translateText(value, language = activeLanguage) {
+  const original = String(value ?? "");
+  const key = normalizeTranslationKey(original);
+  if (!key || language === "ro") {
+    return original;
+  }
+
+  const translated = TRANSLATIONS[language]?.[key] || translateDynamicText(key, language);
+  return translated ? withOriginalSpacing(original, translated) : original;
+}
+
+function isKnownTranslationOfOriginal(currentValue, originalValue) {
+  const current = normalizeTranslationKey(currentValue);
+  if (!current) {
+    return true;
+  }
+
+  return ["ro", "en", "el"].some((language) => normalizeTranslationKey(translateText(originalValue, language)) === current);
+}
+
+function shouldTranslateTextNode(node) {
+  const parent = node.parentElement;
+  if (!parent || !normalizeTranslationKey(node.nodeValue)) {
+    return false;
+  }
+
+  return !parent.closest("script, style, noscript, textarea, [data-no-translate]");
+}
+
+function translateTextNodes(root, language) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      return shouldTranslateTextNode(node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    },
+  });
+
+  const nodes = [];
+  while (walker.nextNode()) {
+    nodes.push(walker.currentNode);
+  }
+
+  nodes.forEach((node) => {
+    const storedOriginal = originalTextNodes.get(node);
+    if (!storedOriginal) {
+      originalTextNodes.set(node, node.nodeValue || "");
+    } else if (language !== "ro" && !isKnownTranslationOfOriginal(node.nodeValue || "", storedOriginal)) {
+      originalTextNodes.set(node, node.nodeValue || "");
+    }
+
+    const original = originalTextNodes.get(node) || "";
+    node.nodeValue = language === "ro" ? original : translateText(original, language);
+  });
+}
+
+function translateAttributes(root, language) {
+  const elements = root instanceof Element ? [root, ...Array.from(root.querySelectorAll("*"))] : Array.from(document.querySelectorAll("*"));
+  elements.forEach((element) => {
+    if (element.closest("script, style, noscript, [data-no-translate]")) {
+      return;
+    }
+
+    TRANSLATABLE_ATTRIBUTES.forEach((attributeName) => {
+      if (!element.hasAttribute(attributeName)) {
+        return;
+      }
+
+      let attributeMap = originalAttributes.get(element);
+      if (!attributeMap) {
+        attributeMap = {};
+        originalAttributes.set(element, attributeMap);
+      }
+
+      const currentValue = element.getAttribute(attributeName) || "";
+      const storedOriginal = attributeMap[attributeName];
+      if (!storedOriginal) {
+        attributeMap[attributeName] = currentValue;
+      } else if (language !== "ro" && !isKnownTranslationOfOriginal(currentValue, storedOriginal)) {
+        attributeMap[attributeName] = currentValue;
+      }
+
+      const original = attributeMap[attributeName] || "";
+      element.setAttribute(attributeName, language === "ro" ? original : translateText(original, language));
+    });
+  });
+}
+
+function updateLanguageButtons(language) {
+  languageButtons.forEach((button) => {
+    const isActive = button.dataset.languageOption === language;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+}
+
+function refreshLanguageSensitiveViews() {
+  if (typeof renderStayPricing === "function") {
+    renderStayPricing();
+  }
+  if (typeof renderRoomTypes === "function") {
+    renderRoomTypes();
+  }
+  if (typeof renderAvailabilityOverview === "function") {
+    renderAvailabilityOverview();
+  }
+  if (typeof syncBookingDateFields === "function") {
+    syncBookingDateFields({ keepStatus: true });
+  }
+}
+
+function applyLanguage(language, { persist = true } = {}) {
+  if (!languageSwitcher) {
+    return;
+  }
+
+  const nextLanguage = SUPPORTED_LANGUAGES.has(language) ? language : "ro";
+  activeLanguage = nextLanguage;
+  document.documentElement.lang = nextLanguage === "el" ? "el" : nextLanguage;
+  document.title = LANGUAGE_TITLES[nextLanguage] || LANGUAGE_TITLES.ro;
+  updateLanguageButtons(nextLanguage);
+
+  if (persist) {
+    writeStoredLanguage(nextLanguage);
+  }
+
+  isApplyingLanguage = true;
+  refreshLanguageSensitiveViews();
+  translateTextNodes(document.body, nextLanguage);
+  translateAttributes(document.body, nextLanguage);
+  window.setTimeout(() => {
+    isApplyingLanguage = false;
+  }, 0);
+}
+
+function queueLanguageRefresh() {
+  if (!languageSwitcher || isApplyingLanguage || activeLanguage === "ro" || languageRefreshScheduled) {
+    return;
+  }
+
+  languageRefreshScheduled = true;
+  window.requestAnimationFrame(() => {
+    languageRefreshScheduled = false;
+    applyLanguage(activeLanguage, { persist: false });
+  });
+}
+
+function initLanguageSwitcher() {
+  if (!languageSwitcher) {
+    return;
+  }
+
+  languageButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      applyLanguage(button.dataset.languageOption || "ro");
+    });
+  });
+
+  applyLanguage(readStoredLanguage(), { persist: false });
+
+  if ("MutationObserver" in window) {
+    languageObserver = new MutationObserver(queueLanguageRefresh);
+    languageObserver.observe(document.body, {
+      childList: true,
+      characterData: true,
+      subtree: true,
+    });
+  }
 }
 
 function getGalleryImageAlt(index) {
@@ -601,7 +1383,7 @@ function buildAvailabilityMonthState(accommodations, initialMonth) {
 function formatDate(dateString) {
   const date = parseDate(dateString);
   return date
-    ? new Intl.DateTimeFormat("ro-RO", { day: "2-digit", month: "short", year: "numeric" }).format(date)
+    ? new Intl.DateTimeFormat(getLanguageLocale(), { day: "2-digit", month: "short", year: "numeric" }).format(date)
     : "-";
 }
 
@@ -609,7 +1391,7 @@ function formatDateTime(dateString) {
   const date = new Date(dateString);
   return Number.isNaN(date.getTime())
     ? "-"
-    : new Intl.DateTimeFormat("ro-RO", {
+    : new Intl.DateTimeFormat(getLanguageLocale(), {
         day: "2-digit",
         month: "short",
         year: "numeric",
@@ -623,7 +1405,7 @@ function formatMonthLabel(monthValue) {
   if (!year || !month) {
     return "";
   }
-  return new Intl.DateTimeFormat("ro-RO", { month: "long", year: "numeric" }).format(
+  return new Intl.DateTimeFormat(getLanguageLocale(), { month: "long", year: "numeric" }).format(
     new Date(year, month - 1, 1),
   );
 }
@@ -662,7 +1444,7 @@ function formatMonthShortLabel(monthValue) {
   if (!year || !month) {
     return "";
   }
-  return new Intl.DateTimeFormat("ro-RO", { month: "short", year: "numeric" }).format(
+  return new Intl.DateTimeFormat(getLanguageLocale(), { month: "short", year: "numeric" }).format(
     new Date(year, month - 1, 1),
   );
 }
@@ -702,6 +1484,12 @@ function addDays(dateString, days) {
 }
 
 function formatNights(nights) {
+  if (activeLanguage === "en") {
+    return `${nights} ${nights === 1 ? "night" : "nights"}`;
+  }
+  if (activeLanguage === "el") {
+    return `${nights} ${nights === 1 ? "νύχτα" : "νύχτες"}`;
+  }
   return `${nights} ${nights === 1 ? "noapte" : "nopti"}`;
 }
 
@@ -710,7 +1498,7 @@ function formatCurrencyEuro(amount) {
   if (!Number.isFinite(numericAmount)) {
     return "-";
   }
-  return `${new Intl.NumberFormat("ro-RO").format(Math.round(numericAmount))} euro`;
+  return `${new Intl.NumberFormat(getLanguageLocale()).format(Math.round(numericAmount))} euro`;
 }
 
 function isValidRange(checkIn, checkOut) {
@@ -4186,6 +4974,7 @@ async function init() {
   initMobileQuickActions();
   initOptionalImages();
   initEvents();
+  initLanguageSwitcher();
   updateScrolledHeader();
   syncSectionHighlights();
   updateSpiralScene();
