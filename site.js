@@ -19,7 +19,7 @@ const CONTACT_SETTINGS = {
 };
 
 const MINIMUM_BOOKING_NIGHTS = 4;
-const SEASONAL_PRICE_RANGES = Object.freeze([
+const DEFAULT_SEASONAL_PRICE_RANGES = Object.freeze([
   {
     label: "1-15 iunie",
     month: 6,
@@ -826,9 +826,17 @@ const galleryLightboxPrev = $("#gallery-lightbox-prev");
 const galleryLightboxNext = $("#gallery-lightbox-next");
 const siteFooter = $(".site-footer");
 const mobileQuickActions = $("[data-mobile-quick-actions]");
+const heroPromoSaving = $(".hero-promo-saving");
+const heroPromoSummary = $("[data-hero-promo-summary]");
+const heroPromoPriceGrid = $("[data-hero-promo-price-grid]");
 const summerPromoPopup = $("[data-summer-promo]");
 const summerPromoClose = $("[data-summer-promo-close]");
 const summerPromoLink = $("[data-summer-promo-link]");
+const summerPromoDealValue = $("[data-summer-promo-deal-value]");
+const summerPromoText = $("[data-summer-promo-text]");
+const summerPromoList = $("[data-summer-promo-list]");
+const stickyPromoPrice = $("[data-sticky-promo-price]");
+const stickyPromoLabel = $("[data-sticky-promo-label]");
 const roomTypesGrid = $("[data-room-types]");
 const amenitiesGrid = $("[data-amenities-grid]");
 const scoreBars = $("[data-score-bars]");
@@ -887,6 +895,9 @@ const ownerPanel = $("#owner-panel");
 const ownerLogout = $("#owner-logout");
 const ownerContactForm = $("#owner-contact-form");
 const ownerContactStatus = $("#owner-contact-status");
+const ownerPricingForm = $("#owner-pricing-form");
+const ownerPricingRows = $("[data-owner-pricing-rows]");
+const ownerPricingStatus = $("#owner-pricing-status");
 const ownerAccountForm = $("#owner-account-form");
 const ownerAccountStatus = $("#owner-account-status");
 const ownerAccommodationSelect = $("[data-owner-accommodation-select]");
@@ -936,6 +947,105 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+function sanitizePricingText(value, maxLength = 120) {
+  return String(value ?? "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, maxLength);
+}
+
+function normalizePricingAmount(value, { optional = false, max = 99999 } = {}) {
+  if (value === null || value === undefined || value === "") {
+    return optional ? null : 0;
+  }
+
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue) || numericValue <= 0) {
+    return optional ? null : 0;
+  }
+
+  return Math.min(max, Math.round(numericValue));
+}
+
+function getMonthNameByNumber(month) {
+  const monthNames = [
+    "",
+    "Ianuarie",
+    "Februarie",
+    "Martie",
+    "Aprilie",
+    "Mai",
+    "Iunie",
+    "Iulie",
+    "August",
+    "Septembrie",
+    "Octombrie",
+    "Noiembrie",
+    "Decembrie",
+  ];
+  return monthNames[month] || "Perioada";
+}
+
+function getDefaultPricingLabel(month, startDay, endDay) {
+  const monthName = getMonthNameByNumber(month);
+  return startDay === 1 && endDay >= 28 ? monthName : `${startDay}-${endDay} ${monthName.toLowerCase()}`;
+}
+
+function normalizeSeasonalPriceRange(raw, index = 0) {
+  if (!raw || typeof raw !== "object") {
+    return null;
+  }
+
+  const month = Math.trunc(Number(raw.month));
+  const startDay = Math.trunc(Number(raw.startDay));
+  const endDay = Math.trunc(Number(raw.endDay));
+  const nightly = normalizePricingAmount(raw.nightly, { max: 9999 });
+
+  if (
+    !Number.isFinite(month) ||
+    month < 1 ||
+    month > 12 ||
+    !Number.isFinite(startDay) ||
+    !Number.isFinite(endDay) ||
+    startDay < 1 ||
+    startDay > 31 ||
+    endDay < startDay ||
+    endDay > 31 ||
+    !nightly
+  ) {
+    return null;
+  }
+
+  const originalNightly = normalizePricingAmount(raw.originalNightly, { optional: true, max: 9999 });
+  const weeklyTotal = normalizePricingAmount(raw.weeklyTotal, { optional: true, max: 99999 });
+  const label = sanitizePricingText(raw.label, 60) || getDefaultPricingLabel(month, startDay, endDay);
+
+  return {
+    label,
+    month,
+    startDay,
+    endDay,
+    originalNightly,
+    nightly,
+    weeklyTotal,
+    note: sanitizePricingText(raw.note, 140),
+    order: Number.isFinite(Number(raw.order)) ? Math.trunc(Number(raw.order)) : index,
+  };
+}
+
+function normalizeSeasonalPriceRanges(rawRanges) {
+  const ranges = (Array.isArray(rawRanges) ? rawRanges : [])
+    .map(normalizeSeasonalPriceRange)
+    .filter(Boolean)
+    .slice(0, 12);
+  const sourceRanges = ranges.length ? ranges : DEFAULT_SEASONAL_PRICE_RANGES.map(normalizeSeasonalPriceRange).filter(Boolean);
+  return sourceRanges.sort((a, b) => a.month - b.month || a.startDay - b.startDay || a.order - b.order);
+}
+
+function cloneDefaultSeasonalPriceRanges() {
+  return normalizeSeasonalPriceRanges(DEFAULT_SEASONAL_PRICE_RANGES).map((range) => ({ ...range }));
+}
+
 function normalizeTranslationKey(value) {
   return String(value ?? "").replace(/\s+/g, " ").trim();
 }
@@ -976,6 +1086,27 @@ function translateDynamicText(key, language) {
   const weeklyMatch = key.match(/^([\d.]+|[\d,\s]+) euro pentru 7 nopti$/);
   if (weeklyMatch) {
     return language === "el" ? `${weeklyMatch[1]} ευρώ για 7 νύχτες` : `${weeklyMatch[1]} euro for 7 nights`;
+  }
+
+  const fromCompactNightlyMatch = key.match(/^de la (.+)\/noapte$/);
+  if (fromCompactNightlyMatch) {
+    return language === "el"
+      ? `από ${fromCompactNightlyMatch[1]}/νύχτα`
+      : `from ${fromCompactNightlyMatch[1]}/night`;
+  }
+
+  const compactNightlyMatch = key.match(/^(.+)\/noapte$/);
+  if (compactNightlyMatch) {
+    return language === "el" ? `${compactNightlyMatch[1]}/νύχτα` : `${compactNightlyMatch[1]}/night`;
+  }
+
+  const publishedRatesMatch = key.match(
+    /^Tarifele publicate pentru (.+) se confirma direct in functie de zilele libere\.$/,
+  );
+  if (publishedRatesMatch) {
+    return language === "el"
+      ? `Οι δημοσιευμένες τιμές για ${publishedRatesMatch[1]} επιβεβαιώνονται απευθείας ανάλογα με τις διαθέσιμες ημέρες.`
+      : `Published rates for ${publishedRatesMatch[1]} are confirmed directly based on free dates.`;
   }
 
   const promoSavingMatch = key.match(/^Promotie activa - economisesti (.+) \/ noapte$/);
@@ -1146,6 +1277,9 @@ function updateLanguageButtons(language) {
 function refreshLanguageSensitiveViews() {
   if (typeof renderStayPricing === "function") {
     renderStayPricing();
+  }
+  if (typeof renderPublicPromoHighlights === "function") {
+    renderPublicPromoHighlights();
   }
   if (typeof renderRoomTypes === "function") {
     renderRoomTypes();
@@ -1507,6 +1641,10 @@ function isValidRange(checkIn, checkOut) {
   return !!(start && end && start.getTime() < end.getTime());
 }
 
+function getSeasonalPriceRanges() {
+  return appState.pricingRanges?.length ? appState.pricingRanges : cloneDefaultSeasonalPriceRanges();
+}
+
 function getSeasonalPriceRangeForDate(dateString) {
   const date = parseDate(dateString);
   if (!date) {
@@ -1516,7 +1654,7 @@ function getSeasonalPriceRangeForDate(dateString) {
   const month = date.getMonth() + 1;
   const day = date.getDate();
   return (
-    SEASONAL_PRICE_RANGES.find((range) => month === range.month && day >= range.startDay && day <= range.endDay) ??
+    getSeasonalPriceRanges().find((range) => month === range.month && day >= range.startDay && day <= range.endDay) ??
     null
   );
 }
@@ -1711,6 +1849,7 @@ function createAppState() {
     },
     accommodations,
     reservations,
+    pricingRanges: cloneDefaultSeasonalPriceRanges(),
     booking: {
       adults: clamp(2, 1, initialGuestLimits.maxAdults),
       children: 0,
@@ -1942,6 +2081,15 @@ function syncOwnerOverridesFromServer(rawOverrides) {
       operation.mode,
     );
   });
+}
+
+function syncPricingFromServer(rawPricingSettings) {
+  const rawRanges = Array.isArray(rawPricingSettings?.ranges) ? rawPricingSettings.ranges : rawPricingSettings;
+  appState.pricingRanges = normalizeSeasonalPriceRanges(rawRanges);
+  renderStayPricing();
+  renderPublicPromoHighlights();
+  syncBookingDateFields({ keepStatus: true });
+  syncOwnerPricingForm();
 }
 
 function isOwnerDayPending(accommodationId, isoDate) {
@@ -2880,7 +3028,7 @@ function renderStayPricing() {
     return;
   }
 
-  stayPricingGrid.innerHTML = SEASONAL_PRICE_RANGES.map(
+  stayPricingGrid.innerHTML = getSeasonalPriceRanges().map(
     (item) => {
       const originalNightly = Number(item.originalNightly || item.nightly);
       const saving = Math.max(0, originalNightly - Number(item.nightly || 0));
@@ -2902,6 +3050,93 @@ function renderStayPricing() {
     `;
     },
   ).join("");
+}
+
+function getPromotedPriceRanges() {
+  return getSeasonalPriceRanges().filter((range) => Number(range.originalNightly || 0) > Number(range.nightly || 0));
+}
+
+function getFeaturedPriceRanges() {
+  const promotedRanges = getPromotedPriceRanges();
+  return promotedRanges.length ? promotedRanges : getSeasonalPriceRanges();
+}
+
+function formatPromoNightlyText(amount) {
+  return `${formatCurrencyEuro(amount)}/noapte`;
+}
+
+function renderPublicPromoHighlights() {
+  const ranges = getSeasonalPriceRanges();
+  const featuredRanges = getFeaturedPriceRanges();
+  const minNightly = Math.min(...featuredRanges.map((range) => Number(range.nightly || 0)).filter(Boolean));
+  const visibleRanges = ranges.slice(0, 4);
+
+  if (!Number.isFinite(minNightly)) {
+    return;
+  }
+
+  if (heroPromoSaving) {
+    heroPromoSaving.textContent = `de la ${formatPromoNightlyText(minNightly)}`;
+  }
+
+  if (heroPromoSummary) {
+    heroPromoSummary.textContent = `${featuredRanges
+      .slice(0, 3)
+      .map((range) => `${range.label}: ${formatPromoNightlyText(range.nightly)}`)
+      .join(". ")}.`;
+  }
+
+  if (heroPromoPriceGrid) {
+    heroPromoPriceGrid.innerHTML = visibleRanges
+      .map((range) => {
+        const hasPromotion = Number(range.originalNightly || 0) > Number(range.nightly || 0);
+        return `
+          <span class="hero-promo-price-item">
+            <small>${escapeHtml(range.label)}</small>
+            ${hasPromotion ? `<del>${escapeHtml(formatCurrencyEuro(range.originalNightly))}</del>` : ""}
+            <b>${escapeHtml(formatCurrencyEuro(range.nightly))}</b>
+          </span>
+        `;
+      })
+      .join("");
+  }
+
+  if (summerPromoDealValue) {
+    summerPromoDealValue.textContent = formatCurrencyEuro(minNightly);
+  }
+
+  if (summerPromoText) {
+    summerPromoText.textContent = `Tarifele publicate pentru ${featuredRanges
+      .slice(0, 3)
+      .map((range) => range.label)
+      .join(", ")} se confirma direct in functie de zilele libere.`;
+  }
+
+  if (summerPromoList) {
+    summerPromoList.innerHTML = visibleRanges
+      .map((range) => {
+        const hasPromotion = Number(range.originalNightly || 0) > Number(range.nightly || 0);
+        return `
+          <li>
+            <span>${escapeHtml(range.label)}</span>
+            ${hasPromotion ? `<del>${escapeHtml(formatCurrencyEuro(range.originalNightly))}</del>` : ""}
+            <b>${escapeHtml(formatCurrencyEuro(range.nightly))}</b>
+          </li>
+        `;
+      })
+      .join("");
+  }
+
+  if (stickyPromoPrice) {
+    stickyPromoPrice.textContent = `de la ${formatCurrencyEuro(minNightly)}`;
+  }
+
+  if (stickyPromoLabel) {
+    stickyPromoLabel.textContent = featuredRanges
+      .slice(0, 2)
+      .map((range) => range.label)
+      .join(" si ");
+  }
 }
 
 function renderOwnerAccommodationSelect() {
@@ -3205,6 +3440,143 @@ function syncOwnerContactForm() {
   }
 
   whatsappInput.value = appState.settings.whatsappNumber || "";
+}
+
+function buildOwnerPricingMonthOptions(selectedMonth) {
+  return Array.from({ length: 12 }, (_, index) => index + 1)
+    .map((month) => {
+      const selected = month === Number(selectedMonth) ? " selected" : "";
+      return `<option value="${month}"${selected}>${escapeHtml(getMonthNameByNumber(month))}</option>`;
+    })
+    .join("");
+}
+
+function renderOwnerPricingForm() {
+  if (!ownerPricingRows) {
+    return;
+  }
+
+  ownerPricingRows.innerHTML = getSeasonalPriceRanges()
+    .map(
+      (range, index) => `
+        <article class="owner-pricing-row" data-owner-pricing-row>
+          <div class="owner-pricing-row-head">
+            <strong>${escapeHtml(range.label)}</strong>
+            <span>${escapeHtml(formatCurrencyEuro(range.nightly))} / noapte</span>
+          </div>
+
+          <div class="owner-pricing-grid">
+            <label>
+              <span>Perioada</span>
+              <input type="text" data-owner-pricing-field="label" value="${escapeHtml(range.label)}" maxlength="60" required>
+            </label>
+
+            <label>
+              <span>Luna</span>
+              <select data-owner-pricing-field="month">
+                ${buildOwnerPricingMonthOptions(range.month)}
+              </select>
+            </label>
+
+            <label>
+              <span>Zi start</span>
+              <input type="number" data-owner-pricing-field="startDay" value="${escapeHtml(range.startDay)}" min="1" max="31" required>
+            </label>
+
+            <label>
+              <span>Zi final</span>
+              <input type="number" data-owner-pricing-field="endDay" value="${escapeHtml(range.endDay)}" min="1" max="31" required>
+            </label>
+
+            <label>
+              <span>Tarif standard</span>
+              <input type="number" data-owner-pricing-field="originalNightly" value="${escapeHtml(range.originalNightly ?? "")}" min="1" max="9999" placeholder="optional">
+            </label>
+
+            <label>
+              <span>Tarif / noapte</span>
+              <input type="number" data-owner-pricing-field="nightly" value="${escapeHtml(range.nightly)}" min="1" max="9999" required>
+            </label>
+
+            <label>
+              <span>Total 7 nopti</span>
+              <input type="number" data-owner-pricing-field="weeklyTotal" value="${escapeHtml(range.weeklyTotal ?? "")}" min="1" max="99999" placeholder="optional">
+            </label>
+
+            <label class="owner-pricing-note-field">
+              <span>Optiune / nota publica</span>
+              <input type="text" data-owner-pricing-field="note" value="${escapeHtml(range.note)}" maxlength="140" placeholder="ex: promotie, perioada de varf">
+            </label>
+          </div>
+          <input type="hidden" data-owner-pricing-field="order" value="${escapeHtml(range.order ?? index)}">
+        </article>
+      `,
+    )
+    .join("");
+}
+
+function syncOwnerPricingForm() {
+  renderOwnerPricingForm();
+}
+
+function getOwnerPricingField(row, fieldName) {
+  const field = row.querySelector(`[data-owner-pricing-field="${fieldName}"]`);
+  return field instanceof HTMLInputElement || field instanceof HTMLSelectElement ? field : null;
+}
+
+function readRequiredOwnerPricingNumber(row, fieldName, label) {
+  const field = getOwnerPricingField(row, fieldName);
+  const numericValue = Number(field?.value ?? "");
+  if (!Number.isFinite(numericValue) || numericValue <= 0) {
+    throw new Error(`Completeaza un numar valid pentru ${label}.`);
+  }
+  return Math.round(numericValue);
+}
+
+function readOptionalOwnerPricingNumber(row, fieldName) {
+  const field = getOwnerPricingField(row, fieldName);
+  const value = String(field?.value ?? "").trim();
+  if (!value) {
+    return null;
+  }
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) && numericValue > 0 ? Math.round(numericValue) : null;
+}
+
+function readOwnerPricingRangesFromForm() {
+  const rows = ownerPricingRows ? Array.from(ownerPricingRows.querySelectorAll("[data-owner-pricing-row]")) : [];
+  const ranges = rows.map((row, index) => {
+    const month = readRequiredOwnerPricingNumber(row, "month", "luna");
+    const startDay = readRequiredOwnerPricingNumber(row, "startDay", "ziua de start");
+    const endDay = readRequiredOwnerPricingNumber(row, "endDay", "ziua de final");
+    const nightly = readRequiredOwnerPricingNumber(row, "nightly", "tariful pe noapte");
+
+    if (month < 1 || month > 12) {
+      throw new Error("Alege o luna valida intre 1 si 12.");
+    }
+
+    if (startDay < 1 || startDay > 31 || endDay < startDay || endDay > 31) {
+      throw new Error("Verifica zilele perioadei: ziua finala trebuie sa fie dupa ziua de start.");
+    }
+
+    return {
+      label: sanitizePricingText(getOwnerPricingField(row, "label")?.value, 60),
+      month,
+      startDay,
+      endDay,
+      originalNightly: readOptionalOwnerPricingNumber(row, "originalNightly"),
+      nightly,
+      weeklyTotal: readOptionalOwnerPricingNumber(row, "weeklyTotal"),
+      note: sanitizePricingText(getOwnerPricingField(row, "note")?.value, 140),
+      order: index,
+    };
+  });
+
+  if (!ranges.length) {
+    throw new Error("Nu exista tarife de salvat.");
+  }
+
+  return ranges;
 }
 
 function focusOwnerEntry() {
@@ -3749,6 +4121,7 @@ async function hydrateOwnerState() {
     appState.owner.usernameHint = String(payload?.ownerUsername || "").trim();
     appState.settings.whatsappNumber =
       sanitizePhone(payload?.whatsappNumber) || sanitizePhone(CONTACT_SETTINGS.whatsappNumber);
+    syncPricingFromServer(payload?.pricingSettings);
     appState.owner.pendingOperations = [];
     appState.owner.isSyncing = false;
     syncOwnerOverridesFromServer(payload?.overrides);
@@ -3797,6 +4170,7 @@ async function handleOwnerLoginSubmit(event) {
     appState.owner.isAuthenticated = true;
     appState.owner.usernameHint = String(payload?.ownerUsername || username).trim();
     appState.settings.whatsappNumber = sanitizePhone(payload?.whatsappNumber) || appState.settings.whatsappNumber;
+    syncPricingFromServer(payload?.pricingSettings);
     appState.owner.pendingOperations = [];
     appState.owner.isSyncing = false;
     syncOwnerOverridesFromServer(payload?.overrides);
@@ -3915,6 +4289,7 @@ async function handleOwnerAccountSubmit(event) {
     appState.owner.usernameHint = String(payload?.ownerUsername || nextUsername).trim();
     appState.owner.isAuthenticated = true;
     appState.settings.whatsappNumber = sanitizePhone(payload?.whatsappNumber) || appState.settings.whatsappNumber;
+    syncPricingFromServer(payload?.pricingSettings);
     ownerAccountForm.reset();
     syncBookingSetupState();
     syncOwnerContactForm();
@@ -3956,6 +4331,35 @@ async function handleOwnerContactSubmit(event) {
     );
   } catch (error) {
     setStatus(ownerContactStatus, error.message || "Nu am putut salva numarul WhatsApp.", "error");
+  }
+}
+
+async function handleOwnerPricingSubmit(event) {
+  event.preventDefault();
+  if (!ownerPricingForm || !appState.owner.isAuthenticated) {
+    return;
+  }
+
+  let ranges;
+  try {
+    ranges = readOwnerPricingRangesFromForm();
+  } catch (error) {
+    setStatus(ownerPricingStatus, error.message || "Verifica tarifele introduse.", "error");
+    return;
+  }
+
+  setStatus(ownerPricingStatus, "Salvez tarifele in site-ul public...", "");
+
+  try {
+    const payload = await fetchJson("/api/pricing-update", {
+      method: "POST",
+      body: JSON.stringify({ ranges }),
+    });
+
+    syncPricingFromServer(payload?.pricingSettings);
+    setStatus(ownerPricingStatus, "Tarifele publice au fost salvate permanent.", "success");
+  } catch (error) {
+    setStatus(ownerPricingStatus, error.message || "Nu am putut salva tarifele publice.", "error");
   }
 }
 
@@ -4808,6 +5212,10 @@ if (ownerContactForm) {
   ownerContactForm.addEventListener("submit", handleOwnerContactSubmit);
 }
 
+if (ownerPricingForm) {
+  ownerPricingForm.addEventListener("submit", handleOwnerPricingSubmit);
+}
+
 if (ownerAccountForm) {
   ownerAccountForm.addEventListener("submit", handleOwnerAccountSubmit);
 }
@@ -4961,6 +5369,7 @@ async function init() {
   renderAmenities();
   renderReviews();
   renderStayPricing();
+  renderPublicPromoHighlights();
   renderAccommodationSelects();
   markBookingFormRendered();
   syncBookingSetupState();

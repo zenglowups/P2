@@ -1715,6 +1715,48 @@ body.intro-active .site-intro {
     radial-gradient(circle at 100% 0%, rgba(123, 201, 216, 0.1), transparent 28%);
 }
 
+.owner-pricing-form,
+.owner-pricing-rows,
+.owner-pricing-row {
+  display: grid;
+  gap: 14px;
+}
+
+.owner-pricing-row {
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(23, 53, 68, 0.1);
+  background: rgba(255, 253, 249, 0.86);
+}
+
+.owner-pricing-row-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.owner-pricing-row-head strong {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.owner-pricing-row-head span {
+  color: var(--sea-deep);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.owner-pricing-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr repeat(5, minmax(88px, 0.7fr));
+  gap: 12px;
+}
+
+.owner-pricing-note-field {
+  grid-column: 1 / -1;
+}
+
 .owner-setup-hint {
   color: var(--ink-soft);
   font-size: 0.9rem;
@@ -5500,6 +5542,10 @@ body.visitor-modal-open {
     grid-template-columns: 1fr;
   }
 
+  .owner-pricing-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .owner-analytics-grid,
   .owner-analytics-days,
   .owner-analytics-visitors {
@@ -5547,6 +5593,15 @@ body.visitor-modal-open {
 
   .site-header {
     padding: 12px 0;
+  }
+
+  .owner-pricing-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .owner-pricing-row-head {
+    align-items: start;
+    flex-direction: column;
   }
 
   body.intro-active {

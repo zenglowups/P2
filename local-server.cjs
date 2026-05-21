@@ -312,6 +312,17 @@ async function handleApi(request, response) {
     return;
   }
 
+  if (request.method === "POST" && url.pathname === "/api/pricing-update") {
+    const payload = await readJsonBody(request);
+    const result = await ownerBackend.updatePublicPricingSettings({
+      headers: request.headers,
+      ranges: payload?.ranges,
+    });
+
+    sendJson(response, 200, result.payload);
+    return;
+  }
+
   sendJson(response, 404, { message: "Endpoint inexistent." });
 }
 
