@@ -224,9 +224,17 @@
       </nav>
 
       <div class="language-switcher" data-language-switcher aria-label="Alege limba">
-        <button class="language-option is-active" type="button" data-language-option="ro" aria-pressed="true">RO</button>
-        <button class="language-option" type="button" data-language-option="en" aria-pressed="false">EN</button>
-        <button class="language-option" type="button" data-language-option="el" aria-pressed="false">EL</button>
+        <button class="language-trigger" type="button" data-language-trigger aria-expanded="false" aria-haspopup="true">
+          <span class="language-flag" aria-hidden="true"><img data-language-current-flag src="Images/flags/flag-ro.svg" alt=""></span>
+          <span data-language-current-label>RO</span>
+        </button>
+        <div class="language-menu" data-language-menu hidden>
+          <button class="language-option is-active" type="button" data-language-option="ro" aria-pressed="true"><span class="language-flag" aria-hidden="true"><img src="Images/flags/flag-ro.svg" alt=""></span> Romana</button>
+          <button class="language-option" type="button" data-language-option="en" aria-pressed="false"><span class="language-flag" aria-hidden="true"><img src="Images/flags/flag-gb.svg" alt=""></span> English</button>
+          <button class="language-option" type="button" data-language-option="el" aria-pressed="false"><span class="language-flag" aria-hidden="true"><img src="Images/flags/flag-el.svg" alt=""></span> Ελληνικά</button>
+          <button class="language-option" type="button" data-language-option="de" aria-pressed="false"><span class="language-flag" aria-hidden="true"><img src="Images/flags/flag-de.svg" alt=""></span> Deutsch</button>
+          <button class="language-option" type="button" data-language-option="bg" aria-pressed="false"><span class="language-flag" aria-hidden="true"><img src="Images/flags/flag-bg.svg" alt=""></span> Български</button>
+        </div>
       </div>
 
     </div>
@@ -342,6 +350,30 @@
               <span>1-15 iunie 80 euro, 15-30 iunie 100 euro, septembrie 110 euro/noapte</span>
             </div>
             <div class="stay-pricing-grid" data-stay-pricing></div>
+          </div>
+
+          <div class="pool-feature is-booking-feature reveal" id="pool-access">
+            <div class="pool-feature-copy">
+              <span class="pool-feature-badge">Nou pentru oaspeti</span>
+              <h3>Acces la piscina pentru sejururile confirmate luna aceasta.</h3>
+              <p>
+                Pentru o perioada limitata, oaspetii AFRODITI Studios Grigoriu beneficiaza de acces la piscina:
+                un plus de vacanta pentru dimineti relaxate, pauze racoroase si seri mai elegante in Grecia.
+              </p>
+              <div class="pool-feature-points">
+                <span>acces inclus pentru oaspeti</span>
+                <span>beneficiu limitat</span>
+                <span>ideal dupa plaja</span>
+              </div>
+            </div>
+
+            <div class="pool-feature-visual" aria-hidden="true">
+              <img class="pool-feature-image" src="Images/pool-day-afroditi-studios.jpeg" alt="" width="1448" height="1086" loading="lazy" decoding="async">
+              <img class="pool-feature-image" src="Images/pool-night-afroditi-studios.jpeg" alt="" width="2016" height="1512" loading="lazy" decoding="async">
+              <div class="pool-light pool-light-one"></div>
+              <div class="pool-light pool-light-two"></div>
+              <span>brand-new pool</span>
+            </div>
           </div>
 
           <form class="stack-form" id="booking-form">
@@ -913,11 +945,82 @@
     <a class="summer-promo-cta" href="#prices" data-summer-promo-link data-analytics-event="booking_interest">Vezi promotia</a>
   </aside>
 
-  <a class="sticky-discount-button" href="#prices" aria-label="Vezi promotia si preturile pe noapte" data-analytics-event="booking_interest">
+  <aside class="discount-promo-popup is-june" data-discount-promo="june" hidden aria-hidden="true" aria-label="Reducere activa pentru luna iunie">
+    <button class="discount-promo-close" type="button" data-discount-promo-close aria-label="Inchide reducerea pentru iunie">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span class="discount-promo-kicker">Reducere Iunie</span>
+    <strong>Start de vara de la <em>80 euro/noapte.</em></strong>
+    <p>Perioadele din iunie au tarif promotional limitat, cu zilele libere confirmate direct.</p>
+    <div class="discount-promo-rates" aria-label="Tarife promotionale pentru iunie">
+      <div>
+        <span>1-15 iunie</span>
+        <del>128 euro</del>
+        <b>80 euro</b>
+      </div>
+      <div>
+        <span>15-30 iunie</span>
+        <del>128 euro</del>
+        <b>100 euro</b>
+      </div>
+    </div>
+    <a class="discount-promo-cta" href="#prices" data-discount-promo-link data-analytics-event="booking_interest">Vezi zilele libere</a>
+  </aside>
+
+  <aside class="discount-promo-popup is-september" data-discount-promo="september" hidden aria-hidden="true" aria-label="Reducere activa pentru luna septembrie">
+    <button class="discount-promo-close" type="button" data-discount-promo-close aria-label="Inchide reducerea pentru septembrie">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span class="discount-promo-kicker">Reducere Septembrie</span>
+    <strong>Septembrie la <em>110 euro/noapte.</em></strong>
+    <p>Toata luna septembrie ramane la tarif promotional pentru sejururi calme, aproape de mare.</p>
+    <div class="discount-promo-rates is-single" aria-label="Tarif promotional pentru septembrie">
+      <div>
+        <span>Toata luna septembrie</span>
+        <del>128 euro</del>
+        <b>110 euro</b>
+      </div>
+    </div>
+    <a class="discount-promo-cta" href="#prices" data-discount-promo-link data-analytics-event="booking_interest">Verifica perioada</a>
+  </aside>
+
+  <aside class="pool-promo-popup" data-pool-promo hidden aria-hidden="true" aria-label="Invitatie luxury pentru acces la piscina">
+    <button class="pool-promo-close" type="button" data-pool-promo-close aria-label="Inchide beneficiul cu piscina">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+    <div class="pool-promo-copy">
+      <span class="pool-promo-kicker">Grand opening</span>
+      <strong>Noul standard al <em>luxului la piscina.</em></strong>
+      <p>
+        Descopera noua experienta premium la piscina pentru oaspetii cazati, disponibila pentru rezervarile confirmate pana la <b data-pool-deadline data-no-translate>sfarsitul lunii</b>.
+      </p>
+      <ul class="pool-promo-perks">
+        <li>oferta exclusiva de lansare</li>
+        <li>experienta rafinata la piscina</li>
+        <li>beneficiu limitat pentru rezervari rapide</li>
+      </ul>
+    </div>
+
+    <div class="pool-promo-media" aria-hidden="true">
+      <div class="pool-promo-arch">
+        <img class="pool-promo-image" src="Images/pool-night-afroditi-studios-popup.jpg" alt="" width="900" height="675" loading="lazy" decoding="async">
+        <span class="pool-promo-chip">new pool</span>
+      </div>
+      <span class="pool-promo-seal">AF</span>
+    </div>
+
+    <a class="pool-promo-cta" href="#prices" data-pool-promo-link data-analytics-event="booking_interest">
+      <span>Rezerva experienta</span>
+      <span aria-hidden="true">&rarr;</span>
+    </a>
+  </aside>
+
+  <button class="sticky-discount-button" type="button" aria-label="Deschide promotia si preturile pe noapte" data-sticky-promo-trigger data-analytics-event="booking_interest">
     <span>Promotie</span>
     <strong data-sticky-promo-price>de la 80 euro</strong>
     <small data-sticky-promo-label>Iunie si septembrie</small>
-  </a>
+  </button>
 
   <div class="mobile-quick-actions" data-mobile-quick-actions aria-label="Actiuni rapide de contact">
     <a class="mobile-quick-action is-call" href="tel:+40742721408" data-analytics-event="social_click">

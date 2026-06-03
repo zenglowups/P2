@@ -7,6 +7,7 @@ const COMPACT_AVAILABILITY = window.matchMedia("(max-width: 760px)");
 const IS_OWNER_PAGE = document.body?.dataset.page === "owner";
 const INTRO_SESSION_KEY = "afroditi-intro-seen";
 const SUMMER_PROMO_SESSION_KEY = "afroditi-promo-june-september-2026-dismissed";
+const PROMO_POPUP_SEQUENCE_DELAY_MS = 10000;
 const VISITOR_PREFERENCES_STORAGE_KEY = "afroditi-visitor-preferences";
 const VISITOR_POLICY_VERSION = "2026-05-07-privacy-consent";
 const GOOGLE_ANALYTICS_ID = "G-3ERJHNHMFY";
@@ -294,16 +295,27 @@ const EXTRACTED_REVIEWS = [
 ];
 
 const LANGUAGE_STORAGE_KEY = "afroditi-site-language";
-const SUPPORTED_LANGUAGES = new Set(["ro", "en", "el"]);
+const SUPPORTED_LANGUAGES = new Set(["ro", "en", "el", "de", "bg"]);
+const LANGUAGE_OPTIONS = {
+  ro: { flagSrc: "Images/flags/flag-ro.svg", flagAlt: "Romania", label: "Romana", shortLabel: "RO" },
+  en: { flagSrc: "Images/flags/flag-gb.svg", flagAlt: "United Kingdom", label: "English", shortLabel: "EN" },
+  el: { flagSrc: "Images/flags/flag-el.svg", flagAlt: "Greece", label: "Ελληνικά", shortLabel: "EL" },
+  de: { flagSrc: "Images/flags/flag-de.svg", flagAlt: "Germany", label: "Deutsch", shortLabel: "DE" },
+  bg: { flagSrc: "Images/flags/flag-bg.svg", flagAlt: "Bulgaria", label: "Български", shortLabel: "BG" },
+};
 const LANGUAGE_LOCALES = {
   ro: "ro-RO",
   en: "en-US",
   el: "el-GR",
+  de: "de-DE",
+  bg: "bg-BG",
 };
 const LANGUAGE_TITLES = {
   ro: "AFRODITI Studios Grigoriu | Cazare Paralia Katerinis, Grecia",
   en: "AFRODITI Studios Grigoriu | Accommodation in Paralia Katerinis, Greece",
   el: "AFRODITI Studios Grigoriu | Διαμονή στην Παραλία Κατερίνης, Ελλάδα",
+  de: "AFRODITI Studios Grigoriu | Unterkunft in Paralia Katerinis, Griechenland",
+  bg: "AFRODITI Studios Grigoriu | Настаняване в Паралия Катерини, Гърция",
 };
 const TRANSLATABLE_ATTRIBUTES = ["aria-label", "alt", "placeholder", "title"];
 const TRANSLATIONS = {
@@ -469,6 +481,7 @@ const TRANSLATIONS = {
     "15-30 iunie": "June 15-30",
     "Iulie-august": "July-August",
     "Vezi promotia": "View promotion",
+    "Deschide promotia si preturile pe noapte": "Open the promotion and nightly rates",
     "Vezi promotia si preturile pe noapte": "View the promotion and nightly rates",
     "Iunie si septembrie": "June and September",
     "Actiuni rapide de contact": "Quick contact actions",
@@ -710,6 +723,7 @@ const TRANSLATIONS = {
     "15-30 iunie": "15-30 Ιουνίου",
     "Iulie-august": "Ιούλιος-Αύγουστος",
     "Vezi promotia": "Δείτε την προσφορά",
+    "Deschide promotia si preturile pe noapte": "Ανοίξτε την προσφορά και τις τιμές ανά νύχτα",
     "Vezi promotia si preturile pe noapte": "Δείτε την προσφορά και τις τιμές ανά νύχτα",
     "Iunie si septembrie": "Ιούνιος και Σεπτέμβριος",
     "Actiuni rapide de contact": "Γρήγορες ενέργειες επικοινωνίας",
@@ -791,6 +805,449 @@ const TRANSLATIONS = {
   },
 };
 
+Object.assign(TRANSLATIONS.en, {
+  "Nou pentru oaspeti": "New for guests",
+  "Acces la piscina pentru sejururile confirmate luna aceasta.": "Pool access for stays confirmed this month.",
+  "Pentru o perioada limitata, oaspetii AFRODITI Studios Grigoriu beneficiaza de acces la piscina: un plus de vacanta pentru dimineti relaxate, pauze racoroase si seri mai elegante in Grecia.":
+    "For a limited time, AFRODITI Studios Grigoriu guests benefit from pool access: an extra holiday touch for relaxed mornings, refreshing breaks and more elegant evenings in Greece.",
+  "acces inclus pentru oaspeti": "access included for guests",
+  "beneficiu limitat": "limited benefit",
+  "ideal dupa plaja": "ideal after the beach",
+  "Rezerva cu acces la piscina": "Book with pool access",
+  "brand-new pool": "brand-new pool",
+  "new pool": "new pool",
+  "Acces limitat la piscina pentru oaspeti": "Limited pool access for guests",
+  "Inchide beneficiul cu piscina": "Close pool benefit",
+  "Beneficiu limitat": "Limited benefit",
+  "Acces la piscina pentru oaspetii cazati.": "Pool access for staying guests.",
+  "Rezerva pana la": "Book by",
+  "sfarsitul lunii": "the end of the month",
+  "si bucura-te de momente racoroase la piscina in timpul sejurului.": "and enjoy refreshing pool moments during your stay.",
+  "Rezerva acum": "Book now",
+  "Invitatie luxury pentru acces la piscina": "Luxury invitation for pool access",
+  "Grand opening": "Grand opening",
+  "Noul standard al": "The new standard of",
+  "luxului la piscina.": "pool luxury.",
+  "Descopera noua experienta premium la piscina pentru oaspetii cazati, disponibila pentru rezervarile confirmate pana la":
+    "Discover the new premium pool experience for staying guests, available for reservations confirmed by",
+  "oferta exclusiva de lansare": "exclusive launch offer",
+  "experienta rafinata la piscina": "refined pool experience",
+  "beneficiu limitat pentru rezervari rapide": "limited benefit for quick reservations",
+  "Rezerva experienta": "Reserve your escape",
+});
+
+Object.assign(TRANSLATIONS.el, {
+  "Nou pentru oaspeti": "Νέο για τους επισκέπτες",
+  "Acces la piscina pentru sejururile confirmate luna aceasta.": "Πρόσβαση στην πισίνα για διαμονές που επιβεβαιώνονται αυτόν τον μήνα.",
+  "Pentru o perioada limitata, oaspetii AFRODITI Studios Grigoriu beneficiaza de acces la piscina: un plus de vacanta pentru dimineti relaxate, pauze racoroase si seri mai elegante in Grecia.":
+    "Για περιορισμένο διάστημα, οι επισκέπτες του AFRODITI Studios Grigoriu απολαμβάνουν πρόσβαση στην πισίνα: μια επιπλέον πινελιά διακοπών για χαλαρά πρωινά, δροσερά διαλείμματα και πιο κομψά βράδια στην Ελλάδα.",
+  "acces inclus pentru oaspeti": "περιλαμβάνεται πρόσβαση για επισκέπτες",
+  "beneficiu limitat": "περιορισμένο προνόμιο",
+  "ideal dupa plaja": "ιδανικό μετά την παραλία",
+  "Rezerva cu acces la piscina": "Κράτηση με πρόσβαση στην πισίνα",
+  "brand-new pool": "ολοκαίνουργια πισίνα",
+  "new pool": "νέα πισίνα",
+  "Acces limitat la piscina pentru oaspeti": "Περιορισμένη πρόσβαση στην πισίνα για επισκέπτες",
+  "Inchide beneficiul cu piscina": "Κλείσιμο προνομίου πισίνας",
+  "Beneficiu limitat": "Περιορισμένο προνόμιο",
+  "Acces la piscina pentru oaspetii cazati.": "Πρόσβαση στην πισίνα για τους διαμένοντες επισκέπτες.",
+  "Rezerva pana la": "Κάντε κράτηση έως",
+  "sfarsitul lunii": "το τέλος του μήνα",
+  "si bucura-te de momente racoroase la piscina in timpul sejurului.": "και απολαύστε δροσερές στιγμές στην πισίνα κατά τη διάρκεια της διαμονής σας.",
+  "Rezerva acum": "Κάντε κράτηση τώρα",
+  "Invitatie luxury pentru acces la piscina": "Πρόσκληση πολυτέλειας για πρόσβαση στην πισίνα",
+  "Grand opening": "Μεγάλο άνοιγμα",
+  "Noul standard al": "Το νέο πρότυπο της",
+  "luxului la piscina.": "πολυτέλειας στην πισίνα.",
+  "Descopera noua experienta premium la piscina pentru oaspetii cazati, disponibila pentru rezervarile confirmate pana la":
+    "Ανακαλύψτε τη νέα premium εμπειρία πισίνας για τους διαμένοντες επισκέπτες, διαθέσιμη για κρατήσεις που επιβεβαιώνονται έως",
+  "oferta exclusiva de lansare": "αποκλειστική προσφορά έναρξης",
+  "experienta rafinata la piscina": "εκλεπτυσμένη εμπειρία πισίνας",
+  "beneficiu limitat pentru rezervari rapide": "περιορισμένο προνόμιο για γρήγορες κρατήσεις",
+  "Rezerva experienta": "Κλείστε την εμπειρία",
+});
+
+TRANSLATIONS.de = {
+  ...TRANSLATIONS.en,
+  "Alege limba": "Sprache wählen",
+  "Prezentare": "Überblick",
+  "Galerie": "Galerie",
+  "Disponibilitate": "Verfügbarkeit",
+  "Recenzii": "Bewertungen",
+  "Contact": "Kontakt",
+  "Facilitati": "Ausstattung",
+  "Verifica disponibilitatea": "Verfügbarkeit prüfen",
+  "Citeste recenziile": "Bewertungen lesen",
+  "Nou pentru oaspeti": "Neu für Gäste",
+  "Acces la piscina pentru sejururile confirmate luna aceasta.": "Poolzugang für Aufenthalte, die diesen Monat bestätigt werden.",
+  "Pentru o perioada limitata, oaspetii AFRODITI Studios Grigoriu beneficiaza de acces la piscina: un plus de vacanta pentru dimineti relaxate, pauze racoroase si seri mai elegante in Grecia.":
+    "Für begrenzte Zeit erhalten Gäste der AFRODITI Studios Grigoriu Zugang zum Pool: ein zusätzliches Urlaubsgefühl für entspannte Morgen, kühle Pausen und elegante Abende in Griechenland.",
+  "acces inclus pentru oaspeti": "Zugang für Gäste inklusive",
+  "beneficiu limitat": "zeitlich begrenzter Vorteil",
+  "ideal dupa plaja": "ideal nach dem Strand",
+  "Rezerva cu acces la piscina": "Mit Poolzugang buchen",
+  "brand-new pool": "brandneuer Pool",
+  "new pool": "neuer Pool",
+  "Acces limitat la piscina pentru oaspeti": "Begrenzter Poolzugang für Gäste",
+  "Inchide beneficiul cu piscina": "Pool-Hinweis schließen",
+  "Beneficiu limitat": "Zeitlich begrenzter Vorteil",
+  "Acces la piscina pentru oaspetii cazati.": "Poolzugang für übernachtende Gäste.",
+  "Rezerva pana la": "Buche bis",
+  "sfarsitul lunii": "Ende des Monats",
+  "si bucura-te de momente racoroase la piscina in timpul sejurului.": "und genieße erfrischende Poolmomente während deines Aufenthalts.",
+  "Rezerva acum": "Jetzt buchen",
+  "Promotie": "Angebot",
+  "Deschide promotia si preturile pe noapte": "Angebot und Preise pro Nacht öffnen",
+  "Invitatie luxury pentru acces la piscina": "Luxus-Einladung für Poolzugang",
+  "Grand opening": "Grand Opening",
+  "Noul standard al": "Der neue Standard für",
+  "luxului la piscina.": "Pool-Luxus.",
+  "Descopera noua experienta premium la piscina pentru oaspetii cazati, disponibila pentru rezervarile confirmate pana la":
+    "Entdecke das neue Premium-Poolerlebnis für übernachtende Gäste, verfügbar für Buchungen, die bestätigt werden bis",
+  "oferta exclusiva de lansare": "exklusives Eröffnungsangebot",
+  "experienta rafinata la piscina": "raffiniertes Poolerlebnis",
+  "beneficiu limitat pentru rezervari rapide": "begrenzter Vorteil für schnelle Buchungen",
+  "Rezerva experienta": "Erlebnis reservieren",
+};
+
+TRANSLATIONS.bg = {
+  ...TRANSLATIONS.en,
+  "Alege limba": "Изберете език",
+  "Prezentare": "Представяне",
+  "Galerie": "Галерия",
+  "Disponibilitate": "Свободни дати",
+  "Recenzii": "Отзиви",
+  "Contact": "Контакт",
+  "Facilitati": "Удобства",
+  "Verifica disponibilitatea": "Проверете свободните дати",
+  "Citeste recenziile": "Прочетете отзивите",
+  "Nou pentru oaspeti": "Ново за гостите",
+  "Acces la piscina pentru sejururile confirmate luna aceasta.": "Достъп до басейн за престои, потвърдени този месец.",
+  "Pentru o perioada limitata, oaspetii AFRODITI Studios Grigoriu beneficiaza de acces la piscina: un plus de vacanta pentru dimineti relaxate, pauze racoroase si seri mai elegante in Grecia.":
+    "За ограничен период гостите на AFRODITI Studios Grigoriu получават достъп до басейн: още повече ваканционно усещане за спокойни сутрини, прохладни паузи и елегантни вечери в Гърция.",
+  "acces inclus pentru oaspeti": "включен достъп за гости",
+  "beneficiu limitat": "ограничен бонус",
+  "ideal dupa plaja": "идеално след плажа",
+  "Rezerva cu acces la piscina": "Резервирайте с достъп до басейн",
+  "brand-new pool": "чисто нов басейн",
+  "new pool": "нов басейн",
+  "Acces limitat la piscina pentru oaspeti": "Ограничен достъп до басейн за гости",
+  "Inchide beneficiul cu piscina": "Затворете съобщението за басейна",
+  "Beneficiu limitat": "Ограничен бонус",
+  "Acces la piscina pentru oaspetii cazati.": "Достъп до басейн за настанените гости.",
+  "Rezerva pana la": "Резервирайте до",
+  "sfarsitul lunii": "края на месеца",
+  "si bucura-te de momente racoroase la piscina in timpul sejurului.": "и се насладете на прохладни моменти край басейна по време на престоя.",
+  "Rezerva acum": "Резервирайте сега",
+  "Promotie": "Промоция",
+  "Deschide promotia si preturile pe noapte": "Отворете промоцията и цените на нощ",
+  "Invitatie luxury pentru acces la piscina": "Луксозна покана за достъп до басейн",
+  "Grand opening": "Голямо откриване",
+  "Noul standard al": "Новият стандарт на",
+  "luxului la piscina.": "лукса край басейна.",
+  "Descopera noua experienta premium la piscina pentru oaspetii cazati, disponibila pentru rezervarile confirmate pana la":
+    "Открийте новото премиум изживяване край басейна за настанените гости, достъпно за резервации, потвърдени до",
+  "oferta exclusiva de lansare": "ексклузивна оферта за откриването",
+  "experienta rafinata la piscina": "изискано изживяване край басейна",
+  "beneficiu limitat pentru rezervari rapide": "ограничен бонус за бързи резервации",
+  "Rezerva experienta": "Резервирайте изживяването",
+};
+
+Object.assign(TRANSLATIONS.de, {
+  "Camere luminoase, aproape de plaja, pentru sejururi calme la mare.": "Helle Zimmer nahe am Strand für ruhige Aufenthalte am Meer.",
+  "Deschide meniul": "Menü öffnen",
+  "Paralia Katerinis, Grecia": "Paralia Katerinis, Griechenland",
+  "Cazare in Paralia Katerinis, Grecia, in studio-uri luminoase aproape de plaja.": "Unterkunft in Paralia Katerinis, Griechenland, in hellen Studios nahe am Strand.",
+  "Daca cauti cazare in Paralia Katerinis, Grecia, cazare aproape de plaja sau studio-uri moderne pe Riviera Olimpului, AFRODITI Studios Grigoriu Luxury Apartments aduce exact atmosfera aceea cautata la mare: camere foarte curate, tonuri luminoase, balcoane primitoare, bai moderne, terasa si o zona linistita, la o plimbare scurta de plaja. Este o alegere potrivita pentru cupluri si familii mici care vor confort, proximitate fata de apa si o gazda atenta la detalii.": "Wenn du eine Unterkunft in Paralia Katerinis, Griechenland, nahe am Strand oder moderne Studios an der Olympischen Riviera suchst, bietet AFRODITI Studios Grigoriu Luxury Apartments genau diese Meeresatmosphäre: sehr saubere Zimmer, helle Töne, einladende Balkone, moderne Bäder, eine Terrasse und eine ruhige Lage nur wenige Gehminuten vom Strand entfernt. Eine gute Wahl für Paare und kleine Familien, die Komfort, Nähe zum Meer und einen aufmerksamen Gastgeber wünschen.",
+  "Promotie activa 2026": "Aktives Angebot 2026",
+  "de la 80 euro/noapte": "ab 80 Euro/Nacht",
+  "Promotie iunie si septembrie in Paralia Katerinis": "Juni- und Septemberangebot in Paralia Katerinis",
+  "1-15 iunie: 80 euro/noapte. 15-30 iunie: 100 euro/noapte. Septembrie: 110 euro/noapte.": "1.-15. Juni: 80 Euro/Nacht. 15.-30. Juni: 100 Euro/Nacht. September: 110 Euro/Nacht.",
+  "1-15 iun.": "1.-15. Juni",
+  "15-30 iun.": "15.-30. Juni",
+  "Sept.": "Sept.",
+  "Iulie": "Juli",
+  "August": "August",
+  "Septembrie": "September",
+  "Vezi disponibilitatea": "Verfügbarkeit ansehen",
+  "evaluare generala din recenziile oaspetilor": "Gesamtbewertung aus Gästebewertungen",
+  "La o strada de mare": "Eine Straße vom Meer entfernt",
+  "plaja este aproape, iar serile raman linistite si relaxate": "der Strand ist nah und die Abende bleiben ruhig und entspannt",
+  "Camere noi si luminoase": "Neue, helle Zimmer",
+  "interioare ingrijite, balcoane private si detalii foarte curate": "gepflegte Innenräume, private Balkone und sehr saubere Details",
+  "Prezentare generala": "Überblick",
+  "Recenzii oaspeti": "Gästebewertungen",
+  "Alege luna si vezi rapid ce zile mai sunt libere.": "Wähle den Monat und sieh schnell, welche Tage noch frei sind.",
+  "Compara usor Studio Double si Studio Deluxe, verifica lunile ramase disponibile si alege perioada potrivita fara sa deschizi un calendar mare.": "Vergleiche Studio Double und Studio Deluxe, prüfe die verbleibenden verfügbaren Monate und wähle den passenden Zeitraum ohne großen Kalender.",
+  "Cerere de cazare": "Unterkunftsanfrage",
+  "Spune-ne perioada si numarul de oaspeti.": "Nenne uns den Zeitraum und die Anzahl der Gäste.",
+  "Cererea ajunge direct pentru confirmarea perioadei si a unitatii alese.": "Die Anfrage wird direkt zur Bestätigung des Zeitraums und der gewählten Einheit gesendet.",
+  "Promotii sezon 2026": "Angebote Saison 2026",
+  "1-15 iunie 80 euro, 15-30 iunie 100 euro, septembrie 110 euro/noapte": "1.-15. Juni 80 Euro, 15.-30. Juni 100 Euro, September 110 Euro/Nacht",
+  "Nume": "Name",
+  "Telefon": "Telefon",
+  "Email optional": "E-Mail optional",
+  "Cazare": "Unterkunft",
+  "Alege cazarea": "Unterkunft wählen",
+  "Oaspeti": "Gäste",
+  "Selecteaza oaspetii": "Gäste auswählen",
+  "2 adulti": "2 Erwachsene",
+  "Adulti": "Erwachsene",
+  "Copii": "Kinder",
+  "Pana la 12 ani": "Bis 12 Jahre",
+  "Trimite pe WhatsApp": "Per WhatsApp senden",
+  "Disponibilitate pe luni": "Verfügbarkeit nach Monaten",
+  "Vezi dintr-o privire cate zile raman libere pentru fiecare studio.": "Sieh auf einen Blick, wie viele Tage für jedes Studio noch frei sind.",
+  "Schimba luna pentru fiecare unitate, vezi intervalele libere si compara rapid disponibilitatea.": "Wechsle den Monat pro Einheit, sieh freie Zeiträume und vergleiche schnell die Verfügbarkeit.",
+  "Sejururi gandite pentru relaxare": "Aufenthalte zum Entspannen",
+  "Studio Double este ideal pentru cupluri, iar Studio Deluxe ofera mai mult spatiu pentru sejururi mai lungi sau familii mici.": "Studio Double ist ideal für Paare, Studio Deluxe bietet mehr Platz für längere Aufenthalte oder kleine Familien.",
+  "Despre proprietate": "Über die Unterkunft",
+  "Camere noi, terase albe si o atmosfera relaxata, la cativa pasi de plaja.": "Neue Zimmer, weiße Terrassen und eine entspannte Atmosphäre nur wenige Schritte vom Strand entfernt.",
+  "Aproape de plaja": "Nah am Strand",
+  "Host foarte apreciat": "Sehr geschätzter Gastgeber",
+  "Galerie foto": "Fotogalerie",
+  "Tot ce ai nevoie pentru un sejur comod, fara graba.": "Alles, was du für einen komfortablen, entspannten Aufenthalt brauchst.",
+  "De la aer conditionat si WiFi pana la balcon, terasa si parcare gratuita, facilitatile sustin exact genul de vacanta relaxata pe care o cauti la mare.": "Von Klimaanlage und WLAN bis Balkon, Terrasse und kostenlosem Parkplatz unterstützen die Ausstattungen genau den entspannten Urlaub am Meer, den du suchst.",
+  "Oaspetii vorbesc cel mai des despre curatenie, liniste, apropierea de plaja si gazda atenta.": "Gäste erwähnen am häufigsten Sauberkeit, Ruhe, Strandnähe und den aufmerksamen Gastgeber.",
+  "Exceptional": "Außergewöhnlich",
+  "Ce spun cel mai des oaspetii": "Was Gäste am häufigsten erwähnen",
+  "Curatenie impecabila, camere noi si o atmosfera calda, aproape de mare.": "Makellose Sauberkeit, neue Zimmer und eine warme Atmosphäre nahe am Meer.",
+  "Recenzii selectate": "Ausgewählte Bewertungen",
+  "Plaja": "Strand",
+  "Curatenie": "Sauberkeit",
+  "Terasa": "Terrasse",
+  "Liniste": "Ruhe",
+  "Gazda": "Gastgeber",
+  "Alege varianta de contact cea mai simpla pentru perioada dorita.": "Wähle die einfachste Kontaktmöglichkeit für deinen gewünschten Zeitraum.",
+  "Apel direct": "Direkter Anruf",
+  "Mesaj rapid": "Schnelle Nachricht",
+  "Scrie pe WhatsApp": "Auf WhatsApp schreiben",
+  "Gazda proprietatii": "Gastgeber der Unterkunft",
+  "Contact direct": "Direkter Kontakt",
+  "Harta si locatie": "Karte und Lage",
+  "Vezi ruta in Google Maps": "Route in Google Maps ansehen",
+  "Social si email": "Social Media und E-Mail",
+  "Trimite email la contact@afroditistudiosgrigoriu.com": "E-Mail an contact@afroditistudiosgrigoriu.com senden",
+  "Promotie activa pentru iunie si septembrie": "Aktives Angebot für Juni und September",
+  "Inchide promotia": "Angebot schließen",
+  "Rezerva iunie sau septembrie la tarif promotional.": "Buche Juni oder September zum Angebotspreis.",
+  "de la": "ab",
+  "/ noapte": "/ Nacht",
+  "Tarife promotionale pe noapte": "Angebotspreise pro Nacht",
+  "1-15 iunie": "1.-15. Juni",
+  "15-30 iunie": "15.-30. Juni",
+  "Iulie-august": "Juli-August",
+  "Vezi promotia": "Angebot ansehen",
+  "Iunie si septembrie": "Juni und September",
+  "Suna acum": "Jetzt anrufen",
+  "Disponibil": "Verfügbar",
+  "Ocupat": "Belegt",
+  "Apartament studio cu 1 pat dublu": "Studio-Apartment mit 1 Doppelbett",
+  "2 adulti + 1 copil": "2 Erwachsene + 1 Kind",
+  "Studio Deluxe": "Studio Deluxe",
+  "Parcare gratuita": "Kostenloser Parkplatz",
+  "WiFi gratuit inclus": "Kostenloses WLAN inklusive",
+  "Transfer de la si/sau la aeroport": "Flughafentransfer",
+  "Gratar": "Grill",
+  "Camere pentru nefumatori": "Nichtraucherzimmer",
+  "Balcon": "Balkon",
+  "Vedere la mare": "Meerblick",
+  "Aer conditionat": "Klimaanlage",
+});
+
+Object.assign(TRANSLATIONS.bg, {
+  "Camere luminoase, aproape de plaja, pentru sejururi calme la mare.": "Светли стаи близо до плажа за спокойни почивки край морето.",
+  "Deschide meniul": "Отворете менюто",
+  "Paralia Katerinis, Grecia": "Паралия Катерини, Гърция",
+  "Cazare in Paralia Katerinis, Grecia, in studio-uri luminoase aproape de plaja.": "Настаняване в Паралия Катерини, Гърция, в светли студиа близо до плажа.",
+  "Daca cauti cazare in Paralia Katerinis, Grecia, cazare aproape de plaja sau studio-uri moderne pe Riviera Olimpului, AFRODITI Studios Grigoriu Luxury Apartments aduce exact atmosfera aceea cautata la mare: camere foarte curate, tonuri luminoase, balcoane primitoare, bai moderne, terasa si o zona linistita, la o plimbare scurta de plaja. Este o alegere potrivita pentru cupluri si familii mici care vor confort, proximitate fata de apa si o gazda atenta la detalii.": "Ако търсите настаняване в Паралия Катерини, Гърция, близо до плажа или модерни студиа на Олимпийската ривиера, AFRODITI Studios Grigoriu Luxury Apartments предлага точно тази морска атмосфера: много чисти стаи, светли тонове, приветливи балкони, модерни бани, тераса и тиха зона само на кратка разходка от плажа. Подходящ избор за двойки и малки семейства, които искат комфорт, близост до морето и внимателен домакин.",
+  "Promotie activa 2026": "Активна промоция 2026",
+  "de la 80 euro/noapte": "от 80 евро/нощ",
+  "Promotie iunie si septembrie in Paralia Katerinis": "Промоция за юни и септември в Паралия Катерини",
+  "1-15 iunie: 80 euro/noapte. 15-30 iunie: 100 euro/noapte. Septembrie: 110 euro/noapte.": "1-15 юни: 80 евро/нощ. 15-30 юни: 100 евро/нощ. Септември: 110 евро/нощ.",
+  "1-15 iun.": "1-15 юни",
+  "15-30 iun.": "15-30 юни",
+  "Sept.": "септ.",
+  "Iulie": "Юли",
+  "August": "Август",
+  "Septembrie": "Септември",
+  "Vezi disponibilitatea": "Вижте свободните дати",
+  "evaluare generala din recenziile oaspetilor": "обща оценка от отзивите на гостите",
+  "La o strada de mare": "На една улица от морето",
+  "plaja este aproape, iar serile raman linistite si relaxate": "плажът е близо, а вечерите остават тихи и спокойни",
+  "Camere noi si luminoase": "Нови и светли стаи",
+  "interioare ingrijite, balcoane private si detalii foarte curate": "поддържани интериори, частни балкони и много чисти детайли",
+  "Prezentare generala": "Общ преглед",
+  "Recenzii oaspeti": "Отзиви от гости",
+  "Alege luna si vezi rapid ce zile mai sunt libere.": "Изберете месец и вижте бързо кои дни са свободни.",
+  "Compara usor Studio Double si Studio Deluxe, verifica lunile ramase disponibile si alege perioada potrivita fara sa deschizi un calendar mare.": "Сравнете лесно Studio Double и Studio Deluxe, проверете наличните месеци и изберете подходящ период без голям календар.",
+  "Cerere de cazare": "Заявка за настаняване",
+  "Spune-ne perioada si numarul de oaspeti.": "Напишете периода и броя гости.",
+  "Cererea ajunge direct pentru confirmarea perioadei si a unitatii alese.": "Заявката се изпраща директно за потвърждение на периода и избраното помещение.",
+  "Promotii sezon 2026": "Промоции сезон 2026",
+  "1-15 iunie 80 euro, 15-30 iunie 100 euro, septembrie 110 euro/noapte": "1-15 юни 80 евро, 15-30 юни 100 евро, септември 110 евро/нощ",
+  "Nume": "Име",
+  "Telefon": "Телефон",
+  "Email optional": "Имейл по избор",
+  "Cazare": "Настаняване",
+  "Alege cazarea": "Изберете настаняване",
+  "Oaspeti": "Гости",
+  "Selecteaza oaspetii": "Изберете гости",
+  "2 adulti": "2 възрастни",
+  "Adulti": "Възрастни",
+  "Copii": "Деца",
+  "Pana la 12 ani": "До 12 години",
+  "Trimite pe WhatsApp": "Изпратете по WhatsApp",
+  "Disponibilitate pe luni": "Свободни дати по месеци",
+  "Vezi dintr-o privire cate zile raman libere pentru fiecare studio.": "Вижте с един поглед колко дни остават свободни за всяко студио.",
+  "Schimba luna pentru fiecare unitate, vezi intervalele libere si compara rapid disponibilitatea.": "Сменете месеца за всяко помещение, вижте свободните периоди и сравнете бързо наличността.",
+  "Sejururi gandite pentru relaxare": "Престои, създадени за релакс",
+  "Studio Double este ideal pentru cupluri, iar Studio Deluxe ofera mai mult spatiu pentru sejururi mai lungi sau familii mici.": "Studio Double е идеално за двойки, а Studio Deluxe предлага повече пространство за по-дълги престои или малки семейства.",
+  "Despre proprietate": "За мястото",
+  "Camere noi, terase albe si o atmosfera relaxata, la cativa pasi de plaja.": "Нови стаи, бели тераси и спокойна атмосфера само на няколко крачки от плажа.",
+  "Aproape de plaja": "Близо до плажа",
+  "Host foarte apreciat": "Много ценен домакин",
+  "Galerie foto": "Фото галерия",
+  "Tot ce ai nevoie pentru un sejur comod, fara graba.": "Всичко необходимо за удобен и спокоен престой.",
+  "De la aer conditionat si WiFi pana la balcon, terasa si parcare gratuita, facilitatile sustin exact genul de vacanta relaxata pe care o cauti la mare.": "От климатик и WiFi до балкон, тераса и безплатен паркинг, удобствата подкрепят точно спокойната морска почивка, която търсите.",
+  "Oaspetii vorbesc cel mai des despre curatenie, liniste, apropierea de plaja si gazda atenta.": "Гостите най-често споменават чистотата, спокойствието, близостта до плажа и внимателния домакин.",
+  "Exceptional": "Изключително",
+  "Ce spun cel mai des oaspetii": "Какво споменават гостите най-често",
+  "Curatenie impecabila, camere noi si o atmosfera calda, aproape de mare.": "Безупречна чистота, нови стаи и топла атмосфера близо до морето.",
+  "Recenzii selectate": "Избрани отзиви",
+  "Plaja": "Плаж",
+  "Curatenie": "Чистота",
+  "Terasa": "Тераса",
+  "Liniste": "Спокойствие",
+  "Gazda": "Домакин",
+  "Alege varianta de contact cea mai simpla pentru perioada dorita.": "Изберете най-лесния начин за контакт за желания период.",
+  "Apel direct": "Директно обаждане",
+  "Mesaj rapid": "Бързо съобщение",
+  "Scrie pe WhatsApp": "Пишете в WhatsApp",
+  "Gazda proprietatii": "Домакин на мястото",
+  "Contact direct": "Директен контакт",
+  "Harta si locatie": "Карта и локация",
+  "Vezi ruta in Google Maps": "Вижте маршрута в Google Maps",
+  "Social si email": "Социални мрежи и имейл",
+  "Trimite email la contact@afroditistudiosgrigoriu.com": "Изпратете имейл до contact@afroditistudiosgrigoriu.com",
+  "Promotie activa pentru iunie si septembrie": "Активна промоция за юни и септември",
+  "Inchide promotia": "Затворете промоцията",
+  "Rezerva iunie sau septembrie la tarif promotional.": "Резервирайте юни или септември на промоционална цена.",
+  "de la": "от",
+  "/ noapte": "/ нощ",
+  "Tarife promotionale pe noapte": "Промоционални цени на нощ",
+  "1-15 iunie": "1-15 юни",
+  "15-30 iunie": "15-30 юни",
+  "Iulie-august": "Юли-август",
+  "Vezi promotia": "Вижте промоцията",
+  "Iunie si septembrie": "Юни и септември",
+  "Suna acum": "Обадете се сега",
+  "Disponibil": "Свободно",
+  "Ocupat": "Заето",
+  "Apartament studio cu 1 pat dublu": "Студио апартамент с 1 двойно легло",
+  "2 adulti + 1 copil": "2 възрастни + 1 дете",
+  "Studio Deluxe": "Studio Deluxe",
+  "Parcare gratuita": "Безплатен паркинг",
+  "WiFi gratuit inclus": "Включен безплатен WiFi",
+  "Transfer de la si/sau la aeroport": "Трансфер от/до летището",
+  "Gratar": "Барбекю",
+  "Camere pentru nefumatori": "Стаи за непушачи",
+  "Balcon": "Балкон",
+  "Vedere la mare": "Изглед към морето",
+  "Aer conditionat": "Климатик",
+});
+
+const DISCOUNT_PROMO_TRANSLATIONS = {
+  en: {
+    "Reducere activa pentru luna iunie": "Active June discount",
+    "Inchide reducerea pentru iunie": "Close June discount",
+    "Reducere Iunie": "June discount",
+    "Start de vara de la": "Summer starts from",
+    "80 euro/noapte.": "80 euro/night.",
+    "Perioadele din iunie au tarif promotional limitat, cu zilele libere confirmate direct.":
+      "June dates have limited promotional rates, with free days confirmed directly.",
+    "Tarife promotionale pentru iunie": "Promotional rates for June",
+    "Vezi zilele libere": "See free dates",
+    "Reducere activa pentru luna septembrie": "Active September discount",
+    "Inchide reducerea pentru septembrie": "Close September discount",
+    "Reducere Septembrie": "September discount",
+    "Septembrie la": "September at",
+    "110 euro/noapte.": "110 euro/night.",
+    "Toata luna septembrie ramane la tarif promotional pentru sejururi calme, aproape de mare.":
+      "All of September stays at a promotional rate for calm seaside stays.",
+    "Tarif promotional pentru septembrie": "Promotional rate for September",
+    "Toata luna septembrie": "All September",
+    "Verifica perioada": "Check dates",
+  },
+  el: {
+    "Reducere activa pentru luna iunie": "Ενεργή έκπτωση για τον Ιούνιο",
+    "Inchide reducerea pentru iunie": "Κλείσιμο έκπτωσης Ιουνίου",
+    "Reducere Iunie": "Έκπτωση Ιουνίου",
+    "Start de vara de la": "Το καλοκαίρι ξεκινά από",
+    "80 euro/noapte.": "80 ευρώ/νύχτα.",
+    "Perioadele din iunie au tarif promotional limitat, cu zilele libere confirmate direct.":
+      "Οι περίοδοι του Ιουνίου έχουν περιορισμένη προσφορά, με διαθέσιμες ημέρες που επιβεβαιώνονται απευθείας.",
+    "Tarife promotionale pentru iunie": "Προσφορές για τον Ιούνιο",
+    "Vezi zilele libere": "Δείτε διαθέσιμες ημέρες",
+    "Reducere activa pentru luna septembrie": "Ενεργή έκπτωση για τον Σεπτέμβριο",
+    "Inchide reducerea pentru septembrie": "Κλείσιμο έκπτωσης Σεπτεμβρίου",
+    "Reducere Septembrie": "Έκπτωση Σεπτεμβρίου",
+    "Septembrie la": "Σεπτέμβριος με",
+    "110 euro/noapte.": "110 ευρώ/νύχτα.",
+    "Toata luna septembrie ramane la tarif promotional pentru sejururi calme, aproape de mare.":
+      "Όλος ο Σεπτέμβριος παραμένει σε προσφορά για ήρεμες διαμονές κοντά στη θάλασσα.",
+    "Tarif promotional pentru septembrie": "Προσφορά για τον Σεπτέμβριο",
+    "Toata luna septembrie": "Όλος ο Σεπτέμβριος",
+    "Verifica perioada": "Ελέγξτε περίοδο",
+  },
+  de: {
+    "Reducere activa pentru luna iunie": "Aktiver Rabatt fuer Juni",
+    "Inchide reducerea pentru iunie": "Juni-Rabatt schliessen",
+    "Reducere Iunie": "Juni-Rabatt",
+    "Start de vara de la": "Sommerstart ab",
+    "80 euro/noapte.": "80 Euro/Nacht.",
+    "Perioadele din iunie au tarif promotional limitat, cu zilele libere confirmate direct.":
+      "Die Juni-Zeitraeume haben begrenzte Aktionspreise, freie Tage werden direkt bestaetigt.",
+    "Tarife promotionale pentru iunie": "Aktionspreise fuer Juni",
+    "Vezi zilele libere": "Freie Tage ansehen",
+    "Reducere activa pentru luna septembrie": "Aktiver Rabatt fuer September",
+    "Inchide reducerea pentru septembrie": "September-Rabatt schliessen",
+    "Reducere Septembrie": "September-Rabatt",
+    "Septembrie la": "September fuer",
+    "110 euro/noapte.": "110 Euro/Nacht.",
+    "Toata luna septembrie ramane la tarif promotional pentru sejururi calme, aproape de mare.":
+      "Der ganze September bleibt zum Aktionspreis fuer ruhige Aufenthalte nahe am Meer.",
+    "Tarif promotional pentru septembrie": "Aktionspreis fuer September",
+    "Toata luna septembrie": "Der ganze September",
+    "Verifica perioada": "Zeitraum pruefen",
+  },
+  bg: {
+    "Reducere activa pentru luna iunie": "Активна отстъпка за юни",
+    "Inchide reducerea pentru iunie": "Затворете отстъпката за юни",
+    "Reducere Iunie": "Отстъпка юни",
+    "Start de vara de la": "Лятото започва от",
+    "80 euro/noapte.": "80 евро/нощ.",
+    "Perioadele din iunie au tarif promotional limitat, cu zilele libere confirmate direct.":
+      "Периодите през юни са с ограничена промоционална цена, а свободните дни се потвърждават директно.",
+    "Tarife promotionale pentru iunie": "Промоционални цени за юни",
+    "Vezi zilele libere": "Вижте свободните дни",
+    "Reducere activa pentru luna septembrie": "Активна отстъпка за септември",
+    "Inchide reducerea pentru septembrie": "Затворете отстъпката за септември",
+    "Reducere Septembrie": "Отстъпка септември",
+    "Septembrie la": "Септември на",
+    "110 euro/noapte.": "110 евро/нощ.",
+    "Toata luna septembrie ramane la tarif promotional pentru sejururi calme, aproape de mare.":
+      "Целият септември остава на промоционална цена за спокойни престои близо до морето.",
+    "Tarif promotional pentru septembrie": "Промоционална цена за септември",
+    "Toata luna septembrie": "Целият септември",
+    "Verifica perioada": "Проверете периода",
+  },
+};
+
+Object.entries(DISCOUNT_PROMO_TRANSLATIONS).forEach(([language, translations]) => {
+  Object.assign(TRANSLATIONS[language], translations);
+});
+
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 const LOCAL_OWNER_HOSTS = new Set(["127.0.0.1", "localhost"]);
@@ -802,6 +1259,10 @@ const header = $(".site-header");
 const navToggle = $(".nav-toggle");
 const body = document.body;
 const languageSwitcher = $("[data-language-switcher]");
+const languageTrigger = $("[data-language-trigger]");
+const languageMenu = $("[data-language-menu]");
+const languageCurrentFlag = $("[data-language-current-flag]");
+const languageCurrentLabel = $("[data-language-current-label]");
 const languageButtons = $$("[data-language-option]");
 const introOverlay = $("#site-intro");
 const backToTopLinks = $$("[data-back-to-top]");
@@ -841,8 +1302,16 @@ const summerPromoLink = $("[data-summer-promo-link]");
 const summerPromoDealValue = $("[data-summer-promo-deal-value]");
 const summerPromoText = $("[data-summer-promo-text]");
 const summerPromoList = $("[data-summer-promo-list]");
+const discountPromoPopups = $$("[data-discount-promo]");
+const discountPromoCloseButtons = $$("[data-discount-promo-close]");
+const discountPromoLinks = $$("[data-discount-promo-link]");
+const poolPromoPopup = $("[data-pool-promo]");
+const poolPromoClose = $("[data-pool-promo-close]");
+const poolPromoLink = $("[data-pool-promo-link]");
+const poolDeadline = $("[data-pool-deadline]");
 const stickyPromoPrice = $("[data-sticky-promo-price]");
 const stickyPromoLabel = $("[data-sticky-promo-label]");
+const stickyPromoTriggers = $$("[data-sticky-promo-trigger]");
 const roomTypesGrid = $("[data-room-types]");
 const amenitiesGrid = $("[data-amenities-grid]");
 const scoreBars = $("[data-score-bars]");
@@ -1144,11 +1613,100 @@ function translateDynamicText(key, language) {
 
   const freeDaysMatch = key.match(/^(\d+) zile libere$/);
   if (freeDaysMatch) {
-    return language === "el" ? `${freeDaysMatch[1]} ελεύθερες ημέρες` : `${freeDaysMatch[1]} free days`;
+    if (language === "el") {
+      return `${freeDaysMatch[1]} ελεύθερες ημέρες`;
+    }
+    if (language === "de") {
+      return `${freeDaysMatch[1]} freie Tage`;
+    }
+    if (language === "bg") {
+      return `${freeDaysMatch[1]} свободни дни`;
+    }
+    return `${freeDaysMatch[1]} free days`;
+  }
+
+  const freeDaysInMonthMatch = key.match(/^(\d+) zile libere in (.+)$/);
+  if (freeDaysInMonthMatch) {
+    if (language === "el") {
+      return `${freeDaysInMonthMatch[1]} ελεύθερες ημέρες τον/την ${freeDaysInMonthMatch[2]}`;
+    }
+    if (language === "de") {
+      return `${freeDaysInMonthMatch[1]} freie Tage im ${freeDaysInMonthMatch[2]}`;
+    }
+    if (language === "bg") {
+      return `${freeDaysInMonthMatch[1]} свободни дни през ${freeDaysInMonthMatch[2]}`;
+    }
+    return `${freeDaysInMonthMatch[1]} free days in ${freeDaysInMonthMatch[2]}`;
+  }
+
+  const openDaysHelperMatch = key.match(
+    /^Mai sunt (\d+) zile libere in (.+)\. Alege rapid intervalul potrivit inainte sa se ocupe\.$/,
+  );
+  if (openDaysHelperMatch) {
+    if (language === "el") {
+      return `Απομένουν ${openDaysHelperMatch[1]} ελεύθερες ημέρες τον/την ${openDaysHelperMatch[2]}. Επιλέξτε γρήγορα την κατάλληλη περίοδο πριν κλειστεί.`;
+    }
+    if (language === "de") {
+      return `Es bleiben ${openDaysHelperMatch[1]} freie Tage im ${openDaysHelperMatch[2]}. Wähle schnell den passenden Zeitraum, bevor er gebucht wird.`;
+    }
+    if (language === "bg") {
+      return `Остават ${openDaysHelperMatch[1]} свободни дни през ${openDaysHelperMatch[2]}. Изберете бързо подходящия период, преди да бъде резервиран.`;
+    }
+    return `${openDaysHelperMatch[1]} free days remain in ${openDaysHelperMatch[2]}. Choose the right period quickly before they are booked.`;
   }
 
   if (key === "Nicio zi libera") {
-    return language === "el" ? "Καμία ελεύθερη ημέρα" : "No free days";
+    if (language === "el") {
+      return "Καμία ελεύθερη ημέρα";
+    }
+    if (language === "de") {
+      return "Keine freien Tage";
+    }
+    if (language === "bg") {
+      return "Няма свободни дни";
+    }
+    return "No free days";
+  }
+
+  const noFreeDaysInMonthMatch = key.match(/^Nicio zi libera in (.+)$/);
+  if (noFreeDaysInMonthMatch) {
+    if (language === "el") {
+      return `Καμία ελεύθερη ημέρα τον/την ${noFreeDaysInMonthMatch[1]}`;
+    }
+    if (language === "de") {
+      return `Keine freien Tage im ${noFreeDaysInMonthMatch[1]}`;
+    }
+    if (language === "bg") {
+      return `Няма свободни дни през ${noFreeDaysInMonthMatch[1]}`;
+    }
+    return `No free days in ${noFreeDaysInMonthMatch[1]}`;
+  }
+
+  if (key === "Complet rezervat") {
+    if (language === "el") {
+      return "Πλήρως κλεισμένο";
+    }
+    if (language === "de") {
+      return "Ausgebucht";
+    }
+    if (language === "bg") {
+      return "Напълно резервирано";
+    }
+    return "Fully booked";
+  }
+
+  const fullyBookedMonthMatch = key.match(/^Nu mai apar zile libere in (.+), dar poti verifica rapid lunile urmatoare\.$/);
+  if (fullyBookedMonthMatch) {
+    if (language === "el") {
+      return `Δεν εμφανίζονται πλέον ελεύθερες ημέρες τον/την ${fullyBookedMonthMatch[1]}, αλλά μπορείτε να ελέγξετε γρήγορα τους επόμενους μήνες.`;
+    }
+    if (language === "de") {
+      return `Im ${fullyBookedMonthMatch[1]} werden keine freien Tage mehr angezeigt, aber du kannst schnell die nächsten Monate prüfen.`;
+    }
+    if (language === "bg") {
+      return `През ${fullyBookedMonthMatch[1]} вече няма свободни дни, но можете бързо да проверите следващите месеци.`;
+    }
+    return `There are no free days left in ${fullyBookedMonthMatch[1]}, but you can quickly check the next months.`;
   }
 
   const nextBusyDayMatch = key.match(/^Urmatoarea zi deja rezervata este (.+)\.$/);
@@ -1203,7 +1761,7 @@ function isKnownTranslationOfOriginal(currentValue, originalValue) {
     return true;
   }
 
-  return ["ro", "en", "el"].some((language) => normalizeTranslationKey(translateText(originalValue, language)) === current);
+  return Array.from(SUPPORTED_LANGUAGES).some((language) => normalizeTranslationKey(translateText(originalValue, language)) === current);
 }
 
 function shouldTranslateTextNode(node) {
@@ -1273,11 +1831,30 @@ function translateAttributes(root, language) {
 }
 
 function updateLanguageButtons(language) {
+  const option = LANGUAGE_OPTIONS[language] || LANGUAGE_OPTIONS.ro;
+  if (languageCurrentFlag) {
+    languageCurrentFlag.setAttribute("src", option.flagSrc);
+    languageCurrentFlag.setAttribute("alt", "");
+    languageCurrentFlag.setAttribute("title", option.flagAlt);
+  }
+  if (languageCurrentLabel) {
+    languageCurrentLabel.textContent = option.shortLabel;
+  }
   languageButtons.forEach((button) => {
     const isActive = button.dataset.languageOption === language;
     button.classList.toggle("is-active", isActive);
     button.setAttribute("aria-pressed", String(isActive));
   });
+}
+
+function setLanguageMenuOpen(isOpen) {
+  if (!languageMenu || !languageTrigger) {
+    return;
+  }
+
+  languageMenu.hidden = !isOpen;
+  languageSwitcher?.classList.toggle("is-open", isOpen);
+  languageTrigger.setAttribute("aria-expanded", String(isOpen));
 }
 
 function refreshLanguageSensitiveViews() {
@@ -1292,6 +1869,9 @@ function refreshLanguageSensitiveViews() {
   }
   if (typeof renderAvailabilityOverview === "function") {
     renderAvailabilityOverview();
+  }
+  if (typeof syncPoolDeadline === "function") {
+    syncPoolDeadline();
   }
   if (typeof syncBookingDateFields === "function") {
     syncBookingDateFields({ keepStatus: true });
@@ -1342,7 +1922,31 @@ function initLanguageSwitcher() {
   languageButtons.forEach((button) => {
     button.addEventListener("click", () => {
       applyLanguage(button.dataset.languageOption || "ro");
+      setLanguageMenuOpen(false);
     });
+  });
+
+  if (languageTrigger) {
+    languageTrigger.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setLanguageMenuOpen(languageMenu?.hidden !== false);
+    });
+  }
+
+  document.addEventListener("click", (event) => {
+    if (!languageSwitcher || languageMenu?.hidden) {
+      return;
+    }
+    if (event.target instanceof Node && languageSwitcher.contains(event.target)) {
+      return;
+    }
+    setLanguageMenuOpen(false);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      setLanguageMenuOpen(false);
+    }
   });
 
   applyLanguage(readStoredLanguage(), { persist: false });
@@ -1629,6 +2233,12 @@ function formatNights(nights) {
   }
   if (activeLanguage === "el") {
     return `${nights} ${nights === 1 ? "νύχτα" : "νύχτες"}`;
+  }
+  if (activeLanguage === "de") {
+    return `${nights} ${nights === 1 ? "Nacht" : "Nächte"}`;
+  }
+  if (activeLanguage === "bg") {
+    return `${nights} ${nights === 1 ? "нощ" : "нощувки"}`;
   }
   return `${nights} ${nights === 1 ? "noapte" : "nopti"}`;
 }
@@ -2397,7 +3007,57 @@ function markSummerPromoDismissed() {
   }
 }
 
-function closeSummerPromo({ remember = true } = {}) {
+let promoSequenceTimer = 0;
+
+function getMarketingPopupBlockedState() {
+  return (
+    body.classList.contains("intro-active") ||
+    body.classList.contains("menu-open") ||
+    appState.visitor.modalOpen ||
+    (siteTermsModal && !siteTermsModal.hidden) ||
+    galleryState.lightboxOpen
+  );
+}
+
+function scheduleNextMarketingPopup(type, attempt = 0) {
+  if (IS_OWNER_PAGE) {
+    return;
+  }
+
+  window.clearTimeout(promoSequenceTimer);
+  promoSequenceTimer = window.setTimeout(() => {
+    if (getMarketingPopupBlockedState()) {
+      if (attempt < 6) {
+        scheduleNextMarketingPopup(type, attempt + 1);
+      }
+      return;
+    }
+
+    if (type === "pool") {
+      showPoolPromo({ force: true });
+      return;
+    }
+
+    if (type === "june" || type === "september") {
+      showDiscountPromo(type, { force: true });
+      return;
+    }
+
+    showSummerPromo({ force: true });
+  }, PROMO_POPUP_SEQUENCE_DELAY_MS);
+}
+
+function syncPoolDeadline() {
+  if (!poolDeadline) {
+    return;
+  }
+
+  const today = new Date();
+  const deadline = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  poolDeadline.textContent = formatDate(toInputDate(deadline));
+}
+
+function closeSummerPromo({ remember = true, scheduleNext = true } = {}) {
   if (!summerPromoPopup) {
     return;
   }
@@ -2414,13 +3074,19 @@ function closeSummerPromo({ remember = true } = {}) {
       summerPromoPopup.hidden = true;
     }
   }, 220);
+
+  if (scheduleNext) {
+    scheduleNextMarketingPopup("june");
+  }
 }
 
-function showSummerPromo() {
-  if (!summerPromoPopup || IS_OWNER_PAGE || hasDismissedSummerPromo()) {
+function showSummerPromo({ force = false } = {}) {
+  if (!summerPromoPopup || IS_OWNER_PAGE || (!force && hasDismissedSummerPromo())) {
     return;
   }
 
+  closePoolPromo({ scheduleNext: false });
+  closeVisibleDiscountPromos({ scheduleNext: false });
   summerPromoPopup.hidden = false;
   summerPromoPopup.setAttribute("aria-hidden", "false");
   body.classList.add("summer-promo-open");
@@ -2429,8 +3095,102 @@ function showSummerPromo() {
   });
 }
 
+function handleStickyPromoClick(event) {
+  event.preventDefault();
+  showSummerPromo({ force: true });
+}
+
+function getDiscountPromoPopup(type) {
+  return discountPromoPopups.find((popup) => popup.dataset.discountPromo === type) || null;
+}
+
+function closeDiscountPromo(type, { scheduleNext = true } = {}) {
+  const popup = getDiscountPromoPopup(type);
+  if (!popup) {
+    return;
+  }
+
+  popup.classList.remove("is-visible");
+  body.classList.remove("discount-promo-open");
+  popup.setAttribute("aria-hidden", "true");
+  window.setTimeout(() => {
+    if (!popup.classList.contains("is-visible")) {
+      popup.hidden = true;
+    }
+  }, 220);
+
+  if (scheduleNext) {
+    scheduleNextMarketingPopup(type === "june" ? "september" : "pool");
+  }
+}
+
+function closeVisibleDiscountPromos({ scheduleNext = false } = {}) {
+  discountPromoPopups.forEach((popup) => {
+    if (popup.classList.contains("is-visible")) {
+      closeDiscountPromo(popup.dataset.discountPromo, { scheduleNext });
+    }
+  });
+}
+
+function showDiscountPromo(type, { force = false } = {}) {
+  const popup = getDiscountPromoPopup(type);
+  if (!popup || IS_OWNER_PAGE || (!force && getMarketingPopupBlockedState())) {
+    return;
+  }
+
+  closeSummerPromo({ remember: false, scheduleNext: false });
+  closePoolPromo({ scheduleNext: false });
+  closeVisibleDiscountPromos({ scheduleNext: false });
+  popup.hidden = false;
+  popup.setAttribute("aria-hidden", "false");
+  body.classList.add("discount-promo-open");
+  window.requestAnimationFrame(() => {
+    popup.classList.add("is-visible");
+  });
+}
+
+function closePoolPromo({ scheduleNext = true } = {}) {
+  if (!poolPromoPopup) {
+    return;
+  }
+
+  poolPromoPopup.classList.remove("is-visible");
+  body.classList.remove("pool-promo-open");
+  poolPromoPopup.setAttribute("aria-hidden", "true");
+  window.setTimeout(() => {
+    if (!poolPromoPopup.classList.contains("is-visible")) {
+      poolPromoPopup.hidden = true;
+    }
+  }, 220);
+
+  if (scheduleNext) {
+    scheduleNextMarketingPopup("summer");
+  }
+}
+
+function showPoolPromo({ force = false } = {}) {
+  if (!poolPromoPopup || IS_OWNER_PAGE || (!force && getMarketingPopupBlockedState())) {
+    return;
+  }
+
+  closeSummerPromo({ remember: false, scheduleNext: false });
+  closeVisibleDiscountPromos({ scheduleNext: false });
+  syncPoolDeadline();
+  poolPromoPopup.hidden = false;
+  poolPromoPopup.setAttribute("aria-hidden", "false");
+  body.classList.add("pool-promo-open");
+  window.requestAnimationFrame(() => {
+    poolPromoPopup.classList.add("is-visible");
+  });
+}
+
 function scheduleSummerPromo(attempt = 0) {
-  if (!summerPromoPopup || IS_OWNER_PAGE || hasDismissedSummerPromo()) {
+  if (!summerPromoPopup || IS_OWNER_PAGE) {
+    return;
+  }
+
+  if (hasDismissedSummerPromo()) {
+    scheduleNextMarketingPopup("june");
     return;
   }
 
@@ -2440,11 +3200,7 @@ function scheduleSummerPromo(attempt = 0) {
       return;
     }
 
-    const hasBlockingModal =
-      body.classList.contains("intro-active") ||
-      appState.visitor.modalOpen ||
-      (siteTermsModal && !siteTermsModal.hidden) ||
-      galleryState.lightboxOpen;
+    const hasBlockingModal = getMarketingPopupBlockedState();
 
     if (hasBlockingModal) {
       if (attempt < 8) {
@@ -2669,15 +3425,35 @@ async function flushOwnerPendingOperations() {
   }
 }
 
-function getAccommodationStatus(accommodation, combinedSet = null) {
+function getAccommodationStatus(accommodation, combinedSet = null, monthValue = "") {
   const busySet = combinedSet ?? getCombinedBusySet(accommodation.id);
+  const activeMonthValue = /^\d{4}-\d{2}$/.test(String(monthValue)) ? monthValue : getAvailabilityMonthValue(accommodation.id);
+  const monthMetrics = getAvailabilityMonthMetrics(busySet, activeMonthValue);
+  const monthLabel = formatMonthLabel(activeMonthValue);
+
+  if (monthMetrics.availableDayCount > 0) {
+    return {
+      label: `${monthMetrics.availableDayCount} zile libere`,
+      className: "is-opportunity",
+      helper: `Mai sunt ${monthMetrics.availableDayCount} zile libere in ${monthLabel}. Alege rapid intervalul potrivit inainte sa se ocupe.`,
+    };
+  }
+
+  if (monthMetrics.visibleDayCount > 0) {
+    return {
+      label: "Complet rezervat",
+      className: "is-busy",
+      helper: `Nu mai apar zile libere in ${monthLabel}, dar poti verifica rapid lunile urmatoare.`,
+    };
+  }
+
   const today = toInputDate(new Date());
 
   if (busySet.has(today)) {
     return {
-      label: "Ocupat",
+      label: "Verifica lunile",
       className: "is-busy",
-      helper: "Perioada curenta este deja rezervata pentru aceasta unitate.",
+      helper: "Alege o luna urmatoare pentru zile libere si confirmare directa.",
     };
   }
 
@@ -3171,8 +3947,11 @@ function renderRoomTypes() {
       const monthValue = getAvailabilityMonthValue(accommodation.id);
       const monthLabel = formatMonthLabel(monthValue);
       const combinedSet = getCombinedBusySet(accommodation.id);
-      const status = getAccommodationStatus(accommodation, combinedSet);
-      const busyDays = getBusyDayCountForMonth(combinedSet, monthValue);
+      const status = getAccommodationStatus(accommodation, combinedSet, monthValue);
+      const metrics = getAvailabilityMonthMetrics(combinedSet, monthValue);
+      const availabilityLine = metrics.availableDayCount
+        ? `${metrics.availableDayCount} zile libere in ${monthLabel}`
+        : `Nicio zi libera in ${monthLabel}`;
 
       return `
         <article class="room-type-card">
@@ -3181,15 +3960,15 @@ function renderRoomTypes() {
               <strong>${escapeHtml(accommodation.name)}</strong>
               <span class="room-type-month">${escapeHtml(monthLabel)}</span>
             </div>
-            <span class="room-type-status ${status.className}">${status.label}</span>
+            <span class="room-type-status ${status.className}">${escapeHtml(status.label)}</span>
           </div>
           <p>${escapeHtml(accommodation.summary)}</p>
           <ul>
             <li>${escapeHtml(accommodation.capacity)}</li>
             ${accommodation.highlights.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
-            <li>${busyDays ? `${busyDays} zile ocupate in ${monthLabel}` : `nicio zi ocupata in ${monthLabel}`}</li>
+            <li>${escapeHtml(availabilityLine)}</li>
           </ul>
-          <p>${escapeHtml(status.helper)}</p>
+          <p class="room-type-helper ${status.className}">${escapeHtml(status.helper)}</p>
         </article>
       `;
     })
@@ -3225,7 +4004,7 @@ function renderAvailabilityOverview() {
       const monthValue = getAvailabilityMonthValue(accommodation.id);
       const monthLabel = formatMonthLabel(monthValue);
       const combinedSet = getCombinedBusySet(accommodation.id);
-      const status = getAccommodationStatus(accommodation, combinedSet);
+      const status = getAccommodationStatus(accommodation, combinedSet, monthValue);
       const metrics = getAvailabilityMonthMetrics(combinedSet, monthValue);
       const minimumMonthValue = getPublicAvailabilityMinimumMonthValue();
       const previousDisabled = compareMonthValues(monthValue, minimumMonthValue) <= 0;
@@ -3255,7 +4034,7 @@ function renderAvailabilityOverview() {
               <strong>${escapeHtml(accommodation.name)}</strong>
               <span>Potrivit pentru ${escapeHtml(accommodation.capacity)}</span>
             </div>
-            <span class="room-type-status ${status.className}">${status.label}</span>
+            <span class="room-type-status ${status.className}">${escapeHtml(status.label)}</span>
           </div>
           <div class="availability-month-nav is-inline" aria-label="${escapeHtml(`Navigare luna pentru ${accommodation.name}`)}">
             <button
@@ -5010,6 +5789,27 @@ function initEvents() {
   if (summerPromoLink) {
     summerPromoLink.addEventListener("click", () => closeSummerPromo());
   }
+  discountPromoCloseButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const popup = button.closest("[data-discount-promo]");
+      closeDiscountPromo(popup?.dataset.discountPromo);
+    });
+  });
+  discountPromoLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      const popup = link.closest("[data-discount-promo]");
+      closeDiscountPromo(popup?.dataset.discountPromo);
+    });
+  });
+  if (poolPromoClose) {
+    poolPromoClose.addEventListener("click", () => closePoolPromo());
+  }
+  if (poolPromoLink) {
+    poolPromoLink.addEventListener("click", () => closePoolPromo());
+  }
+  stickyPromoTriggers.forEach((button) => {
+    button.addEventListener("click", handleStickyPromoClick);
+  });
   if (bookingAccommodationSelect) {
     bookingAccommodationSelect.addEventListener("change", () => {
       renderBookingAccommodationChoices();
@@ -5330,6 +6130,14 @@ if (ownerAccommodationSelect) {
       closeSummerPromo();
       return;
     }
+    if (event.key === "Escape" && discountPromoPopups.some((popup) => popup.classList.contains("is-visible"))) {
+      closeVisibleDiscountPromos({ scheduleNext: true });
+      return;
+    }
+    if (event.key === "Escape" && poolPromoPopup?.classList.contains("is-visible")) {
+      closePoolPromo();
+      return;
+    }
     if (event.key === "Escape" && appState.owner.panelOpen) {
       closeOwnerModal();
     }
@@ -5390,6 +6198,7 @@ async function init() {
   initOptionalImages();
   initEvents();
   initLanguageSwitcher();
+  syncPoolDeadline();
   updateScrolledHeader();
   syncSectionHighlights();
   updateSpiralScene();
