@@ -29,6 +29,19 @@
           "value": "noindex, nofollow, noarchive"
         }
       ]
+    },
+    {
+      "source": "/data/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
     }
   ],
   "rewrites": [
@@ -75,6 +88,51 @@
         }
       ],
       "destination": "https://www.afroditistudiosgrigoriu.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cazare-paralia-katerinis.html",
+      "destination": "/cazare-paralia-katerinis",
+      "permanent": true
+    },
+    {
+      "source": "/studio-paralia-katerinis.html",
+      "destination": "/studio-paralia-katerinis",
+      "permanent": true
+    },
+    {
+      "source": "/camere-paralia-katerinis.html",
+      "destination": "/camere-paralia-katerinis",
+      "permanent": true
+    },
+    {
+      "source": "/cazare-aproape-de-plaja-paralia-katerinis.html",
+      "destination": "/cazare-aproape-de-plaja-paralia-katerinis",
+      "permanent": true
+    },
+    {
+      "source": "/locatie.html",
+      "destination": "/locatie",
+      "permanent": true
+    },
+    {
+      "source": "/contact.html",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/studio-double.html",
+      "destination": "/studio-double",
+      "permanent": true
+    },
+    {
+      "source": "/studio-deluxe.html",
+      "destination": "/studio-deluxe",
       "permanent": true
     },
     {

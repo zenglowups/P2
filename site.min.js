@@ -7,7 +7,7 @@ const COMPACT_AVAILABILITY = window.matchMedia("(max-width: 760px)");
 const IS_OWNER_PAGE = document.body?.dataset.page === "owner";
 const INTRO_SESSION_KEY = "afroditi-intro-seen";
 const SUMMER_PROMO_SESSION_KEY = "afroditi-promo-june-september-2026-dismissed";
-const PROMO_POPUP_SEQUENCE_DELAY_MS = 10000;
+const PROMO_POPUP_SEQUENCE_DELAY_MS = 30000;
 const VISITOR_PREFERENCES_STORAGE_KEY = "afroditi-visitor-preferences";
 const VISITOR_POLICY_VERSION = "2026-05-07-privacy-consent";
 const GOOGLE_ANALYTICS_ID = "G-3ERJHNHMFY";

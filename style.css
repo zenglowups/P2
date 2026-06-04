@@ -6534,6 +6534,221 @@ body.visitor-modal-open {
     linear-gradient(145deg, rgba(255, 253, 248, 0.94), rgba(238, 250, 248, 0.84));
 }
 
+.contact-card-whatsapp {
+  border-color: rgba(25, 150, 82, 0.22);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0 10%, transparent 10% 100%),
+    linear-gradient(225deg, rgba(207, 244, 222, 0.72) 0 13%, transparent 13% 100%),
+    radial-gradient(circle at 88% 14%, rgba(37, 211, 102, 0.13), transparent 30%),
+    linear-gradient(145deg, rgba(255, 253, 248, 0.98), rgba(235, 249, 244, 0.94));
+  color: var(--sea-deep);
+}
+
+.contact-card-whatsapp::before {
+  background: linear-gradient(180deg, rgba(25, 150, 82, 0.08), transparent 62%);
+}
+
+.contact-card-whatsapp .contact-card-kicker {
+  color: rgba(19, 122, 70, 0.82);
+}
+
+.contact-card-whatsapp strong {
+  color: var(--sea-deep);
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(1.08rem, 1.6vw, 1.24rem);
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  line-height: 1.18;
+}
+
+.contact-card-whatsapp > div span:last-child {
+  color: rgba(23, 53, 68, 0.74);
+}
+
+.contact-section {
+  padding-block: clamp(96px, 8vw, 126px);
+  background:
+    radial-gradient(circle at 18% 16%, rgba(247, 223, 170, 0.16), transparent 24%),
+    radial-gradient(circle at 84% 20%, rgba(16, 153, 173, 0.16), transparent 26%),
+    linear-gradient(135deg, rgba(255, 253, 248, 0.035) 0 1px, transparent 1px 84px),
+    linear-gradient(180deg, #092431 0%, #0b4050 48%, #071d28 100%);
+}
+
+.contact-layout {
+  grid-template-columns: minmax(300px, 0.78fr) minmax(620px, 1.22fr);
+  gap: clamp(44px, 5vw, 72px);
+  align-items: center;
+}
+
+.contact-section .section-copy {
+  max-width: 460px;
+}
+
+.contact-section .section-copy h2 {
+  font-size: clamp(2.7rem, 4.1vw, 4.6rem);
+  line-height: 1.01;
+  letter-spacing: -0.025em;
+}
+
+.contact-section .section-copy p {
+  max-width: 42ch;
+  font-size: 1rem;
+}
+
+.contact-direct-cta.button {
+  min-height: 52px;
+  width: fit-content;
+  padding: 0 22px;
+  border: 1px solid rgba(247, 223, 170, 0.38);
+  background:
+    linear-gradient(135deg, rgba(255, 253, 248, 0.12), rgba(255, 253, 248, 0.04)),
+    rgba(8, 33, 43, 0.26);
+  color: var(--gold-light);
+  text-decoration: none;
+  box-shadow: 0 16px 34px rgba(4, 13, 18, 0.16);
+}
+
+.contact-primary-grid {
+  gap: 16px;
+}
+
+.contact-card {
+  min-height: 168px;
+  padding: 24px;
+  gap: 18px;
+  align-items: center;
+  border-radius: 22px;
+  clip-path: none;
+  border: 1px solid rgba(255, 253, 248, 0.62);
+  box-shadow: 0 22px 50px rgba(4, 19, 27, 0.14);
+}
+
+.contact-card::before {
+  opacity: 0.44;
+}
+
+.contact-card::after,
+.contact-mini-card::after {
+  display: none;
+}
+
+.contact-card .contact-icon {
+  width: 54px;
+  height: 54px;
+  filter: drop-shadow(0 14px 22px rgba(4, 19, 27, 0.12));
+}
+
+.contact-card-kicker {
+  color: rgba(19, 66, 84, 0.72);
+  font-size: 0.67rem;
+  letter-spacing: 0.18em;
+}
+
+.contact-card strong {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(1.08rem, 1.45vw, 1.22rem);
+  font-weight: 900;
+  letter-spacing: 0.005em;
+  line-height: 1.2;
+}
+
+.contact-card > div span:last-child {
+  font-size: 0.94rem;
+  line-height: 1.58;
+}
+
+.contact-card-call {
+  border-color: rgba(201, 149, 69, 0.24);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0 12%, transparent 12% 100%),
+    linear-gradient(225deg, rgba(240, 216, 168, 0.5) 0 14%, transparent 14% 100%),
+    radial-gradient(circle at 92% 10%, rgba(201, 149, 69, 0.14), transparent 32%),
+    linear-gradient(145deg, rgba(255, 253, 248, 0.99), rgba(245, 248, 245, 0.94));
+}
+
+.contact-card-call .contact-card-kicker {
+  color: rgba(132, 94, 39, 0.82);
+}
+
+.contact-card-call strong,
+.contact-card-whatsapp strong {
+  color: var(--sea-deep);
+}
+
+.contact-card-call > div span:last-child,
+.contact-card-whatsapp > div span:last-child {
+  color: rgba(23, 53, 68, 0.76);
+}
+
+.contact-host-card {
+  grid-template-columns: minmax(180px, 0.62fr) minmax(0, 1.38fr);
+  gap: clamp(24px, 3.2vw, 38px);
+  padding: clamp(26px, 3vw, 34px);
+  border-radius: 28px;
+  clip-path: none;
+  border-color: rgba(247, 223, 170, 0.2);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.74) 0 10%, transparent 10% 100%),
+    linear-gradient(225deg, rgba(223, 246, 247, 0.58) 0 13%, transparent 13% 100%),
+    radial-gradient(circle at 100% 12%, rgba(16, 153, 173, 0.1), transparent 30%),
+    linear-gradient(145deg, rgba(255, 253, 248, 0.98), rgba(239, 249, 247, 0.94));
+  box-shadow: 0 30px 72px rgba(4, 19, 27, 0.22);
+}
+
+.contact-host-portrait {
+  border-radius: 22px;
+  clip-path: polygon(0 18px, 18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px));
+}
+
+.contact-host-badge {
+  border-radius: 16px;
+}
+
+.contact-host-copy {
+  gap: 16px;
+}
+
+.contact-host-copy h3 {
+  max-width: 18ch;
+  font-size: clamp(2.1rem, 3vw, 3rem);
+}
+
+.contact-host-pillars span {
+  border-radius: 0;
+  clip-path: polygon(0 9px, 9px 0, calc(100% - 9px) 0, 100% 9px, 100% calc(100% - 9px), calc(100% - 9px) 100%, 9px 100%, 0 calc(100% - 9px));
+}
+
+.contact-host-actions {
+  gap: 10px;
+}
+
+.contact-host-actions .button,
+.contact-host-actions .button-ghost {
+  min-height: 50px;
+  padding: 0 20px;
+  border: 1px solid rgba(18, 56, 71, 0.14);
+  background: rgba(255, 253, 248, 0.9);
+  color: var(--sea-deep);
+  font-family: "Manrope", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-decoration: none;
+  box-shadow: 0 12px 26px rgba(12, 31, 39, 0.08);
+}
+
+.contact-host-actions .button:not(.button-ghost) {
+  border-color: rgba(37, 211, 102, 0.24);
+  background:
+    linear-gradient(135deg, rgba(247, 223, 170, 0.68), rgba(255, 151, 126, 0.8)),
+    #fffdf8;
+  color: #071f2a;
+}
+
+.sticky-discount-button {
+  display: none;
+}
+
 .guest-card,
 .pool-feature {
   background:
@@ -6592,9 +6807,51 @@ main .section:not(.hero) .button-ghost:focus-visible {
 
 .contact-direct-cta.button:hover,
 .contact-direct-cta.button:focus-visible {
-  transform: none;
-  box-shadow: none;
+  transform: translateY(-1px);
+  box-shadow: 0 18px 38px rgba(4, 13, 18, 0.18);
   color: #fff2ce;
+}
+
+.contact-section .contact-direct-cta.button {
+  min-height: 52px;
+  width: fit-content;
+  padding: 0 22px;
+  border: 1px solid rgba(247, 223, 170, 0.38);
+  background:
+    linear-gradient(135deg, rgba(255, 253, 248, 0.12), rgba(255, 253, 248, 0.04)),
+    rgba(8, 33, 43, 0.26);
+  color: var(--gold-light);
+  text-decoration: none;
+  box-shadow: 0 16px 34px rgba(4, 13, 18, 0.16);
+}
+
+.contact-section .contact-host-actions .button,
+.contact-section .contact-host-actions .button-ghost {
+  min-height: 50px;
+  padding: 0 20px;
+  border: 1px solid rgba(18, 56, 71, 0.14);
+  background: rgba(255, 253, 248, 0.9);
+  color: var(--sea-deep);
+  font-family: "Manrope", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-decoration: none;
+  box-shadow: 0 12px 26px rgba(12, 31, 39, 0.08);
+}
+
+.contact-section .contact-host-actions .button:not(.button-ghost) {
+  border-color: rgba(37, 211, 102, 0.24);
+  background:
+    linear-gradient(135deg, rgba(247, 223, 170, 0.68), rgba(255, 151, 126, 0.8)),
+    #fffdf8;
+  color: #071f2a;
+}
+
+.contact-section .contact-host-actions .button:hover,
+.contact-section .contact-host-actions .button:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px rgba(12, 31, 39, 0.12);
 }
 
 .gallery-arrow,
@@ -6919,6 +7176,7 @@ main .section:not(.hero) .button-ghost:focus-visible {
 
   .site-header {
     padding: 12px 0;
+    z-index: 170;
   }
 
   .owner-pricing-grid {
@@ -6976,6 +7234,7 @@ main .section:not(.hero) .button-ghost:focus-visible {
 
   .language-menu {
     top: calc(100% + 8px);
+    z-index: 180;
     min-width: 166px;
   }
 
@@ -7027,7 +7286,7 @@ main .section:not(.hero) .button-ghost:focus-visible {
     top: 84px;
     left: 14px;
     right: 14px;
-    z-index: 82;
+    z-index: 172;
     display: grid;
     gap: 8px;
     max-height: min(560px, calc(100dvh - 112px));
@@ -8005,14 +8264,7 @@ main .section:not(.hero) .button-ghost:focus-visible {
   }
 
   .sticky-discount-button {
-    top: 88px;
-    right: 12px;
-    left: auto;
-    bottom: auto;
-    width: 160px;
-    min-height: 72px;
-    padding: 11px 13px 12px;
-    border-radius: 22px;
+    display: none;
   }
 
   .sticky-discount-button span {
@@ -8286,6 +8538,75 @@ main .section:not(.hero) .button-ghost:focus-visible {
 }
 
 @media (max-width: 760px) {
+  .contact-layout {
+    gap: 32px;
+  }
+
+  .contact-section .section-copy {
+    max-width: 100%;
+  }
+
+  .contact-section .section-copy h2 {
+    max-width: 11.5ch;
+    font-size: clamp(2.35rem, 9vw, 3.25rem);
+  }
+
+  .contact-section .contact-direct-cta.button {
+    width: fit-content;
+    min-height: 48px;
+    padding: 0 18px;
+  }
+
+  .contact-card {
+    min-height: 0;
+    padding: 18px;
+    gap: 14px;
+    border-radius: 20px;
+    clip-path: none;
+  }
+
+  .contact-card .contact-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .contact-card strong,
+  .contact-card-whatsapp strong {
+    font-size: 1.06rem;
+    line-height: 1.2;
+  }
+
+  .contact-card > div span:last-child {
+    font-size: 0.88rem;
+    line-height: 1.52;
+  }
+
+  .contact-host-card {
+    clip-path: none;
+    border-radius: 22px;
+    padding: 20px;
+  }
+
+  .contact-host-media {
+    max-width: 260px;
+  }
+
+  .contact-host-copy h3 {
+    max-width: 14ch;
+    font-size: clamp(1.75rem, 7.4vw, 2.25rem);
+  }
+
+  .contact-section .contact-host-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .contact-section .contact-host-actions .button,
+  .contact-section .contact-host-actions .button-ghost {
+    width: 100%;
+    justify-content: center;
+  }
+
   .gallery-arrow,
   .availability-month-button,
   .gallery-lightbox-arrow,
