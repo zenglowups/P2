@@ -8538,6 +8538,110 @@ main .section:not(.hero) .button-ghost:focus-visible {
 }
 
 @media (max-width: 760px) {
+  .js-ready .reveal,
+  .js-ready .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+    transition-delay: 0ms;
+  }
+
+  .hero-glow,
+  .hero-promo-banner,
+  .hero-promo-banner::after,
+  .summer-promo-popup.is-visible,
+  .discount-promo-popup.is-visible,
+  .pool-promo-popup.is-visible,
+  .sticky-discount-button,
+  .sticky-discount-button::after,
+  .pool-water,
+  .pool-feature-image:first-child,
+  .pool-feature-image:nth-child(2) {
+    animation: none;
+  }
+
+  .summer-promo-popup {
+    left: 12px;
+    right: 12px;
+    bottom: calc(86px + env(safe-area-inset-bottom));
+    width: auto;
+    max-height: none;
+    overflow: visible;
+    gap: 8px;
+    padding: 13px 14px 14px;
+    border-radius: 20px;
+    box-shadow: 0 18px 48px rgba(4, 14, 20, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  .summer-promo-close {
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 253, 249, 0.14);
+  }
+
+  .summer-promo-kicker {
+    min-height: 24px;
+    padding: 0 9px;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+  }
+
+  .summer-promo-title {
+    max-width: calc(100% - 40px);
+    font-size: clamp(1.16rem, 5.6vw, 1.48rem);
+    line-height: 1.02;
+  }
+
+  .summer-promo-deal {
+    display: flex;
+    width: 100%;
+    align-items: baseline;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 16px;
+  }
+
+  .summer-promo-deal span,
+  .summer-promo-deal small {
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+  }
+
+  .summer-promo-deal small {
+    grid-column: auto;
+  }
+
+  .summer-promo-deal b {
+    font-size: clamp(1.7rem, 8vw, 2.18rem);
+  }
+
+  .summer-promo-popup p,
+  .summer-promo-list {
+    display: none;
+  }
+
+  .summer-promo-cta {
+    min-height: 42px;
+    padding: 0 14px;
+    border-radius: 16px;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+  }
+
+  .discount-promo-popup {
+    bottom: calc(86px + env(safe-area-inset-bottom));
+    max-height: none;
+    overflow: visible;
+  }
+
+  .pool-promo-popup {
+    bottom: calc(86px + env(safe-area-inset-bottom));
+  }
+
   .contact-layout {
     gap: 32px;
   }

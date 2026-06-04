@@ -3194,7 +3194,7 @@ function scheduleSummerPromo(attempt = 0) {
     return;
   }
 
-  const delay = attempt === 0 ? 1800 : 1400;
+  const delay = attempt === 0 ? (COMPACT_AVAILABILITY.matches ? 7600 : 1800) : 1400;
   window.setTimeout(() => {
     if (hasDismissedSummerPromo()) {
       return;
@@ -5335,6 +5335,13 @@ function handleSectionAnchorClick(event) {
 }
 
 function applyRevealDelays() {
+  if (COMPACT_AVAILABILITY.matches) {
+    revealItems.forEach((item) => {
+      item.style.setProperty("--reveal-delay", "0ms");
+    });
+    return;
+  }
+
   revealItems.forEach((item, index) => {
     item.style.setProperty("--reveal-delay", `${(index % 6) * 70}ms`);
   });
@@ -5382,6 +5389,11 @@ function syncSectionHighlights() {
 }
 
 function initRevealObserver() {
+  if (COMPACT_AVAILABILITY.matches) {
+    revealItems.forEach((item) => item.classList.add("is-visible"));
+    return;
+  }
+
   revealItems.forEach((item) => {
     if (item.getBoundingClientRect().top <= window.innerHeight * 0.92) {
       item.classList.add("is-visible");
