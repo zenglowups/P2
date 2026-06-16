@@ -172,7 +172,7 @@
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
   >
-  <link rel="stylesheet" href="style.min.css?v=20260604-mobile-polish">
+  <link rel="stylesheet" href="style.min.css?v=20260616-email-booking">
 </head>
 <body>
   <div class="page-top-anchor" id="page-top" aria-hidden="true"></div>
@@ -390,8 +390,8 @@
               </label>
 
               <label>
-                <span>Email optional</span>
-                <input type="email" name="guestEmail" placeholder="Ex: nume@email.com" autocomplete="email" maxlength="160">
+                <span>Email</span>
+                <input type="email" name="guestEmail" placeholder="Ex: nume@email.com" autocomplete="email" maxlength="160" required>
               </label>
             </div>
 
@@ -500,7 +500,7 @@
             <input type="hidden" name="turnstileToken" id="booking-turnstile-token" value="">
             <div class="booking-turnstile" id="booking-turnstile" hidden></div>
 
-            <button class="button button-block" type="submit" id="booking-submit">Trimite pe WhatsApp</button>
+            <button class="button button-block" type="submit" id="booking-submit">Trimite cererea</button>
             <p class="form-status" id="booking-status" aria-live="polite"></p>
           </form>
         </div>
@@ -1221,6 +1221,6 @@
       </div>
     </div>
   </div>
-  <script src="site.min.js?v=20260604-mobile-polish"></script>
+  <script src="site.min.js?v=20260616-email-booking"></script>
 </body>
 </html>

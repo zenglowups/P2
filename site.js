@@ -362,7 +362,7 @@ const TRANSLATIONS = {
     "1-15 iunie 80 euro, 15-30 iunie 100 euro, septembrie 110 euro/noapte": "June 1-15 80 euro, June 15-30 100 euro, September 110 euro/night",
     "Nume": "Name",
     "Telefon": "Phone",
-    "Email optional": "Optional email",
+    "Email": "Email",
     "Cazare": "Accommodation",
     "Alege cazarea": "Choose accommodation",
     "Oaspeti": "Guests",
@@ -385,7 +385,7 @@ const TRANSLATIONS = {
     "Citeste politica de confidentialitate": "Read the privacy policy",
     "Confirmarea telefonica este obligatorie. Clientul trebuie sa sune pentru confirmarea finala a rezervarii.": "Phone confirmation is required. The guest must call for final reservation confirmation.",
     "Se accepta doar sejururi de minimum 4 nopti, iar datele ocupate sunt respinse automat din formular.": "Only stays of at least 4 nights are accepted, and occupied dates are rejected automatically by the form.",
-    "Trimite pe WhatsApp": "Send on WhatsApp",
+    "Trimite cererea": "Send request",
     "Disponibilitate pe luni": "Monthly availability",
     "Vezi dintr-o privire cate zile raman libere pentru fiecare studio.": "See at a glance how many days remain free for each studio.",
     "Schimba luna pentru fiecare unitate, vezi intervalele libere si compara rapid disponibilitatea.": "Change the month for each unit, view free periods and quickly compare availability.",
@@ -604,7 +604,7 @@ const TRANSLATIONS = {
     "1-15 iunie 80 euro, 15-30 iunie 100 euro, septembrie 110 euro/noapte": "1-15 Ιουνίου 80 ευρώ, 15-30 Ιουνίου 100 ευρώ, Σεπτέμβριος 110 ευρώ/νύχτα",
     "Nume": "Όνομα",
     "Telefon": "Τηλέφωνο",
-    "Email optional": "Προαιρετικό email",
+    "Email": "Email",
     "Cazare": "Διαμονή",
     "Alege cazarea": "Επιλέξτε διαμονή",
     "Oaspeti": "Επισκέπτες",
@@ -627,7 +627,7 @@ const TRANSLATIONS = {
     "Citeste politica de confidentialitate": "Διαβάστε την πολιτική απορρήτου",
     "Confirmarea telefonica este obligatorie. Clientul trebuie sa sune pentru confirmarea finala a rezervarii.": "Η τηλεφωνική επιβεβαίωση είναι υποχρεωτική. Ο επισκέπτης πρέπει να καλέσει για την τελική επιβεβαίωση της κράτησης.",
     "Se accepta doar sejururi de minimum 4 nopti, iar datele ocupate sunt respinse automat din formular.": "Γίνονται δεκτές μόνο διαμονές τουλάχιστον 4 νυχτών και οι κατειλημμένες ημερομηνίες απορρίπτονται αυτόματα.",
-    "Trimite pe WhatsApp": "Αποστολή στο WhatsApp",
+    "Trimite cererea": "Αποστολή αιτήματος",
     "Disponibilitate pe luni": "Διαθεσιμότητα ανά μήνα",
     "Vezi dintr-o privire cate zile raman libere pentru fiecare studio.": "Δείτε γρήγορα πόσες ημέρες μένουν διαθέσιμες για κάθε στούντιο.",
     "Schimba luna pentru fiecare unitate, vezi intervalele libere si compara rapid disponibilitatea.": "Αλλάξτε μήνα για κάθε μονάδα, δείτε τα ελεύθερα διαστήματα και συγκρίνετε τη διαθεσιμότητα.",
@@ -986,7 +986,7 @@ Object.assign(TRANSLATIONS.de, {
   "1-15 iunie 80 euro, 15-30 iunie 100 euro, septembrie 110 euro/noapte": "1.-15. Juni 80 Euro, 15.-30. Juni 100 Euro, September 110 Euro/Nacht",
   "Nume": "Name",
   "Telefon": "Telefon",
-  "Email optional": "E-Mail optional",
+  "Email": "E-Mail",
   "Cazare": "Unterkunft",
   "Alege cazarea": "Unterkunft wählen",
   "Oaspeti": "Gäste",
@@ -995,7 +995,7 @@ Object.assign(TRANSLATIONS.de, {
   "Adulti": "Erwachsene",
   "Copii": "Kinder",
   "Pana la 12 ani": "Bis 12 Jahre",
-  "Trimite pe WhatsApp": "Per WhatsApp senden",
+  "Trimite cererea": "Anfrage senden",
   "Disponibilitate pe luni": "Verfügbarkeit nach Monaten",
   "Vezi dintr-o privire cate zile raman libere pentru fiecare studio.": "Sieh auf einen Blick, wie viele Tage für jedes Studio noch frei sind.",
   "Schimba luna pentru fiecare unitate, vezi intervalele libere si compara rapid disponibilitatea.": "Wechsle den Monat pro Einheit, sieh freie Zeiträume und vergleiche schnell die Verfügbarkeit.",
@@ -1088,7 +1088,7 @@ Object.assign(TRANSLATIONS.bg, {
   "1-15 iunie 80 euro, 15-30 iunie 100 euro, septembrie 110 euro/noapte": "1-15 юни 80 евро, 15-30 юни 100 евро, септември 110 евро/нощ",
   "Nume": "Име",
   "Telefon": "Телефон",
-  "Email optional": "Имейл по избор",
+  "Email": "Имейл",
   "Cazare": "Настаняване",
   "Alege cazarea": "Изберете настаняване",
   "Oaspeti": "Гости",
@@ -1097,7 +1097,7 @@ Object.assign(TRANSLATIONS.bg, {
   "Adulti": "Възрастни",
   "Copii": "Деца",
   "Pana la 12 ani": "До 12 години",
-  "Trimite pe WhatsApp": "Изпратете по WhatsApp",
+  "Trimite cererea": "Изпратете заявка",
   "Disponibilitate pe luni": "Свободни дати по месеци",
   "Vezi dintr-o privire cate zile raman libere pentru fiecare studio.": "Вижте с един поглед колко дни остават свободни за всяко студио.",
   "Schimba luna pentru fiecare unitate, vezi intervalele libere si compara rapid disponibilitatea.": "Сменете месеца за всяко помещение, вижте свободните периоди и сравнете бързо наличността.",
@@ -4515,7 +4515,7 @@ function renderOwnerAnalytics() {
     ["Vizitatori unici", totals.uniqueVisitors || 0],
     ["Intrari totale", totals.totalEntries || 0],
     ["Intrari cu analytics", totals.analyticsEntries || 0],
-    ["Cereri WhatsApp", totals.whatsappRequests || 0],
+    ["Cereri rezervare", totals.whatsappRequests || 0],
     ["Clickuri social", totals.socialClicks || 0],
     ["Informari confirmate", totals.preferenceSaves || 0],
   ]
@@ -4539,7 +4539,7 @@ function renderOwnerAnalytics() {
             <article class="owner-analytics-day">
               <strong>${escapeHtml(formatDate(day.date))}</strong>
               <span>${escapeHtml(String(day.entries || 0))} intrari, ${escapeHtml(String(day.newVisitors || 0))} vizitatori noi</span>
-              <span>${escapeHtml(String(day.whatsappRequests || 0))} cereri WhatsApp, ${escapeHtml(String(day.socialClicks || 0))} clickuri social</span>
+              <span>${escapeHtml(String(day.whatsappRequests || 0))} cereri rezervare, ${escapeHtml(String(day.socialClicks || 0))} clickuri social</span>
             </article>
           `,
         )
@@ -4596,17 +4596,14 @@ function syncBookingSetupState() {
     return;
   }
 
-  const hasWhatsAppNumber = !!sanitizePhone(appState.settings.whatsappNumber);
   const hasServerEndpoint = CAN_USE_OWNER_API;
-  bookingSubmit.disabled = !hasWhatsAppNumber || !hasServerEndpoint;
-  bookingSubmit.setAttribute("aria-disabled", String(!hasWhatsAppNumber || !hasServerEndpoint));
+  bookingSubmit.disabled = !hasServerEndpoint;
+  bookingSubmit.setAttribute("aria-disabled", String(!hasServerEndpoint));
   if (!hasServerEndpoint) {
     bookingFormNote.textContent = "Formularul de cazare este disponibil doar prin varianta securizata a site-ului.";
     return;
   }
-  bookingFormNote.textContent = hasWhatsAppNumber
-    ? `Se accepta doar sejururi de minimum ${MINIMUM_BOOKING_NIGHTS} nopti, iar datele ocupate sunt respinse automat din formular.`
-    : "Momentan formularul nu poate fi trimis, pentru ca numarul WhatsApp nu este setat.";
+  bookingFormNote.textContent = `Se accepta doar sejururi de minimum ${MINIMUM_BOOKING_NIGHTS} nopti, iar datele ocupate sunt respinse automat din formular.`;
 }
 
 function markBookingFormRendered() {
@@ -4726,15 +4723,14 @@ async function handleBookingSubmit(event) {
   const childAge = Number.parseInt(childAgeText, 10);
   const checkIn = String(data.get("checkIn") ?? "").trim();
   const checkOut = String(data.get("checkOut") ?? "").trim();
-  const whatsappNumber = sanitizePhone(appState.settings.whatsappNumber);
   const accommodation = getAccommodationById(accommodationId);
 
-  if (!whatsappNumber) {
-    setStatus("booking-status", "Momentan contactul pe WhatsApp nu este disponibil.", "error");
-    return;
-  }
   if (!guestName || !guestPhone || !guestCount) {
     setStatus("booking-status", "Completeaza numele, telefonul si numarul de oaspeti.", "error");
+    return;
+  }
+  if (!guestEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail)) {
+    setStatus("booking-status", "Completeaza o adresa de email valida pentru a primi confirmarea.", "error");
     return;
   }
   if (!bookingContactConsent?.checked) {
@@ -4830,23 +4826,13 @@ async function handleBookingSubmit(event) {
     return;
   }
 
-  if (!bookingResponse?.whatsappUrl) {
-    resetBookingCaptcha();
-    markBookingFormRendered();
-    setStatus("booking-status", bookingResponse?.message || "Mesajul a fost primit.", "success");
-    syncBookingSetupState();
-    return;
-  }
-
-  const popup = window.open(bookingResponse.whatsappUrl, "_blank", "noopener,noreferrer");
-
-  if (!popup) {
-    window.location.href = bookingResponse.whatsappUrl;
-  }
-
   setBookingGuestPickerOpen(false);
   void trackAnalyticsEvent("whatsapp_request");
-  setStatus("booking-status", "Am deschis WhatsApp cu cererea completata.", "success");
+  setStatus(
+    "booking-status",
+    bookingResponse?.message || "Cererea ta a fost trimisa. Ti-am trimis un email de confirmare.",
+    "success",
+  );
   resetBookingCaptcha();
   markBookingFormRendered();
   syncBookingSetupState();
