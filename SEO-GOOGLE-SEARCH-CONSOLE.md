@@ -9,6 +9,14 @@
 - `robots.txt` permite indexarea site-ului public si blocheaza zonele tehnice: owner, api, data.
 - Paginile publice au canonical, robots index/follow, Open Graph, Twitter card si schema JSON-LD pentru breadcrumbs.
 
+### Actualizare 2026-06-16
+
+- Pagina principala are o sectiune `Intrebari frecvente` vizibila plus schema `FAQPage` (poate aparea ca rezultat extins in Google).
+- Schema `LodgingBusiness` include acum coordonate `geo`, limbile disponibile si moneda (EUR).
+- Paginile `studio-double` si `studio-deluxe` au schema `Apartment` cu capacitatea de cazare.
+- Pagina principala face acum legaturi interne catre paginile de cazare, aproape de plaja si studiouri (din sectiunea `Cautari utile`).
+- Dupa acest update, reintra in Search Console si apasa din nou `Request indexing` pe pagina principala, ca Google sa preia noua schema si sectiunea FAQ.
+
 ## Cautari pe care merita sa le tintesti
 
 - cazare Paralia Katerinis

@@ -1156,6 +1156,66 @@ Object.assign(TRANSLATIONS.bg, {
   "Aer conditionat": "Климатик",
 });
 
+Object.assign(TRANSLATIONS.en, {
+  "Intrebari frecvente": "Frequently asked questions",
+  "Raspunsuri rapide la cele mai frecvente intrebari despre sejur.": "Quick answers to the most common questions about your stay.",
+  "Cat de aproape este plaja?": "How close is the beach?",
+  "La doar cateva minute de mers pe jos; plaja, restaurantele si magazinele sunt foarte aproape, intr-o zona linistita.": "Just a few minutes' walk away; the beach, restaurants and shops are very close, in a quiet area.",
+  "Exista parcare gratuita?": "Is there free parking?",
+  "Da, parcarea este gratuita si usor de gasit in zona.": "Yes, parking is free and easy to find nearby.",
+  "Care este durata minima a sejurului?": "What is the minimum stay?",
+  "Acceptam rezervari de minimum 4 nopti.": "We accept bookings of at least 4 nights.",
+  "Ce facilitati sunt incluse?": "What facilities are included?",
+  "WiFi gratuit, aer conditionat, balcon, terasa, vedere la mare si transfer de la sau pana la aeroport.": "Free WiFi, air conditioning, balcony, terrace, sea view and airport transfer.",
+  "Cum rezerv si cum primesc confirmarea?": "How do I book and receive confirmation?",
+  "Completezi formularul de pe site, iar confirmarea solicitarii ajunge automat pe email; pentru intrebari rapide ne poti suna sau scrie.": "Fill in the form on the site and the request confirmation arrives automatically by email; for quick questions you can call or message us.",
+});
+
+Object.assign(TRANSLATIONS.el, {
+  "Intrebari frecvente": "Συχνές ερωτήσεις",
+  "Raspunsuri rapide la cele mai frecvente intrebari despre sejur.": "Γρήγορες απαντήσεις στις πιο συχνές ερωτήσεις για τη διαμονή σας.",
+  "Cat de aproape este plaja?": "Πόσο κοντά είναι η παραλία;",
+  "La doar cateva minute de mers pe jos; plaja, restaurantele si magazinele sunt foarte aproape, intr-o zona linistita.": "Μόλις λίγα λεπτά με τα πόδια· η παραλία, τα εστιατόρια και τα καταστήματα είναι πολύ κοντά, σε μια ήσυχη περιοχή.",
+  "Exista parcare gratuita?": "Υπάρχει δωρεάν πάρκινγκ;",
+  "Da, parcarea este gratuita si usor de gasit in zona.": "Ναι, το πάρκινγκ είναι δωρεάν και εύκολο να το βρείτε στην περιοχή.",
+  "Care este durata minima a sejurului?": "Ποια είναι η ελάχιστη διαμονή;",
+  "Acceptam rezervari de minimum 4 nopti.": "Δεχόμαστε κρατήσεις τουλάχιστον 4 διανυκτερεύσεων.",
+  "Ce facilitati sunt incluse?": "Ποιες παροχές περιλαμβάνονται;",
+  "WiFi gratuit, aer conditionat, balcon, terasa, vedere la mare si transfer de la sau pana la aeroport.": "Δωρεάν WiFi, κλιματισμός, μπαλκόνι, βεράντα, θέα στη θάλασσα και μεταφορά από/προς το αεροδρόμιο.",
+  "Cum rezerv si cum primesc confirmarea?": "Πώς κάνω κράτηση και λαμβάνω επιβεβαίωση;",
+  "Completezi formularul de pe site, iar confirmarea solicitarii ajunge automat pe email; pentru intrebari rapide ne poti suna sau scrie.": "Συμπληρώνετε τη φόρμα στον ιστότοπο και η επιβεβαίωση του αιτήματος φτάνει αυτόματα με email· για γρήγορες ερωτήσεις μπορείτε να μας καλέσετε ή να μας γράψετε.",
+});
+
+Object.assign(TRANSLATIONS.de, {
+  "Intrebari frecvente": "Häufige Fragen",
+  "Raspunsuri rapide la cele mai frecvente intrebari despre sejur.": "Schnelle Antworten auf die häufigsten Fragen zum Aufenthalt.",
+  "Cat de aproape este plaja?": "Wie nah ist der Strand?",
+  "La doar cateva minute de mers pe jos; plaja, restaurantele si magazinele sunt foarte aproape, intr-o zona linistita.": "Nur wenige Gehminuten entfernt; Strand, Restaurants und Geschäfte sind ganz in der Nähe, in einer ruhigen Gegend.",
+  "Exista parcare gratuita?": "Gibt es kostenlose Parkplätze?",
+  "Da, parcarea este gratuita si usor de gasit in zona.": "Ja, das Parken ist kostenlos und in der Umgebung leicht zu finden.",
+  "Care este durata minima a sejurului?": "Was ist die Mindestaufenthaltsdauer?",
+  "Acceptam rezervari de minimum 4 nopti.": "Wir akzeptieren Buchungen ab mindestens 4 Nächten.",
+  "Ce facilitati sunt incluse?": "Welche Ausstattung ist inbegriffen?",
+  "WiFi gratuit, aer conditionat, balcon, terasa, vedere la mare si transfer de la sau pana la aeroport.": "Kostenloses WLAN, Klimaanlage, Balkon, Terrasse, Meerblick und Flughafentransfer.",
+  "Cum rezerv si cum primesc confirmarea?": "Wie buche ich und erhalte eine Bestätigung?",
+  "Completezi formularul de pe site, iar confirmarea solicitarii ajunge automat pe email; pentru intrebari rapide ne poti suna sau scrie.": "Sie füllen das Formular auf der Website aus und die Bestätigung der Anfrage kommt automatisch per E-Mail; für schnelle Fragen können Sie uns anrufen oder schreiben.",
+});
+
+Object.assign(TRANSLATIONS.bg, {
+  "Intrebari frecvente": "Често задавани въпроси",
+  "Raspunsuri rapide la cele mai frecvente intrebari despre sejur.": "Бързи отговори на най-честите въпроси за престоя.",
+  "Cat de aproape este plaja?": "Колко близо е плажът?",
+  "La doar cateva minute de mers pe jos; plaja, restaurantele si magazinele sunt foarte aproape, intr-o zona linistita.": "Само на няколко минути пеша; плажът, ресторантите и магазините са много близо, в тих район.",
+  "Exista parcare gratuita?": "Има ли безплатен паркинг?",
+  "Da, parcarea este gratuita si usor de gasit in zona.": "Да, паркингът е безплатен и лесно се намира в района.",
+  "Care este durata minima a sejurului?": "Какъв е минималният престой?",
+  "Acceptam rezervari de minimum 4 nopti.": "Приемаме резервации за минимум 4 нощувки.",
+  "Ce facilitati sunt incluse?": "Какви удобства са включени?",
+  "WiFi gratuit, aer conditionat, balcon, terasa, vedere la mare si transfer de la sau pana la aeroport.": "Безплатен WiFi, климатик, балкон, тераса, изглед към морето и трансфер от/до летището.",
+  "Cum rezerv si cum primesc confirmarea?": "Как да резервирам и да получа потвърждение?",
+  "Completezi formularul de pe site, iar confirmarea solicitarii ajunge automat pe email; pentru intrebari rapide ne poti suna sau scrie.": "Попълвате формуляра на сайта и потвърждението на заявката пристига автоматично по имейл; за бързи въпроси можете да ни се обадите или да ни пишете.",
+});
+
 const DISCOUNT_PROMO_TRANSLATIONS = {
   en: {
     "Reducere activa pentru luna iunie": "Active June discount",
