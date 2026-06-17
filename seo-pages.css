@@ -256,3 +256,40 @@ p {
     grid-template-columns: 1fr;
   }
 }
+
+/* Footer credit - ZenWebsites */
+.seo-footer-credit {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(201, 149, 69, 0.28);
+  text-align: center;
+}
+
+.seo-footer-credit a {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.seo-footer-credit .footer-credit-brand {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  color: #c99545;
+}
+
+.seo-footer-credit .footer-credit-tag {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  color: #c99545;
+  opacity: 0.78;
+}
+
+.seo-footer-credit a:hover .footer-credit-brand,
+.seo-footer-credit a:focus-visible .footer-credit-brand {
+  text-decoration: underline;
+}

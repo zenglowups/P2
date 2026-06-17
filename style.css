@@ -8770,5 +8770,43 @@ main .section:not(.hero) .button-ghost:focus-visible {
   text-decoration: underline;
 }
 
+/* Footer credit - ZenWebsites */
+.footer-credit {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gold-line);
+  text-align: center;
+}
+
+.footer-credit a {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-decoration: none;
+}
+
+.footer-credit-brand {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  color: var(--gold);
+}
+
+.footer-credit-tag {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.34em;
+  color: var(--gold);
+  opacity: 0.78;
+}
+
+.footer-credit a:hover .footer-credit-brand,
+.footer-credit a:focus-visible .footer-credit-brand {
+  text-decoration: underline;
+}
+
 
 
