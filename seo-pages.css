@@ -293,3 +293,33 @@ p {
 .seo-footer-credit a:focus-visible .footer-credit-brand {
   text-decoration: underline;
 }
+
+/* Language switcher */
+.seo-lang {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: 6px;
+  padding-left: 10px;
+  border-left: 1px solid var(--line);
+}
+
+.seo-lang a {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  padding: 4px 7px;
+  border-radius: 6px;
+}
+
+.seo-lang a[aria-current="true"] {
+  color: var(--sea-deep);
+  background: rgba(255, 253, 249, 0.9);
+  border: 1px solid var(--line);
+}
+
+.seo-lang a:hover,
+.seo-lang a:focus-visible {
+  color: var(--sea-deep);
+}

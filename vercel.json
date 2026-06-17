@@ -76,7 +76,15 @@
     {
       "source": "/studio-deluxe",
       "destination": "/studio-deluxe.html"
-    }
+    },
+    { "source": "/en/cazare-paralia-katerinis", "destination": "/en/cazare-paralia-katerinis.html" },
+    { "source": "/en/studio-paralia-katerinis", "destination": "/en/studio-paralia-katerinis.html" },
+    { "source": "/en/camere-paralia-katerinis", "destination": "/en/camere-paralia-katerinis.html" },
+    { "source": "/en/cazare-aproape-de-plaja-paralia-katerinis", "destination": "/en/cazare-aproape-de-plaja-paralia-katerinis.html" },
+    { "source": "/en/locatie", "destination": "/en/locatie.html" },
+    { "source": "/en/contact", "destination": "/en/contact.html" },
+    { "source": "/en/studio-double", "destination": "/en/studio-double.html" },
+    { "source": "/en/studio-deluxe", "destination": "/en/studio-deluxe.html" }
   ],
   "redirects": [
     {
@@ -135,6 +143,14 @@
       "destination": "/studio-deluxe",
       "permanent": true
     },
+    { "source": "/en/cazare-paralia-katerinis.html", "destination": "/en/cazare-paralia-katerinis", "permanent": true },
+    { "source": "/en/studio-paralia-katerinis.html", "destination": "/en/studio-paralia-katerinis", "permanent": true },
+    { "source": "/en/camere-paralia-katerinis.html", "destination": "/en/camere-paralia-katerinis", "permanent": true },
+    { "source": "/en/cazare-aproape-de-plaja-paralia-katerinis.html", "destination": "/en/cazare-aproape-de-plaja-paralia-katerinis", "permanent": true },
+    { "source": "/en/locatie.html", "destination": "/en/locatie", "permanent": true },
+    { "source": "/en/contact.html", "destination": "/en/contact", "permanent": true },
+    { "source": "/en/studio-double.html", "destination": "/en/studio-double", "permanent": true },
+    { "source": "/en/studio-deluxe.html", "destination": "/en/studio-deluxe", "permanent": true },
     {
       "source": "/owner",
       "destination": "/owner-login.html",
